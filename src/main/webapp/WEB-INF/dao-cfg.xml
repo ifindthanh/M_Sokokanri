@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+ 
+ <bean id="userDAO" class="vn.com.nsmv.dao.impl.UserDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>
+ 
+ <bean id="priShainBasDAO" class="vn.com.nsmv.dao.impl.PriShainBasDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>
+ <bean id="nyukoDAO" class="vn.com.nsmv.dao.impl.NyukoDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>
+ <bean id="transDAO" class="vn.com.nsmv.dao.impl.TransDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>
+ <bean id="shukkaBodyDAOImpl" class="vn.com.nsmv.dao.impl.ShukkaBodyDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>
+ <bean id="shukkaHeadDAOImpl" class="vn.com.nsmv.dao.impl.ShukkaHeadDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>
+<bean id="logRequestDaoImpl" class="vn.com.nsmv.dao.impl.LogRequestDaoImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean> 
+ <bean id="sokoDaoImpl" class="vn.com.nsmv.dao.impl.SokoDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean> 
+</beans>

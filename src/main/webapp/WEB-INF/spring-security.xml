@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/security
+      http://www.springframework.org/schema/security/spring-security-4.0.xsd
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+ 
+     
+     <global-method-security pre-post-annotations="enabled" />  
+    
+	<http pattern="/api/login" security="none"/>  
+    <http pattern="/api/signup" security="none"/>
+    <http pattern="/api/**" entry-point-ref="restAuthenticationEntryPoint" create-session="stateless"> 
+        <csrf disabled="true"/>  
+        <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/>  
+    </http>
+    
+    <beans:bean id="jwtAuthenticationFilter" class="vn.com.nsmv.authentication.JwtAuthenticationFilter">  
+    </beans:bean>
+ 	<beans:bean id="restAuthenticationEntryPoint" class="vn.com.nsmv.authentication.RestAuthenticationEntryPoint">  
+    </beans:bean>
+    <beans:bean id="ajaxTimeoutRedirectFilter" class="vn.com.nsmv.bean.AjaxTimeoutRedirectFilter"></beans:bean>
+    <beans:bean id="customUserService" class="vn.com.nsmv.bean.CustomUserService" autowire="byName"> 
+    	<beans:property name="userDAO" ref="userDAO"></beans:property>
+    </beans:bean>
+     <beans:bean id="userDAO" class="vn.com.nsmv.dao.impl.UserDAOImpl">  
+    </beans:bean>
+    <http use-expressions="true">
+        <csrf disabled="true"/>
+        <session-management invalid-session-url="/login" />
+		<custom-filter ref="ajaxTimeoutRedirectFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
+        <intercept-url pattern="/" access="permitAll" />
+        <intercept-url pattern="/welcome" access="permitAll" />
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/register/*" access="permitAll" />
+        <intercept-url pattern="/api/*" access="permitAll" />
+ 
+        <intercept-url pattern="/import/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        <intercept-url pattern="/imported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        <intercept-url pattern="/export/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        <intercept-url pattern="/exported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        <intercept-url pattern="/profile/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        <intercept-url pattern="/user/list" access="hasAnyRole('ROLE_A', 'ROLE_S')" />
+        <intercept-url pattern="/user/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        
+        <intercept-url pattern="/*" access="isAuthenticated()" />
+ 
+        <access-denied-handler error-page="/403" />
+        
+        <form-login login-page='/login' login-processing-url="/j_spring_security_check"
+            default-target-url="/" always-use-default-target="false"
+            authentication-failure-url="/login?error=true" username-parameter="email"
+            password-parameter="password" />
+ 
+        <logout invalidate-session="true" 
+        logout-success-url="/" 
+        logout-url="/logout" delete-cookies="JSESSIONID" />
+ 
+    </http>
+    
+    <authentication-manager erase-credentials="true">
+ 
+        <!-- authentication from database -->
+        <authentication-provider user-service-ref="customUserService">
+        	 <!-- <password-encoder ref="encoder" /> -->
+        </authentication-provider>
+    </authentication-manager>
+    <!-- <beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+		<beans:constructor-arg name="strength" value="10" />
+	</beans:bean> -->
+</beans:beans>

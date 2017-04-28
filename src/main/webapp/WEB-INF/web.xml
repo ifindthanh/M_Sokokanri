@@ -1,0 +1,80 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	 
+	   
+	<display-name>Archetype Created Web Application</display-name>
+	   
+	<servlet>
+		       
+		<servlet-name>spring-mvc</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		       
+		<load-on-startup>1</load-on-startup>
+		   
+	</servlet>
+	 
+	   
+	<servlet-mapping>
+		       
+		<servlet-name>spring-mvc</servlet-name>
+		       
+		<url-pattern>/</url-pattern>
+		   
+	</servlet-mapping>
+	 
+	   <!-- Other XML Configuration -->
+	   <!-- Load by Spring ContextLoaderListener -->
+	   
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring-security.xml
+			/WEB-INF/data-source-hiber-cfg.xml
+			/WEB-INF/dao-cfg.xml
+			/WEB-INF/transaction-cfg.xml
+		</param-value>
+	</context-param>
+	 
+	 
+	   <!-- Spring ContextLoaderListener -->
+	   
+	<listener>
+		       
+		<listener-class>org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+		   
+	</listener>
+	 
+
+	<!-- Spring Security Filter -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Character Encoding Filter -->
+	<filter>
+		<filter-name>Character Encoding Filter</filter-name>
+		<filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>Character Encoding Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<page-encoding>UTF-8</page-encoding>
+	</filter-mapping>
+</web-app>
