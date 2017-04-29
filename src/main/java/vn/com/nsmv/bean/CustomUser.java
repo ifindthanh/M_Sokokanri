@@ -13,7 +13,6 @@ public class CustomUser implements UserDetails
 	private final Collection<? extends GrantedAuthority> authorities;
 	private final String password;
 	private final String username;
-	private final String sokoCd;
 	private final boolean accountNonExpired;
 	private final boolean accountNonLocked;
 	private final boolean credentialsNonExpired;
@@ -24,7 +23,6 @@ public class CustomUser implements UserDetails
 		Collection<? extends GrantedAuthority> authorities,
 		String password,
 		String username,
-		String sokoCd,
 		boolean accountNonExpired,
 		boolean accountNonLocked,
 		boolean credentialsNonExpired,
@@ -34,7 +32,6 @@ public class CustomUser implements UserDetails
 		this.authorities = authorities;
 		this.password = password;
 		this.username = username;
-		this.sokoCd = sokoCd;
 		this.accountNonExpired = accountNonExpired;
 		this.accountNonLocked = accountNonLocked;
 		this.credentialsNonExpired = credentialsNonExpired;
@@ -79,11 +76,6 @@ public class CustomUser implements UserDetails
 	public String getDisplayName()
 	{
 		return displayName;
-	}
-
-	public String getSokoCd()
-	{
-		return this.sokoCd;
 	}
 
 }

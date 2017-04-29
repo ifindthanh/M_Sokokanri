@@ -64,4 +64,7 @@ public interface UserDAO
 	 * @return List<BusinessCard>
 	 ******************************************/
 	public Long countUserBySearchCondition(String searchCondition);
+	
+	public Set<UserRole> getRoles(Long userID);
 }
+

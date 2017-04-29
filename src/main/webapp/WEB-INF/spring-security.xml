@@ -28,7 +28,7 @@
     </beans:bean>
     <http use-expressions="true">
         <csrf disabled="true"/>
-        <session-management invalid-session-url="/login" />
+        <session-management invalid-session-url="/" />
 		<custom-filter ref="ajaxTimeoutRedirectFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
         <intercept-url pattern="/" access="permitAll" />
         <intercept-url pattern="/welcome" access="permitAll" />

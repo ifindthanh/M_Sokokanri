@@ -25,7 +25,6 @@ public class User implements java.io.Serializable
 	private String fullname;
 	private String email;
 	private String gender;
-	private Set<UserRole> userRole = new HashSet<UserRole>();
 
 	public User()
 	{
@@ -89,13 +88,4 @@ public class User implements java.io.Serializable
 		this.gender = gender;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<UserRole> getUserRole() {
-		return this.userRole;
-	}
-
-	public void setUserRole(Set<UserRole> userRole) {
-		this.userRole = userRole;
-	}
-
 }

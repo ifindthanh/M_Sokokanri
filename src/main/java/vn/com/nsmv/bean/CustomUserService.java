@@ -2,16 +2,21 @@ package vn.com.nsmv.bean;
 
 import java.util.*;
 
+import javax.transaction.Transactional;
+
+import org.hibernate.Hibernate;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
 
 import vn.com.nsmv.dao.*;
 import vn.com.nsmv.entity.User;
+import vn.com.nsmv.entity.UserRole;
 
 public class CustomUserService implements UserDetailsService
 {
 	private UserDAO userDAO;
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
 		User user = this.userDAO.getUserByCd(username);
@@ -19,18 +24,21 @@ public class CustomUserService implements UserDetailsService
 		{
 			throw new UsernameNotFoundException("");
 		}
-		user.getUserRole().size();
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-			"ROLE_A");
-		// TODO get Role from Role table
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		authorities.add(authority);
+		Set<UserRole> roles = userDAO.getRoles(user.getId());
+		if (roles != null) {
+			for (UserRole item : roles) {
+				SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
+						"ROLE_" + item.getId().getRoleID());
+				authorities.add(authority);
+			}
+		}
+		
 		return new CustomUser(
 			user.getFullname(),
 			authorities,
 			user.getPassword(),
 			username,
-			"",
 			true,
 			true,
 			true,

@@ -91,7 +91,7 @@ public class UserDAOImpl implements UserDAO
 	public User getUserByCd(String email)
 	{
 		//lay thong tin user tu DB dua vao userCd
-		Session session = this.sessionFactory.getCurrentSession();
+		Session session = this.sessionFactory.openSession();
 		Query query = session
 			.createQuery(
 				"from User where email = :email");
@@ -276,6 +276,15 @@ public class UserDAOImpl implements UserDAO
 		{
 			return null;
 		}
+	}
+
+	public Set<UserRole> getRoles(Long userID) {
+		Session session = this.sessionFactory.openSession();
+		Query query = session
+			.createQuery(
+				"from UserRole where user_id = :user_id");
+		query.setLong("user_id", userID);
+		return new HashSet(query.list());
 	}
 
 }
