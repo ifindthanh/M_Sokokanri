@@ -267,7 +267,7 @@ public class Utils
 		{
 			return Constants.BLANK;
 		}
-		String result = ((CustomUser) authentication.getPrincipal()).getSokoCd();
+		String result = "";
 		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_S")))
 		{
 			//return sokoCd that is selected by super admin user

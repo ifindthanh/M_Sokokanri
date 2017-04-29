@@ -24,25 +24,32 @@
 							aria-hidden="true"></i> Đăng ký</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
-					<li><a href="<c:url value= "/logout"/>"><i class="fa"
-						aria-hidden="true"></i> <sec:authentication property="principal.displayName"/></a></li>
+					<li>
+						<a href="<c:url value= "/logout"/>"><sec:authentication property="principal.displayName"/> <i class="fa fa-sign-out"
+						aria-hidden="true"></i>
+						</a>
+					</li>
 				</sec:authorize>
 			</ul>
 		</div>
 	</div>
 	<div class="extra-content"
 		style="height: 150px; width: 100%; background-color: white"></div>
-	<nav class="navbar navbar-inverse" style="border-radius: 0">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">WebSiteName</a>
-			</div>
-			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#">Page 1</a></li>
-				<li><a href="#">Page 2</a></li>
-				<li><a href="#">Page 3</a></li>
-			</ul>
-		</div>
-	</nav>
+	<nav class="navbar navbar-inverse">
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="#">Home</a></li>
+			<li><a href="#">Giới thiệu</a></li>
+			<li><a href="#">Báo giá</a></li>
+			<sec:authorize access="isAuthenticated()">
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Đơn hàng</a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Tạo đơn hàng</a></li>
+				    	<li><a href="#">Chờ duyệt</a></li>
+				        <li><a href="#">Đã duyệt</a></li>
+				        <li><a href="#">Đã mua</a></li>
+				    </ul>
+				</li>
+			</sec:authorize>
+		</ul>
+			</nav>
 </div>
