@@ -35,7 +35,7 @@ public final class PaginationTaglib extends AbstractTaglib
 		out.write("<nav>");
 		out.write("<ul class=\"pagination\">");
 		out.write(
-			"<li style=\"margin-top: 8px;margin-right: 10px;\">&#x5404;&#x30DA;&#x30FC;&#x30B8;</li>"); // 各ページ
+			"<li style=\"margin-top: 8px;margin-right: 10px;\">&#x5404;&#x30DA;&#x30FC;&#x30B8;</li>");
 
 		// write max results picker
 		out.write("<li>");
@@ -51,7 +51,7 @@ public final class PaginationTaglib extends AbstractTaglib
 		out.write("</select>");
 		out.write("</li>");
 		out.write(
-			"<li style=\"margin-top: 8px; margin-left: 10px;\">&#x4EF6;&#x3092;&#x8868;&#x793A;</li>"); // 件を表示
+			"<li style=\"margin-top: 8px; margin-left: 10px;\">&#x4EF6;&#x3092;&#x8868;&#x793A;</li>"); // ä»¶ã‚’è¡¨ç¤º
 		out.write("</ul>");
 		out.write("</nav>");
 		out.write("</div>");
@@ -60,9 +60,9 @@ public final class PaginationTaglib extends AbstractTaglib
 		out.write("<nav>");
 		out.write("<ul class=\"pagination\">");
 		out.write("<li style=\"margin-top: 8px; margin-right: 20px;\">");
-		out.write("&#x5168;" + count + "&#x4EF6;  "); //out.write("全" + count + "件  ");
+		out.write("&#x5168;" + count + "&#x4EF6;  "); //out.write("å…¨" + count + "ä»¶  ");
 
-		String toAppendText = "&#x4EF6;&#x76EE;&#x3092;&#x8868;&#x793A;"; // 件目を表示
+		String toAppendText = "&#x4EF6;&#x76EE;&#x3092;&#x8868;&#x793A;"; // ä»¶ç›®ã‚’è¡¨ç¤º
 		if (this.count > this.steps)
 		{
 			if (this.offset == 0)

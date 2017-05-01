@@ -1,4 +1,4 @@
-.menu-header ul {
+menu-header ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -7,6 +7,7 @@
 
 .menu-header ul li {
     float: left;
+    list-style: none;
 }
 
 .menu-header ul li a {
@@ -26,3 +27,42 @@
 	float: right;
 }
 
+.pagination>li:last-child {
+	margin-right: 0;
+}
+
+.pagination>li {
+    display: inline;
+    float: left;
+    margin-right: 3px;
+}
+
+.pagination>li select option {
+	text-align:center;
+}
+
+.pagination>li a {
+	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size:15px;
+}
+.pagination>.disabled>a, 
+.pagination>.disabled>a:focus, 
+.pagination>.disabled>a:hover, 
+.pagination>.disabled>span, 
+.pagination>.disabled>span:focus, 
+.pagination>.disabled>span:hover {
+    background-color: #f2f2f2;
+    color:#d0d0d0;
+}
+
+.page_content, .div-bottom {
+	padding: 20px;
+}
+
+.order_table tr td, .order_table th td{
+	padding: 10px;
+}
+
+textarea.description {
+	resize: vertical;
+}

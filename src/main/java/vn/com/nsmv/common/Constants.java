@@ -39,7 +39,7 @@ public final class Constants
 	//amazon
 	//public static String LINK_ACTIVE_ACCOUNT = "http://52.77.6.193/sokokanri/register/active/";
 
-	public static String EMAIL_SUBJECT = "アカウント登録しました";
+	public static String EMAIL_SUBJECT = "ã‚¢ã‚«ã‚¦ãƒ³ãƒˆç™»éŒ²ã�—ã�¾ã�—ã�Ÿ";
 
 	public static class REQUEST_PARAMETER
 	{

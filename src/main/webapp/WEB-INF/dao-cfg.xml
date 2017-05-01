@@ -29,4 +29,12 @@
  <bean id="sokoDaoImpl" class="vn.com.nsmv.dao.impl.SokoDAOImpl">
      <property name="sessionFactory" ref="mySessionFactory" />
  </bean> 
+ 
+ <bean id="moneyExchangeDAOImpl" class="vn.com.nsmv.dao.impl.MoneyExchangeDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean> 
+ 
+  <bean id="itemDAOImpl" class="vn.com.nsmv.dao.impl.ItemDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean> 
 </beans>

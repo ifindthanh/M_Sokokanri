@@ -24,6 +24,7 @@ public class NyukoDAOImpl implements NyukoDAO
 	{
 		this.sessionFactory = sessionFactory;
 	}
+	
 	public List<Nyuko> getAllImportingItems(long lastRetrieveTime, String sokoCd)
 	{
 		Session session = this.sessionFactory.getCurrentSession();

@@ -1,18 +1,21 @@
+<%@page import="vn.com.nsmv.bean.LiveMoneyExchange"%>
 <%@page import="vn.com.nsmv.common.Utils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<%@ taglib prefix="rate" uri="/WEB-INF/taglibs/moneyExchange.tld" %>
 <link rel="shortcut icon" href="<c:url value="/resources/img/favicon.ico" />" />
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/fonts/css/font-awesome.min.css" />" rel="stylesheet">
 <script src="<c:url value="/resources/js/jquery.min.js" />"></script>
+
 <div>
 	<div class="top-block"
 		style="height: 50px; width: 100%; background-color: #9e9595">
 		<div class="block"
 			style="float: left; padding-top: 15px; padding-left: 20px;">Tỷ
-			giá</div>
+			giá <rate:money ></rate:money></div>
 		<div class="menu-header block">
 			<ul>
 				<sec:authorize access="!isAuthenticated()">
@@ -43,7 +46,8 @@
 			<sec:authorize access="isAuthenticated()">
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Đơn hàng</a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Tạo đơn hàng</a></li>
+						<li><a href="<c:url value= "/donhang/tao-moi"/>">Tạo đơn hàng</a></li>
+						<li><a href="<c:url value= "/donhang/tat-ca/0"/>">Tất cả đơn hàng</a></li>
 				    	<li><a href="#">Chờ duyệt</a></li>
 				        <li><a href="#">Đã duyệt</a></li>
 				        <li><a href="#">Đã mua</a></li>
