@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import vn.com.nsmv.common.Utils;
+
 @Entity
 @Table(name = "items")
 public class Item {
@@ -83,6 +85,12 @@ public class Item {
 	}
 	public void setTotal(Double total) {
 		this.total = total;
+	}
+	
+	// in case of all property is not set => we ignore this record
+	public boolean ignore() {
+		return Utils.isEmpty(this.name) && Utils.isEmpty(this.brand) && Utils.isEmpty(this.brand) && Utils.isEmpty(this.description) 
+				&& Utils.isEmpty(this.link) && this.cost == null && this.quantity == null;
 	}
 	
 }

@@ -19,4 +19,8 @@ public class Order {
 	public void addItem(Item item) {
 		this.allItems.add(item);
 	}
+	
+	public void removeItem(Item item) {
+		this.allItems.remove(item);
+	}
 }

@@ -70,8 +70,10 @@
 								<td></td>
 								<td></td>
 								<td><input class="form-control" type="text" disabled="disabled" /></td>
-								<td><a href="#"><i class="fa fa-save"
-										aria-hidden="true"></i>/<i class="deleteItem fa fa-trash-o"
+								<td><a class="myAction" href="#"><i class="fa fa-save"
+										aria-hidden="true"></i></a>
+										/
+									<a class="deleteItem myAction"><i class="fa fa-trash-o"
 										aria-hidden="true"></i></a></td>
 							</tr>
 						</c:forEach>
@@ -117,11 +119,16 @@
         	"info":     false
  	   	});
        	$(".deleteItem").click(function (){
+       		table
+            .row( $(this).parents('tr') )
+            .remove()
+            .draw();
        		table.column(0, {}).nodes().each( function (cell, i) {
-       			console.log(cell);
     			cell.innerHTML = i+1;
     		}).draw();
        	});
+       	
+       	
        	
        	$('#addRow').on( 'click', function () {
        		var index = parseInt($("#item_size").val());   
@@ -136,7 +143,7 @@
         		"",
         		"",
         		"<input class=\"description form-control\" type=\"text\" disabled=\"disabled\" name=\"allItems[" + index + "].total\"/>",
-        		"<a href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i>/<i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i></a>"
+        		"<a class= \"myAction\" href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i></a>/<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
             ] ).draw( false );
             table.column(0, {}).nodes().each( function (cell, i) {
     			cell.innerHTML = i+1;
@@ -148,7 +155,19 @@
 		} );
          
     });
+    function deleteRow(element){
+    	console.log($(element));
+   		table
+        .row( $(element).parents('tr') )
+        .remove()
+        .draw();
+   		table.column(0, {}).nodes().each( function (cell, i) {
+			cell.innerHTML = i+1;
+		}).draw();
+   	}
     
     </script>
+    
+    
 </body>
 </html>

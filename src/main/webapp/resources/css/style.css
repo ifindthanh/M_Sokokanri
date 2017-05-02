@@ -66,3 +66,8 @@ menu-header ul {
 textarea.description {
 	resize: vertical;
 }
+
+a.myAction {
+	padding: 5px;
+	cursor: pointer;
+}

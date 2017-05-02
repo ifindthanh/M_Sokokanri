@@ -23,8 +23,9 @@ public class OrdersServiceImpl implements OrdersService {
 	@Transactional(rollbackFor={SokokanriException.class})
 	public void createOrder(Order order) throws SokokanriException {
 		for (Item item : order.getAllItems()) {
-			if (item.getName().equals("a")) {
-				throw new SokokanriException("Break");
+			if (item.ignore()) {
+				order.removeItem(item);
+				continue;
 			}
 			this.itemDAO.add(item);
 		}
