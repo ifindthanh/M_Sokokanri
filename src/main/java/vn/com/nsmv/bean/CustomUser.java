@@ -17,6 +17,9 @@ public class CustomUser implements UserDetails
 	private final boolean accountNonLocked;
 	private final boolean credentialsNonExpired;
 	private final boolean enabled;
+	private final Long userId;
+	private final String phone;
+	private final String email;
 
 	public CustomUser(
 		String displayName,
@@ -26,7 +29,9 @@ public class CustomUser implements UserDetails
 		boolean accountNonExpired,
 		boolean accountNonLocked,
 		boolean credentialsNonExpired,
-		boolean enabled)
+		boolean enabled, Long userId,
+		String phone,
+		String email)
 	{
 		this.displayName = displayName;
 		this.authorities = authorities;
@@ -36,6 +41,9 @@ public class CustomUser implements UserDetails
 		this.accountNonLocked = accountNonLocked;
 		this.credentialsNonExpired = credentialsNonExpired;
 		this.enabled = enabled;
+		this.userId = userId;
+		this.phone = phone;
+		this.email = email;
 	}
 
 	public Collection<? extends GrantedAuthority> getAuthorities()
@@ -78,4 +86,17 @@ public class CustomUser implements UserDetails
 		return displayName;
 	}
 
+	public Long getUserId() {
+		return userId;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	
 }

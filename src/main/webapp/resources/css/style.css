@@ -67,7 +67,17 @@ textarea.description {
 	resize: vertical;
 }
 
+
 a.myAction {
 	padding: 5px;
 	cursor: pointer;
+}
+
+.row {
+	padding-top: 10px;
+}
+
+.message {
+	color: red;
+	text-align: center;
 }

@@ -57,16 +57,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${order.allItems}" varStatus="status">
+						<c:forEach var="item" items="${order.items}" varStatus="status">
 							<tr>
-								<form:input type="hidden" path="allItems[${status.index}].id" value="${item.id }"/>
+								<form:input type="hidden" path="items[${status.index}].id" value="${item.id }"/>
 								<td></td>
 								<td>
-									<form:input class="form-control" path="allItems[${status.index}].name" value="${item.name }" />
+									<form:input class="form-control" path="items[${status.index}].name" value="${item.name }" />
 								</td>
-								<td><form:input class="form-control" path="allItems[${status.index}].brand" type="text" /></td>
-								<td><form:input class="form-control" path="allItems[${status.index}].link" type="text" /></td>
-								<td><form:textarea class="description form-control" path="allItems[${status.index}].description" /></td>
+								<td><form:input class="form-control" path="items[${status.index}].brand" type="text" /></td>
+								<td><form:input class="form-control" path="items[${status.index}].link" type="text" /></td>
+								<td><form:textarea class="description form-control" path="items[${status.index}].description" /></td>
 								<td></td>
 								<td></td>
 								<td><input class="form-control" type="text" disabled="disabled" /></td>
@@ -82,8 +82,40 @@
 				<button id="addRow" type="button" class="btn btn-default">
 					<i class="fa fa-plus" aria-hidden="true" ></i> Thêm sản phẩm
 				</button>
+				
+				<hr/>
+				
+				<div class="col-xs-12">
+					<h4><label>Thông tin khách hàng</label></h4>
+					<div class = "row">
+						<label class="col-xs-2">Họ và tên: </label>
+						<div class="col-xs-4"><form:input path="fullName" type="text" class="form-control"/></div>
+					</div>
+					<div class = "row">
+						<label class="col-xs-2">Email: </label>
+						<div class="col-xs-4"><form:input path="email" type="text"  class="form-control"/></div>
+					</div>
+					<div class = "row">
+						<label class="col-xs-2">Số điện thoại: </label>
+						<div class="col-xs-4"><form:input path="phone" type="text"  class="form-control"/></div>
+					</div>
+					<div class = "row">
+						<label class="col-xs-2">Địa chỉ: </label>
+						<div class="col-xs-4"><form:input path="address" type="text"  class="form-control"/></div>
+					</div>
+					<div class = "row">
+						<label class="col-xs-2">Thành phố: </label>
+						<div class="col-xs-4"><form:input path="city" type="text"  class="form-control"/></div>
+					</div>
+					<div class = "row">
+						<label class="col-xs-2">Ghi chú: </label>
+						<div class="col-xs-4"><form:textarea path="note" class="form-control description" rows="4"/></div>
+					</div>
+				</div>
+				<br/>
 				<input type="submit" class="btn btn-primary" value="Tạo đơn hàng"/>
-				<input type="hidden" value="${order.allItems.size()}" id="item_size"/>
+				<input type="hidden" value="${order.items.size()}" id="item_size"/>
+				<form:input type="hidden" path = "userId" value="${order.userId}"/>
 			</form:form>
 
 		</div>
@@ -119,6 +151,10 @@
         	"info":     false
  	   	});
        	$(".deleteItem").click(function (){
+       		var agreeToDelete = confirm("Bạn có thực sự muốn xóa mặt hàng đã chọn?");
+       		if (!agreeToDelete) {
+       			return;
+       		}
        		table
             .row( $(this).parents('tr') )
             .remove()
@@ -136,13 +172,13 @@
     		$("#item_size").val(index + 1);
             table.row.add( [
             	"",
-            	"<input class=\"form-control\" type=\"text\" name=\"allItems[" + index + "].name\" value=\"\" />",
-        		"<input class=\"form-control\" type=\"text\" name=\"allItems[" + index + "].brand\" />",
-        		"<input class=\"form-control\" type=\"text\" name=\"allItems[" + index + "].link\" />",
-        		"<textarea class=\"description form-control\" name=\"allItems[" + index + "].description\"> </textarea>",
+            	"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].name\" value=\"\" />",
+        		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].brand\" />",
+        		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].link\" />",
+        		"<textarea class=\"description form-control\" name=\"items[" + index + "].description\"> </textarea>",
         		"",
         		"",
-        		"<input class=\"description form-control\" type=\"text\" disabled=\"disabled\" name=\"allItems[" + index + "].total\"/>",
+        		"<input class=\"description form-control\" type=\"text\" disabled=\"disabled\" name=\"items[" + index + "].total\"/>",
         		"<a class= \"myAction\" href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i></a>/<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
             ] ).draw( false );
             table.column(0, {}).nodes().each( function (cell, i) {
@@ -156,7 +192,10 @@
          
     });
     function deleteRow(element){
-    	console.log($(element));
+    	var agreeToDelete = confirm("Bạn có thực sự muốn xóa mặt hàng đã chọn?");
+   		if (!agreeToDelete) {
+   			return;
+   		}
    		table
         .row( $(element).parents('tr') )
         .remove()

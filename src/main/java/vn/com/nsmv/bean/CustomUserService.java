@@ -1,15 +1,18 @@
 package vn.com.nsmv.bean;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.Hibernate;
-import org.springframework.security.core.*;
-import org.springframework.security.core.authority.*;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import vn.com.nsmv.dao.*;
+import vn.com.nsmv.dao.UserDAO;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.entity.UserRole;
 
@@ -34,15 +37,8 @@ public class CustomUserService implements UserDetailsService
 			}
 		}
 		
-		return new CustomUser(
-			user.getFullname(),
-			authorities,
-			user.getPassword(),
-			username,
-			true,
-			true,
-			true,
-			true);
+		return new CustomUser(user.getFullname(), authorities, user.getPassword(), username, true, true, true, true,
+				user.getId(), user.getPhone(), user.getEmail());
 	}
 	public UserDAO getUserDAO()
 	{
