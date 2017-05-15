@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import vn.com.nsmv.common.Utils;
+
 
 @Entity
 @Table(name = "category")
@@ -32,6 +34,7 @@ public class Category implements java.io.Serializable {
 	private String city;
 	private String note;
 	private Long userId;
+	private String formattedId;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -146,5 +149,29 @@ public class Category implements java.io.Serializable {
 		this.updateDate = updateDate;
 	}
 	
+	@Transient
+	public String getFormattedId() {
+		return Utils.getFormattedId(this.id, 7);
+	}
+	public void setFormattedId(String formattedId) {
+		this.formattedId = formattedId;
+	}
 	
+	@Transient
+	public String getOrderPrice() {
+		if (this.items == null) {
+			return "";
+		}
+		double result = 0;
+		for (Item item : this.items) {
+			if (item.getTotal() == null) {
+				continue;
+			}
+			result += item.getTotal();
+		}
+		if (result == 0) {
+			return "";
+		}
+		return String.format("%.4f", result);
+	}
 }

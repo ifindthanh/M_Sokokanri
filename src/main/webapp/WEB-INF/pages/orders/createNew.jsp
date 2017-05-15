@@ -67,9 +67,9 @@
 								<td><form:input class="form-control" path="items[${status.index}].brand" type="text" /></td>
 								<td><form:input class="form-control" path="items[${status.index}].link" type="text" /></td>
 								<td><form:textarea class="description form-control" path="items[${status.index}].description" /></td>
-								<td></td>
-								<td></td>
-								<td><input class="form-control" type="text" disabled="disabled" /></td>
+								<td><form:input class="txtCost form-control" path="items[${status.index}].cost" type="text" onchange="computeMoney(this)" /></td>
+								<td><form:input class="txtQuantity form-control" path="items[${status.index}].quantity" type="text" onchange="computeMoney(this)"/></td>
+								<td><form:input class="txtTotal form-control" path="items[${status.index}].total" type="text" readonly="true"/></td>
 								<td><a class="myAction" href="#"><i class="fa fa-save"
 										aria-hidden="true"></i></a>
 										/
@@ -176,9 +176,9 @@
         		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].brand\" />",
         		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].link\" />",
         		"<textarea class=\"description form-control\" name=\"items[" + index + "].description\"> </textarea>",
-        		"",
-        		"",
-        		"<input class=\"description form-control\" type=\"text\" disabled=\"disabled\" name=\"items[" + index + "].total\"/>",
+        		"<input class=\"txtCost form-control\" type=\"text\" name=\"items[" + index + "].cost\" onchange=\"computeMoney(this)\" />",
+        		"<input class=\"txtQuantity form-control\" type=\"text\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
+        		"<input class=\"txtTotal form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].total\"/>",
         		"<a class= \"myAction\" href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i></a>/<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
             ] ).draw( false );
             table.column(0, {}).nodes().each( function (cell, i) {
@@ -204,6 +204,19 @@
 			cell.innerHTML = i+1;
 		}).draw();
    	}
+    
+    function computeMoney(element) {
+    	var currentElement = $(element);
+    	var txtTotal = currentElement.closest('tr').find(".txtTotal");
+    	var txtCost = currentElement.closest('tr').find(".txtCost");
+    	var txtQuantity = currentElement.closest('tr').find(".txtQuantity");
+    	if (txtCost.val() && txtCost.val() != "" 
+    			&& txtQuantity.val() && txtQuantity.val() != "") {
+    		txtTotal.val(parseInt(txtQuantity.val())* parseFloat(txtCost.val()));
+    	} else {
+    		txtTotal.val("");
+    	}
+    }
     
     </script>
     

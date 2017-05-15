@@ -14,6 +14,7 @@ public final class Constants
 	public static int STATUS_CHECKER = 4;
 	public static final String ROLE_I = "ROLE_I";
 	public static final String ROLE_C = "ROLE_C";
+	public static final String ROLE_U = "ROLE_U";
 	public static String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 	public static String URL_PATTERN = "^(http://|https://)?(www.)?([a-zA-Z0-9-_]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$";

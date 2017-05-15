@@ -1,147 +1,64 @@
 package vn.com.nsmv.javabean;
 
-import java.text.*;
-import java.util.*;
+import java.util.Map;
 
-import vn.com.nsmv.common.*;
+import vn.com.nsmv.common.Utils;
 
 /**
  */
 public final class SearchCondition
 {
-	private String sojoNo;
-	private String szNo;
-	private String buzaiKigo;
-	private String zaisitu;
-	private String kakoMongon;
-	private String dansunMongon;
-	private String nagasa;
-	private String dateStart;
-	private String dateEnd;
-	private boolean includeExportedItems = true; // by default, this option is not used in searching and displaying, it is used in exporting only. We do not set value of this property in other cases.
-	private String sokoCd;
+	private String brand;
+	private Integer status;
+	private String userId;
+	
+	public String getBrand() {
+		return brand;
+	}
 
-	public String getSojoNo()
-	{
-		return sojoNo;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
-	public void setSojoNo(String sojoNo)
-	{
-		this.sojoNo = sojoNo;
+	
+	
+	public String getUserId() {
+		return userId;
 	}
-	public String getSzNo()
-	{
-		return szNo;
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
-	public void setSzNo(String szNo)
+
+	public StringBuilder getSearching(SearchCondition searchCondition, Map<String,Object> params)
 	{
-		this.szNo = szNo;
-	}
-	public String getBuzaiKigo()
-	{
-		return buzaiKigo;
-	}
-	public void setBuzaiKigo(String buzaiKigo)
-	{
-		this.buzaiKigo = buzaiKigo;
-	}
-	public String getZaisitu()
-	{
-		return zaisitu;
-	}
-	public void setZaisitu(String zaisitu)
-	{
-		this.zaisitu = zaisitu;
-	}
-	public String getKakoMongon()
-	{
-		return kakoMongon;
-	}
-	public void setKakoMongon(String kakoMongon)
-	{
-		this.kakoMongon = kakoMongon;
-	}
-	public String getDansunMongon()
-	{
-		return dansunMongon;
-	}
-	public void setDansunMongon(String dansunMongon)
-	{
-		this.dansunMongon = dansunMongon;
-	}
-	public String getNagasa()
-	{
-		return nagasa;
-	}
-	public void setNagasa(String nagasa)
-	{
-		this.nagasa = nagasa;
-	}
-	public String getDateStart()
-	{
-		return dateStart;
-	}
-	public void setDateStart(String dateStart)
-	{
-		this.dateStart = dateStart;
-	}
-	public String getDateEnd()
-	{
-		return dateEnd;
-	}
-	public void setDateEnd(String dateEnd)
-	{
-		this.dateEnd = dateEnd;
-	}
-	public Date getDateStartDate()
-	{
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-		if (!Utils.isEmpty(dateStart))
+		StringBuilder searching = new StringBuilder();
+		if (!Utils.isEmpty(this.brand))
 		{
-			try
-			{
-				Date dtStart = format.parse(dateStart);
-				return dtStart;
-			}
-			catch (ParseException e)
-			{
-				return null;
-			}
+			searching.append(" and brand like %:brand%");
+			params.put("brand", this.brand);
 		}
-		return null;
-	}
-	public Date getDateEndDate()
-	{
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-		if (!Utils.isEmpty(dateEnd))
-		{
-			try
-			{
-				Date dtEnd = format.parse(dateEnd);
-				return dtEnd;
-			}
-			catch (ParseException e)
-			{
-				return null;
-			}
+		
+		if (this.userId != null) {
+			searching.append(" and user_id like %:userId%");
+			params.put("userId", this.userId);
 		}
-		return null;
+		
+		if (this.status != null) {
+			searching.append(" and status like %:status%");
+			params.put("status", this.status);
+		}
+		
+		return searching;
 	}
-	public boolean isIncludeExportedItems()
-	{
-		return this.includeExportedItems;
+
+	public Integer getStatus() {
+		return status;
 	}
-	public void setIncludeExportedItems(boolean includeExportedItems)
-	{
-		this.includeExportedItems = includeExportedItems;
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
-	public String getSokoCd()
-	{
-		return this.sokoCd;
-	}
-	public void setSokoCd(String sokoCd)
-	{
-		this.sokoCd = sokoCd;
-	}
+	
+	
 
 }

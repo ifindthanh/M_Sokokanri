@@ -285,62 +285,6 @@ public class NyukoDAOImpl implements NyukoDAO
 		{
 			return null;
 		}
-		if (!Utils.isEmpty(searchCondition.getSojoNo()))
-		{
-			searching.append(" and SOJO_NO like '%" + searchCondition.getSojoNo() + "%'");
-		}
-		if (!Utils.isEmpty(searchCondition.getSzNo()))
-		{
-			searching.append(" and SZ_NO like '%" + searchCondition.getSzNo() + "%'");
-		}
-		if (!Utils.isEmpty(searchCondition.getBuzaiKigo()))
-		{
-			searching.append(" and BUZAI_KIGO = '" + searchCondition.getBuzaiKigo() + "'");
-		}
-		if (!Utils.isEmpty(searchCondition.getZaisitu()))
-		{
-			searching.append(" and ZAISITU = '" + searchCondition.getZaisitu() + "'");
-		}
-		if (!Utils.isEmpty(searchCondition.getKakoMongon()))
-		{
-			searching.append(" and KAKO_MONGON = '" + searchCondition.getKakoMongon() + "'");
-		}
-		if (!Utils.isEmpty(searchCondition.getDansunMongon()))
-		{
-			searching
-				.append(" and DANSUN_MONGON like '%" + searchCondition.getDansunMongon() + "%'");
-		}
-		if (!Utils.isEmpty(searchCondition.getNagasa()))
-		{
-			searching.append(" and NAGASA = '" + searchCondition.getNagasa() + "'");
-		}
-
-		String dateField = "SAGYO_DATE"; //search by sagyoDate
-		if (!importing)
-		{
-			dateField = "NYKO_DATE"; //search by nykoDate
-		}
-
-		if (!Utils.isEmpty(searchCondition.getDateStart()))
-		{
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			searching.append(
-				" and " + dateField + " >= '" + format.format(searchCondition.getDateStartDate())
-					+ "'");
-		}
-		if (!Utils.isEmpty(searchCondition.getDateEnd()))
-		{
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar c = Calendar.getInstance();
-			c.setTime(searchCondition.getDateEndDate());
-			c.add(Calendar.DATE, 1); // number of days to add
-			String dtEnd = format.format(c.getTime()); // dt is now the new date
-			searching.append(" and " + dateField + " < '" + dtEnd + "'");
-		}
-		if (!searchCondition.isIncludeExportedItems())
-		{
-			searching.append(" and (EXPORTED_FLG is null or EXPORTED_FLG <> 1 )");
-		}
 
 		return searching;
 	}

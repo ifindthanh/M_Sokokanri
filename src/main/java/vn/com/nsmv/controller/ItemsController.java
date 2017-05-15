@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,49 +23,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
-import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
-import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
 @Controller
+@Scope("session")
 public class ItemsController {
-	private SearchCondition searchCondition = new SearchCondition();
-	private Integer offset;
-	private Integer maxResults;
 	
 	@Autowired
 	private OrdersService ordersService;
-	
-	@RequestMapping(value = "/donhang/tat-ca/0", method=RequestMethod.GET)
-	public String init()
-	{
-		this.offset = 0;
-		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		return "redirect:/donhang/tat-ca";
-	}
-	
-	@RequestMapping(value = "/donhang/tat-ca", method=RequestMethod.GET)
-	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
-		if (this.maxResults == null)
-		{
-			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		}
-		
-		if (offset != null)
-		{
-			this.offset = offset;
-		}
-		
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
-		
-		return new ModelAndView("/orders/allOrders");
-	}
 	
 	@RequestMapping(value = "/donhang/{orderId}", method=RequestMethod.GET)
 	public ModelAndView viewAnOrder(HttpServletRequest request, Model model, @PathVariable Long orderId) {

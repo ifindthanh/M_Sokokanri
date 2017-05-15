@@ -288,4 +288,18 @@ public class Utils
 		}
 		return "";
 	}
+	
+	public static boolean isUser(){
+		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		for (GrantedAuthority item : authorities) {
+			if (Constants.ROLE_U.equals(item.getAuthority())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static String getFormattedId (Object id, int nbOfDigit) {
+		return String.format("%0" + nbOfDigit + "d", id);
+	}
 }

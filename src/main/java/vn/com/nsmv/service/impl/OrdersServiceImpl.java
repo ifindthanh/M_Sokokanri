@@ -16,6 +16,8 @@ import vn.com.nsmv.dao.ItemDAO;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.entity.User;
+import vn.com.nsmv.javabean.SearchCondition;
+import vn.com.nsmv.javabean.SortCondition;
 import vn.com.nsmv.service.OrdersService;
 
 @Service("ordersService")
@@ -34,6 +36,7 @@ public class OrdersServiceImpl implements OrdersService {
 		category.setUser(user);
 		category.setStatus(0);
 		Long categoryId = categoryDAO.add(category);
+		
 		for (Item item : category.getItems()) {
 			if (item.ignore()) {
 				category.removeItem(item);
@@ -82,6 +85,16 @@ public class OrdersServiceImpl implements OrdersService {
 
 	public void deleteItemById(Long id) throws SokokanriException {
 		this.itemDAO.deleteById(id);
+	}
+
+	@Transactional
+	public List<Category> getAllOrders(SearchCondition searchCondition, SortCondition sortCondition, Integer offset, Integer maxResults) throws SokokanriException {
+		return this.categoryDAO.getAllOrders(searchCondition, sortCondition, offset, maxResults);
+	}
+
+	@Transactional
+	public int countAllOrders(SearchCondition searchCondition) throws SokokanriException {
+		return this.categoryDAO.countAllOrders(searchCondition);
 	}
 	
 }
