@@ -41,7 +41,7 @@ public class LiveMoneyExchange {
 
 	@Scheduled(fixedDelay = 3600000)
 	public void sendLiveRequest() {
-
+		/*
 		// The following line initializes the HttpGet Object with the URL in
 		// order to send a request
 		HttpGet get = new HttpGet(BASE_URL + ENDPOINT + "?access_key=" + ACCESS_KEY + "&currencies=VND,GBP");
@@ -63,7 +63,7 @@ public class LiveMoneyExchange {
 		} catch (Exception e) {
 			logger.debug("==DEBUG== Cannot update exchange money " + e.getMessage());
 		}
-
+		*/
 	}
 
 }

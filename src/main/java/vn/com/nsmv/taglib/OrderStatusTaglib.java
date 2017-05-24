@@ -10,6 +10,12 @@ public class OrderStatusTaglib extends AbstractTaglib {
 	@Override
 	protected void printUI(JspWriter writer) throws IOException {
 		switch (this.status) {
+		case -2:
+			writer.write("<p style=\"color: #f44283\">Đã ghi chú</p>");
+			break;
+		case -1:
+			writer.write("<p style=\"color: #f44283\">Đã ghi chú</p>");
+			break;
 		case 0:
 			writer.write("<p style=\"color: #293a56\">Chờ duyệt</p>");
 			break;

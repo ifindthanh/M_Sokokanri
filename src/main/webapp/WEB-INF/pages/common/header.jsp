@@ -46,10 +46,18 @@
 			<sec:authorize access="isAuthenticated()">
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Đơn hàng</a>
 					<ul class="dropdown-menu">
-						<li><a href="<c:url value= "/donhang/tao-moi"/>">Tạo đơn hàng</a></li>
-						<li><a href="<c:url value= "/donhang/tat-ca/0"/>">Tất cả đơn hàng</a></li>
-				    	<li><a href="#">Chờ duyệt</a></li>
-				        <li><a href="#">Đã duyệt</a></li>
+						<sec:authorize access="hasRole('ROLE_U')">
+							<li><a href="<c:url value= "/donhang/tao-moi"/>">Tạo đơn hàng</a></li>
+						</sec:authorize>
+						<sec:authorize access="hasAnyRole('ROLE_U','ROLE_A')">
+							<li><a href="<c:url value= "/donhang/tat-ca/0"/>">Tất cả đơn hàng</a></li>
+						</sec:authorize>
+						<sec:authorize access="hasAnyRole('ROLE_C','ROLE_A','ROLE_U')">
+				    		<li><a href="<c:url value= "/donhang/cho-duyet/0"/>">Chờ duyệt</a></li>
+				    	</sec:authorize>
+				    	<sec:authorize access="hasAnyRole('ROLE_B','ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/cho-mua/0"/>">Đã duyệt</a></li>
+				        </sec:authorize>
 				        <li><a href="#">Đã mua</a></li>
 				    </ul>
 				</li>

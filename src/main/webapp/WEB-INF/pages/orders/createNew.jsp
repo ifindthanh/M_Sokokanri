@@ -79,9 +79,19 @@
 						</c:forEach>
 					</tbody>
 				</table>
-				<button id="addRow" type="button" class="btn btn-default">
-					<i class="fa fa-plus" aria-hidden="true" ></i> Thêm sản phẩm
-				</button>
+				
+				
+				<div style="position: relative">
+					<div>
+						<button id="addRow" type="button" class="btn btn-default">
+						<i class="fa fa-plus" aria-hidden="true" ></i> Thêm sản phẩm
+					</button>
+					</div>
+					<div style="float:right; position: absolute; right: 100px; top: 0px;">
+						<label>Tổng tiền : <span id="total_price"></span></label>
+					</div>
+					
+				</div>
 				
 				<hr/>
 				
@@ -216,6 +226,12 @@
     	} else {
     		txtTotal.val("");
     	}
+    	var total_price = 0;
+    	$(".txtTotal").each(function (){
+    		if ($(this).val() && $(this).val() != "")
+    			total_price += parseFloat($(this).val());
+    	});
+    	$("#total_price").html(total_price);
     }
     
     </script>

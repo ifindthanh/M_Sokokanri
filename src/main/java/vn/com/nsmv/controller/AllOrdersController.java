@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
@@ -66,7 +66,7 @@ public class AllOrdersController {
 		}
 		try {
 			if (Utils.isUser()) {
-				String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
 			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,

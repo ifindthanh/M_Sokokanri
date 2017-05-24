@@ -83,4 +83,23 @@ public class ItemDAOImpl implements ItemDAO {
 		}
 	}
 
+	public Item findById(Long id) throws SokokanriException {
+		try
+		{
+			Session session = this.sessionFactory.getCurrentSession();
+			Query query = session.createQuery("from Item where id = :id");
+			List list = query.setParameter("id", id).list();
+			if (list == null || list.isEmpty()) {
+				return null;
+			}
+			Item item = (Item) list.get(0);
+			return item;
+		}
+		catch (Exception ex)
+		{
+			logger.debug(ex);
+			throw new SokokanriException(ex);
+		}
+	}
+
 }

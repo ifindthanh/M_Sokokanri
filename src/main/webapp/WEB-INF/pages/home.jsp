@@ -33,6 +33,7 @@
 <script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
 <script>
 function login(){
+	$("#errorMessage").html("");
 	$.ajax({
 		type : "POST",
 		url : "j_spring_security_check",

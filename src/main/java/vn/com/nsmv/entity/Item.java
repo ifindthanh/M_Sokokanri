@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import vn.com.nsmv.common.Utils;
 
@@ -25,9 +26,11 @@ public class Item implements java.io.Serializable {
 	private Double cost;
 	private Integer quantity;
 	private Double total;
+	private Double realPrice;
 	private Category category;
 	private Date createdDate;
 	private Date updateDate;
+	private Boolean cannotBuy;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,6 +98,14 @@ public class Item implements java.io.Serializable {
 		this.total = total;
 	}
 	
+	@Column(name = "REAL_PRICE")
+	public Double getRealPrice() {
+		return realPrice;
+	}
+	public void setRealPrice(Double realPrice) {
+		this.realPrice = realPrice;
+	}
+	
 	// in case of all property is not set => we ignore this record
 	public boolean ignore() {
 		return Utils.isEmpty(this.name) && Utils.isEmpty(this.brand) && Utils.isEmpty(this.brand) && Utils.isEmpty(this.description) 
@@ -125,5 +136,5 @@ public class Item implements java.io.Serializable {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-
+	
 }

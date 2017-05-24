@@ -10,4 +10,6 @@ public interface ItemDAO {
 	public List<Item> getItemsInCategory(Long categoryId) throws SokokanriException;
 	public void saveOrUpdate(Item item) throws SokokanriException;
 	public void deleteById(Long id) throws SokokanriException;
+	public Item findById(Long id) throws SokokanriException;
+	
 }

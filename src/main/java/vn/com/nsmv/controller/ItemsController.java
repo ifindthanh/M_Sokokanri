@@ -23,7 +23,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
+import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
+import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.service.OrdersService;
@@ -42,6 +44,15 @@ public class ItemsController {
 			if (category == null) {
 				throw new SokokanriException("Đơn hàng không tồn tại");
 			}
+			if (Utils.isUser()) {
+				if (!category.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+					throw new SokokanriException("Bạn không được phép thao tác với đơn hàng này");
+				}
+			}
+			
+			boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || (Utils.isUser() && category.getStatus() != null && category.getStatus() == 0 ));
+			
+			model.addAttribute("read_only", Boolean.valueOf(readOnly));
 			category.setUserId(category.getUser().getId());
 			model.addAttribute("category", category);
 			return new ModelAndView("/orders/orderDetail");

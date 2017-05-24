@@ -14,6 +14,8 @@ public final class Constants
 	public static int STATUS_CHECKER = 4;
 	public static final String ROLE_I = "ROLE_I";
 	public static final String ROLE_C = "ROLE_C";
+	public static final String ROLE_B = "ROLE_B";
+	public static final String ROLE_A = "ROLE_A";
 	public static final String ROLE_U = "ROLE_U";
 	public static String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";

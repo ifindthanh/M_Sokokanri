@@ -299,6 +299,19 @@ public class Utils
 		return false;
 	}
 	
+	public static boolean hasRole(String role){
+		if (Utils.isEmpty(role)) {
+			return false;
+		}
+		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		for (GrantedAuthority item : authorities) {
+			if (role.equals(item.getAuthority())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static String getFormattedId (Object id, int nbOfDigit) {
 		return String.format("%0" + nbOfDigit + "d", id);
 	}

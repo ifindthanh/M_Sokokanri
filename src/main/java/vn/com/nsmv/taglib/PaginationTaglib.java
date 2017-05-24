@@ -142,6 +142,8 @@ public final class PaginationTaglib extends AbstractTaglib
 				this.constructLink((nbOfPages - 1) * this.steps, "&raquo;", "disabled", true));
 		else
 			out.write(this.constructLink((nbOfPages - 1) * this.steps, "&raquo;", null, false));
+		
+		out.write("</div>");
 	}
 
 	private void writeOption(Writer out, int number, boolean selected) throws IOException
