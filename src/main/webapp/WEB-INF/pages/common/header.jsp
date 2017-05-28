@@ -58,7 +58,9 @@
 				    	<sec:authorize access="hasAnyRole('ROLE_B','ROLE_A','ROLE_U')">
 				        	<li><a href="<c:url value= "/donhang/cho-mua/0"/>">Đã duyệt</a></li>
 				        </sec:authorize>
-				        <li><a href="#">Đã mua</a></li>
+				        <sec:authorize access="hasAnyRole('ROLE_T1','ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/da-mua/0"/>">Đã mua</a></li>
+				        </sec:authorize>
 				    </ul>
 				</li>
 			</sec:authorize>

@@ -35,6 +35,7 @@ public class Category implements java.io.Serializable {
 	private String note;
 	private Long userId;
 	private String formattedId;
+	private String transferId;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -149,6 +150,13 @@ public class Category implements java.io.Serializable {
 		this.updateDate = updateDate;
 	}
 	
+	@Column(name = "TRANSFER_ID")
+	public String getTransferId() {
+		return transferId;
+	}
+	public void setTransferId(String transferId) {
+		this.transferId = transferId;
+	}
 	@Transient
 	public String getFormattedId() {
 		return Utils.getFormattedId(this.id, 7);
@@ -174,4 +182,24 @@ public class Category implements java.io.Serializable {
 		}
 		return String.format("%.4f", result);
 	}
+	
+	@Transient
+	public String getOrderRealPrice() {
+		if (this.items == null) {
+			return "";
+		}
+		double result = 0;
+		for (Item item : this.items) {
+			if (item.getRealPrice() == null) {
+				continue;
+			}
+			result += item.getRealPrice();
+		}
+		if (result == 0) {
+			return "";
+		}
+		return String.format("%.4f", result);
+	}
+	
+	
 }

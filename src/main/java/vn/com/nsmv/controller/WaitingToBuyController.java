@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
@@ -75,6 +77,10 @@ public class WaitingToBuyController {
 			this.searchCondition = new SearchCondition(1);
 		}
 		try {
+			if (Utils.isUser()) {
+				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+				this.searchCondition.setUserId(userId);
+			}
 			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
 			int count = this.ordersService.countAllOrders(this.searchCondition);
@@ -99,20 +105,7 @@ public class WaitingToBuyController {
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
 		}
-		return new ModelAndView("redirect:cho-duyet");
-	}
-	
-	@RequestMapping(value = "/donhang/mua-don-hang", method=RequestMethod.GET)
-	public ModelAndView approval(@RequestParam Long id, Model model){
-		if (!Utils.hasRole(Constants.ROLE_C) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền duyệt đơn hàng");
-		}
-		try {
-			this.ordersService.approve(id);
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ModelAndView("redirect:cho-duyet");
+		return new ModelAndView("redirect:cho-mua");
 	}
 	
 	@RequestMapping(value = "/donhang/mua-hang", method=RequestMethod.POST)

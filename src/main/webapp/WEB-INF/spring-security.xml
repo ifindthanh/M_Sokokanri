@@ -36,7 +36,7 @@
         <intercept-url pattern="/register/*" access="permitAll" />
         <intercept-url pattern="/api/*" access="permitAll" />
  
-        <intercept-url pattern="/import/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/cho-duyet" access="hasAnyRole('ROLE_U', 'ROLE_C', 'ROLE_A')" />
         <intercept-url pattern="/imported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/export/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/exported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />

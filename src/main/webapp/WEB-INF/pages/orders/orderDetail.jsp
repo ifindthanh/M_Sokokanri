@@ -115,6 +115,11 @@
 								<input type="button" class="btn btn-default openNote" value="Ghi chú đơn hàng" data-id="-2"/>
 							</sec:authorize>
 						</c:if>
+						<c:if test="${category.status eq 2}">
+							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+								<input type="button" class="btn btn-primary" value="Đã chuyển hàng ở nước ngoài" data-toggle="modal" data-target="#transferModal"/>
+							</sec:authorize>
+						</c:if>
 					</div>
 					<div style="float:right; position: absolute; right: 30px; top: 0px;">
 						<label>Tổng tiền : <span id="total_price">${category.getOrderPrice() }</span></label>
@@ -184,7 +189,29 @@
 					<textarea id="error_information" class="description form-control" placeholder="Điền thông tin sai sót của đơn hàng" style="width: 100%; height: 150px"></textarea>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
+					<button type="button" class="btn btn-primary" onclick="transfer()">Ghi chú</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div id="transferModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Ghi chú vận đơn</h4>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="transferId" class="description form-control" placeholder="Ghi chú vận đơn" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="transfer()">Ghi chú</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -364,6 +391,17 @@
     	if (submitForm) {
     		$("#order_form").attr("action", "mua-hang");
     		$("#order_form").submit();
+    	}
+    }
+    
+    function transfer(){
+    	var check = confirm("Bạn có thật sự muốn chuyển đơn hàng này sang đã chuyển tại nước ngoài?");
+    	if (check) {
+    		if (!$("#transferId") || $("#transferId").val() == "") {
+    			alert("Vui lòng ghi chú vận đơn.");
+    			return;
+    		}
+    		window.location.href = "ghi-chu-van-don?id="+$("#orderId").val()+"&transferID=" + $("#transferId").val();
     	}
     }
     

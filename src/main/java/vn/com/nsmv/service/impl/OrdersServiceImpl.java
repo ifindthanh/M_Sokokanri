@@ -163,5 +163,33 @@ public class OrdersServiceImpl implements OrdersService {
 		this.categoryDAO.saveCategory(category);
 		
 	}
+
+	@Transactional
+	public void transferOrder(Long id, String tranferID) throws SokokanriException {
+		this.transferAnOrder(id, tranferID);
+	}
+
+	private void transferAnOrder(Long id, String tranferID) throws SokokanriException {
+		Category category = this.categoryDAO.getById(id);
+		if (category == null) {
+			throw new SokokanriException("Đơn hàng không tồn tại");
+		}
+		if (category.getStatus() == null || (category.getStatus() != 2)) {
+			throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+		}
+		category.setTransferId(tranferID);
+		category.setStatus(3);
+		this.categoryDAO.saveCategory(category);
+	}
+
+	@Transactional
+	public void transferOrders(Set<Long> selectedItems, String tranferID) throws SokokanriException {
+		for (Long id : selectedItems) {
+			this.transferAnOrder(id, tranferID);
+		}
+		
+	}
+
+
 	
 }

@@ -41,17 +41,18 @@
 	<div id="page_content">
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 row" style="height: 150px">
-				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
+				
 			</div>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>						
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th>Trạng thái</th>
 							<th>Tổng tiền</th>
+							<th>Tổng tiền thực tế</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -74,6 +75,9 @@
 									${item.getOrderPrice() }
 								</td>
 								<td>
+									${item.getOrderRealPrice() }
+								</td>
+								<td>
 									<a href="${item.id }"><i class="fa fa-info"
 										aria-hidden="true"></i> View</a>
 								</td>
@@ -92,10 +96,32 @@
 			
 			<div class="col-sm-12" style="margin-bottom: 20px;">
 				<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-					<i class="fa" aria-hidden="true" ></i> Duyệt đơn hàng
+					<i class="fa" aria-hidden="true" ></i> Chuyển hàng tại nước ngoài
 				</button>
 			</div>
 		</form>
+	</div>
+	
+	<!-- Modal -->
+	<div id="addNoteModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Ghi chú vận đơn</h4>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="transfer_information" class="description form-control" placeholder="Ghi chú vận đơn" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
 	</div>
 	
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
@@ -127,6 +153,7 @@
 	 	   	"ordering": false,
 	        "info":     false
  	   	});
+		
     });
     
     function selectItem(id, element) {
@@ -134,7 +161,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "cho-duyet/chon-don-hang?id=" + id,
+    			url : "da-mua/chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -143,7 +170,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "cho-duyet/bo-chon-don-hang?id=" + id,
+    			url : "da-mua/bo-chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -152,7 +179,7 @@
     	}
     }
     
-	function selectAllItems(element) {
+    function selectAllItems(element) {
 		var chkbox = $(element);
 		var ids = "";
 		$(".order_id").each(function (){
@@ -162,7 +189,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "cho-duyet/chon-tat-ca?ids="+ids,
+    			url : "da-mua/chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -172,7 +199,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "cho-duyet/bo-chon-tat-ca?ids="+ids,
+    			url : "da-mua/bo-chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -182,17 +209,29 @@
     		});
     	}
     }
+    
 	
 	function approval(){
+		
 		if ($('.order_id:checkbox:checked').length == 0) {
-			alert("Vui lòng chọn đơn hàng.");
+			alert("Vui lòng chọn một đơn hàng.");
 			return;
 		}
+		
 		var check = confirm("Các thông tin về đơn hàng sẽ không thể thay đổi nữa. Bạn có thật sự muốn phê duyệt đơn hàng này?");
     	if (check) {
-    		window.location.href = "duyet-nhieu-don-hang";
+    		$('#addNoteModal').modal('show');
     	}
 	}
+	
+	function addNote () {
+		if (!$("#transfer_information") || $("#transfer_information").val() == "") {
+			alert("Vui lòng ghi chú vận đơn");
+			return;
+		}
+		window.location.href = "chuyen-don-hang?tranferID=" + $("#transfer_information").val(); 
+	}
+	
     </script>
 </body>
 </html>

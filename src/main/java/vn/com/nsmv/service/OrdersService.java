@@ -22,4 +22,6 @@ public interface OrdersService {
 	public void noteAnOrder(Long id, String content) throws SokokanriException;
 	public void saveRealPrice(Long id, Double value) throws SokokanriException;
 	public void noteABuyingOrder(Long id, String content) throws SokokanriException;
+	public void transferOrder(Long id, String tranferID) throws SokokanriException;
+	public void transferOrders(Set<Long> selectedItems, String tranferID) throws SokokanriException;
 }
