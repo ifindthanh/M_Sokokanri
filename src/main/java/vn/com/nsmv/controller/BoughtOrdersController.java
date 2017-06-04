@@ -46,6 +46,7 @@ public class BoughtOrdersController {
 	{
 		this.offset = 0;
 		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+		this.selectedItems.clear();
 		return "redirect:/donhang/da-mua";
 	}
 	
@@ -72,7 +73,7 @@ public class BoughtOrdersController {
 	
 	private void doBusiness(Model model) {
 		if (this.searchCondition == null) {
-			this.searchCondition = new SearchCondition(1);
+			this.searchCondition = new SearchCondition(2);
 		}
 		try {
 			if (Utils.isUser()) {
@@ -104,6 +105,7 @@ public class BoughtOrdersController {
 				throw new SokokanriException("Vui lòng ghi chú vận đơn");
 			}
 			this.ordersService.transferOrders(this.selectedItems, tranferID);
+			this.selectedItems.clear();
 			
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());

@@ -92,3 +92,19 @@ a.myAction {
 	width: 100%;
 	z-index: 20000;
 }
+
+.left_align {
+	text-align: left;
+}
+
+.right_align {
+	text-align: right;
+}
+
+.top_margin_5 {
+	margin-top: 5px;
+}
+
+.txtQuantity {
+	width: 100px
+}

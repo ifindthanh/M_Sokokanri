@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
+<%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
 <head>
@@ -42,17 +43,17 @@
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 row" style="height: 150px">
-				
-				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
 			</div>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
+							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>						
 							<th>Mã đơn hàng</th>
+							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
 							<th>Trạng thái</th>
-							<th>Tổng tiền</th>
+							<th>Tổng tiền thực tế</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -60,8 +61,12 @@
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td>
+									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}"/>
+								</td>
+								<td>
 									${item.formattedId}
 								</td>
+								<th>${item.transferId}</th>
 								<td>
 									${item.user.fullname}
 								</td>
@@ -69,7 +74,7 @@
 									<order:status status="${item.status }"/>
 								</td>
 								<td>
-									${item.getOrderPrice() }
+									${item.getOrderRealPrice() }
 								</td>
 								<td>
 									<a href="${item.id }"><i class="fa fa-info"
@@ -88,6 +93,11 @@
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			
+			<div class="col-sm-12" style="margin-bottom: 20px;">
+				<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
+					<i class="fa" aria-hidden="true" ></i> Chuyển về Việt Nam
+				</button>
+			</div>
 		</form>
 	</div>
 	
@@ -120,8 +130,71 @@
 	 	   	"ordering": false,
 	        "info":     false
  	   	});
+		
     });
     
+    function selectItem(id, element) {
+    	var chkbox = $(element);
+    	if (chkbox.is(':checked')) {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen/chon-don-hang?id=" + id,
+    			success : function(result) {
+    			},
+    			error : function() {
+    			}
+    		});
+    	} else {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen/bo-chon-don-hang?id=" + id,
+    			success : function(result) {
+    			},
+    			error : function() {
+    			}
+    		});
+    	}
+    }
+    
+    function selectAllItems(element) {
+		var chkbox = $(element);
+		var ids = "";
+		$(".order_id").each(function (){
+			$(this).prop('checked', chkbox.is(':checked'));
+			ids += $(this).attr("order_id")+",";
+		})
+    	if (chkbox.is(':checked')) {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen/chon-tat-ca?ids="+ids,
+    			success : function(result) {
+    				
+    			},
+    			error : function() {
+    			}
+    		});
+    	} else {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen/bo-chon-tat-ca?ids="+ids,
+    			success : function(result) {
+    				
+    			},
+    			error : function() {
+    				
+    			}
+    		});
+    	}
+    }
+    
+	
+	function approval(){
+		var check = confirm("Bạn có thật sự muốn phê duyệt đơn hàng này?");
+    	if (check) {
+    		window.location.href = "chuyen-nhieu-don-hang-vn"; 
+    	}
+	}
+	
 	
     </script>
 </body>

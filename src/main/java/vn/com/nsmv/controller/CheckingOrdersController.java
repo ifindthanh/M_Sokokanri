@@ -1,7 +1,10 @@
 package vn.com.nsmv.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,47 +16,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.common.Constants.SESSION_PARAM;
 import vn.com.nsmv.entity.Category;
+import vn.com.nsmv.javabean.ExportingSearchCondition;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
 @Controller
 @Scope("session")
-public class WaitingToBuyController {
+public class CheckingOrdersController {
 	
-	private SearchCondition searchCondition = new SearchCondition(1);
+	private SearchCondition searchCondition = new SearchCondition(4);
 	private Integer offset;
 	private Integer maxResults;
 	
 	@Autowired
 	private OrdersService ordersService;
 	
-	private Set<Long> selectedItems = new HashSet<Long>();
-	
-	@RequestMapping(value = "/donhang/cho-mua/0", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-chuyen-vn/0", method=RequestMethod.GET)
 	public String init()
 	{
 		this.offset = 0;
 		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		this.selectedItems.clear();
-		this.searchCondition = new SearchCondition(1);
-		return "redirect:/donhang/cho-mua";
+		this.searchCondition =  new SearchCondition(4);
+		return "redirect:/donhang/da-chuyen-vn";
 	}
 	
-	@RequestMapping(value = "/donhang/cho-mua", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-chuyen-vn", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
 		if (this.maxResults == null)
 		{
@@ -71,12 +72,52 @@ public class WaitingToBuyController {
 		}
 		
 		this.doBusiness(model);
-		return new ModelAndView("/orders/buyingOrders");
+		return new ModelAndView("/orders/transferedToVNOrders");
 	}
+	
+	
+	@RequestMapping(value = "/donhang/da-chuyen-vn", method = RequestMethod.POST)
+	public RedirectView search(
+		HttpServletRequest request,
+		Model model,
+		SearchCondition searchCondition,
+		Integer offset,
+		Integer maxResults)
+	{
+		if (this.maxResults == null)
+		{
+			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+		}
+		
+		if (offset != null)
+		{
+			this.offset = offset;
+		}
+		
+		if (maxResults != null)
+		{
+			this.maxResults = maxResults;
+		}
+		
+		if (searchCondition != null) 
+		{
+			this.searchCondition = searchCondition;
+		}
+		
+		return new RedirectView("da-chuyen-vn-tim-kiem");
+	}
+	
+	@RequestMapping(value = "/donhang/da-chuyen-vn-tim-kiem", method = RequestMethod.GET)
+	public String searchResult(HttpServletRequest request, Model model)
+	{
+		this.doBusiness(model);
+		return "/orders/transferedToVNOrders";
+	}
+	
 	
 	private void doBusiness(Model model) {
 		if (this.searchCondition == null) {
-			this.searchCondition = new SearchCondition(1);
+			this.searchCondition = new SearchCondition(4);
 		}
 		try {
 			if (Utils.isUser()) {
@@ -96,43 +137,27 @@ public class WaitingToBuyController {
 		}
 	}
 	
-	
-	@RequestMapping(value = "/donhang/da-mua-nhieu-don-hang", method=RequestMethod.GET)
-	public ModelAndView approvalOrders(Model model){
-		if (!Utils.hasRole(Constants.ROLE_C) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền duyệt đơn hàng");
-		}
+	@RequestMapping(value = "/donhang/nhap-kho", method=RequestMethod.GET)
+	public ModelAndView importToStorage(Model model) {
 		try {
-			this.ordersService.approveOrders(this.selectedItems);
-			this.selectedItems.clear();
+			List<Category> allOrders = this.ordersService.getAllOrders(new SearchCondition(4), null, null,
+					null);
+			Map<Long, List<Category>> classificationOrders = new HashMap<Long, List<Category>>();
+			for (Category item : allOrders) {
+				Long id = item.getUser().getId();
+				if (classificationOrders.containsKey(id)) {
+					classificationOrders.get(id).add(item);
+				} else {
+					ArrayList<Category> orders = new ArrayList<Category>();
+					orders.add(item);
+					classificationOrders.put(id, orders);
+				}
+			}
+			this.ordersService.importToStorage(classificationOrders);
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
 		}
-		return new ModelAndView("redirect:cho-mua");
+		return new ModelAndView("redirect:/donhang/da-chuyen-vn/0");
 	}
 	
-	@RequestMapping(value = "/donhang/mua-hang", method=RequestMethod.POST)
-	public ModelAndView approvalBuy(@ModelAttribute("order")Category category, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes){
-		try {
-			category.setStatus(2);
-			this.ordersService.saveOrder(category);
-			return new ModelAndView("redirect:/donhang/" + category.getId());
-		} catch (SokokanriException ex) {
-			redirectAttributes.addFlashAttribute(
-					"message", ex.getErrorMessage());
-			redirectAttributes.addFlashAttribute(
-					"order", category);
-			return new ModelAndView("redirect:/donhang/luu-error");
-		}
-	}
-	
-	@RequestMapping(value = "/donhang/ghi-chu-mua", method=RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseResult<String>> noteAnOrder(@RequestParam Long id, @RequestParam String content, Model model){
-		try {
-			this.ordersService.noteABuyingOrder(id, content);
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
-	}
 }

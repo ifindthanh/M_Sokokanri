@@ -31,6 +31,9 @@ public class OrderStatusTaglib extends AbstractTaglib {
 		case 4:
 			writer.write("<p style=\"color: #293a56\">Đã chuyển về VN</p>");
 			break;
+		case 5:
+			writer.write("<p style=\"color: #293a56\">Đã lưu kho</p>");
+			break;
 
 		default:
 			break;

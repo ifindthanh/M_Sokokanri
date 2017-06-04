@@ -6,6 +6,7 @@
 <%@ taglib prefix="rate" uri="/WEB-INF/taglibs/moneyExchange.tld" %>
 <link rel="shortcut icon" href="<c:url value="/resources/img/favicon.ico" />" />
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/css/login.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/fonts/css/font-awesome.min.css" />" rel="stylesheet">
 <script src="<c:url value="/resources/js/jquery.min.js" />"></script>
@@ -61,9 +62,60 @@
 				        <sec:authorize access="hasAnyRole('ROLE_T1','ROLE_A','ROLE_U')">
 				        	<li><a href="<c:url value= "/donhang/da-mua/0"/>">Đã mua</a></li>
 				        </sec:authorize>
+				        <sec:authorize access="hasAnyRole('ROLE_T2','ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/da-chuyen/0"/>">Đã chuyển hàng tại nước ngoài</a></li>
+				        </sec:authorize>
+				        <sec:authorize access="hasAnyRole('ROLE_K','ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/da-chuyen-vn/0"/>">Đã chuyển về Việt Nam</a></li>
+				        </sec:authorize>
+				        <sec:authorize access="hasAnyRole('ROLE_BG','ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/da-nhap-kho/0"/>">Đã nhập kho</a></li>
+				        </sec:authorize>
+				        <sec:authorize access="hasAnyRole('ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/da-xuat-hd/0"/>">Đã xuất hóa đơn</a></li>
+				        </sec:authorize>
 				    </ul>
 				</li>
 			</sec:authorize>
 		</ul>
 			</nav>
 </div>
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="loginmodal-container">
+				<h1>Login to Your Account</h1>
+				<p id= "errorMessage" class="error"></p>
+				
+				<br>
+				<form name='f' class ="login_form" id ="login_form" action="${pageContext.request.contextPath}/j_spring_security_check" method='POST'>
+					<input type="text" name="email" placeholder="Email"> 
+					<input type="password" name="password" placeholder="Password"> 
+					<input type="button" onclick="login()" class="login loginmodal-submit" value="Login">
+				</form>
+
+				<div class="login-help">
+					<a href="#" onclick="login()">Register</a> - <a href="#">Forgot Password</a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		function login(){
+			$("#errorMessage").html("");
+			$.ajax({
+				type : "POST",
+				url : "${pageContext.request.contextPath}/j_spring_security_check",
+				data: $("#login_form").serialize(),
+				success : function(result) {
+					window.location.href = window.location.href.split("#")[0];
+				},
+				error : function() {
+					$("#errorMessage").html("User name hoac password khong dung");
+				}
+			
+			});
+		}
+	</script>

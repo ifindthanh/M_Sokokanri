@@ -6,7 +6,7 @@ import vn.com.nsmv.entity.MoneyExchange;
 public interface MoneyExchangeDAO {
 	public void updateMoneyExchange(MoneyExchange moneyExchange) throws SokokanriException;
 
-	public MoneyExchange getMoneyExchange();
+	public MoneyExchange getMoneyExchange() throws SokokanriException;
 
 	public void add(MoneyExchange moneyExchange) throws SokokanriException;
 }

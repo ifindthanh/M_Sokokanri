@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 
 @Entity
@@ -137,4 +138,34 @@ public class Item implements java.io.Serializable {
 		this.updateDate = updateDate;
 	}
 	
+	public void validate() throws SokokanriException{
+		if (Utils.isEmpty(this.name) && Utils.isEmpty(this.link) 
+				&& this.quantity == null && this.cost == null) {
+			return;
+		}
+		
+		if (Utils.isEmpty(this.name)) {
+			throw new SokokanriException("Tên mặt hàng không được để trống");
+		}
+		
+		if (Utils.isEmpty(this.link)) {
+			throw new SokokanriException("Đường dẫn đến mặt hàng không được để trống");
+		}
+		
+		if (this.quantity == null) {
+			throw new SokokanriException("Số lượng không được để trống");
+		}
+		
+		if (this.quantity < 1) {
+			throw new SokokanriException("Số lượng phải lớn hơn 0");
+		}
+		
+		if (this.cost == null) {
+			throw new SokokanriException("Đơn giá không được để trống");
+		}
+		
+		if (this.cost <= 0) {
+			throw new SokokanriException("Đơn giá phải lớn hơn 0");
+		}
+	}
 }

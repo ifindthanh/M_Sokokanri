@@ -40,5 +40,9 @@
  
  <bean id="categoryDAOImpl" class="vn.com.nsmv.dao.impl.CategoryDAOImpl">
      <property name="sessionFactory" ref="mySessionFactory" />
- </bean>  
+ </bean>
+ 
+  <bean id="billDAOImpl" class="vn.com.nsmv.dao.impl.BillDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean>    
 </beans>

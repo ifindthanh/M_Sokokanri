@@ -1,10 +1,14 @@
 package vn.com.nsmv.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,21 +22,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
-import vn.com.nsmv.entity.Category;
+import vn.com.nsmv.entity.Bill;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
 @Controller
 @Scope("session")
-public class WaitingToApprove {
+public class BillExportedController {
 	
-	private SearchCondition searchCondition = new SearchCondition(0);
+	private SearchCondition searchCondition = new SearchCondition(6);
 	private Integer offset;
 	private Integer maxResults;
 	
@@ -41,16 +46,17 @@ public class WaitingToApprove {
 	
 	private Set<Long> selectedItems = new HashSet<Long>();
 	
-	@RequestMapping(value = "/donhang/cho-duyet/0", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-xuat-hd/0", method=RequestMethod.GET)
 	public String init()
 	{
 		this.offset = 0;
 		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+		this.searchCondition =  new SearchCondition(6);
 		this.selectedItems.clear();
-		return "redirect:/donhang/cho-duyet";
+		return "redirect:/donhang/da-xuat-hd";
 	}
 	
-	@RequestMapping(value = "/donhang/cho-duyet", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-xuat-hd", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
 		if (this.maxResults == null)
 		{
@@ -68,44 +74,88 @@ public class WaitingToApprove {
 		}
 		
 		this.doBusiness(model);
-		return new ModelAndView("/orders/allWaitingOrders");
+		return new ModelAndView("/orders/billExportedItems");
 	}
+	
+	
+	@RequestMapping(value = "/donhang/da-xuat-hd", method = RequestMethod.POST)
+	public RedirectView search(
+		HttpServletRequest request,
+		Model model,
+		SearchCondition searchCondition,
+		Integer offset,
+		Integer maxResults)
+	{
+		this.selectedItems.clear();
+		
+		if (this.maxResults == null)
+		{
+			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+		}
+		
+		if (offset != null)
+		{
+			this.offset = offset;
+		}
+		
+		if (maxResults != null)
+		{
+			this.maxResults = maxResults;
+		}
+		
+		if (searchCondition != null) 
+		{
+			this.searchCondition = searchCondition;
+		}
+		
+		return new RedirectView("da-xuat-hd-tim-kiem");
+	}
+	
+	@RequestMapping(value = "/donhang/da-xuat-hd-tim-kiem", method = RequestMethod.GET)
+	public String searchResult(HttpServletRequest request, Model model)
+	{
+		this.doBusiness(model);
+		return "/orders/billExportedItems";
+	}
+	
 	
 	private void doBusiness(Model model) {
 		if (this.searchCondition == null) {
-			this.searchCondition = new SearchCondition(0);
+			this.searchCondition = new SearchCondition(6);
 		}
 		try {
 			if (Utils.isUser()) {
 				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
+			List<Bill> allBills = this.ordersService.getAllBills(this.searchCondition, this.offset,
 					this.maxResults);
-			int count = this.ordersService.countAllOrders(this.searchCondition);
-			model.addAttribute("allOrders", allOrders);
+			int count = this.ordersService.countAllBills(this.searchCondition);
+			model.addAttribute("allBills", allBills);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("count", count);
+			model.addAttribute("selectedItems", this.selectedItems);
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 		}
 	}
 	
-	@RequestMapping(value = "/donhang/cho-duyet/chon-don-hang", method=RequestMethod.GET)
+	
+	@RequestMapping(value = "/donhang/xuat-hd/chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
 		this.selectedItems.add(id);
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/cho-duyet/bo-chon-don-hang", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/xuat-hd/bo-chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
 		this.selectedItems.remove(id);
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/cho-duyet/chon-tat-ca", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/xuat-hd/chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
 		String[] allIds = ids.split(",");
 		for (String item : allIds) {
@@ -122,7 +172,7 @@ public class WaitingToApprove {
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/cho-duyet/bo-chon-tat-ca", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/xuat-hd/bo-chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
 		String[] allIds = ids.split(",");
 		for (String item : allIds) {
@@ -135,54 +185,6 @@ public class WaitingToApprove {
 			} catch (Exception ex) {
 				continue;
 			}
-		}
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/donhang/duyet-nhieu-don-hang", method=RequestMethod.GET)
-	public ModelAndView approvalOrders(Model model){
-		if (!Utils.hasRole(Constants.ROLE_C) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền duyệt đơn hàng");
-		}
-		try {
-			this.ordersService.approveOrders(this.selectedItems);
-			this.selectedItems.clear();
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ModelAndView("redirect:cho-duyet");
-	}
-	
-	@RequestMapping(value = "/donhang/duyet-don-hang", method=RequestMethod.GET)
-	public ModelAndView approval(@RequestParam Long id, Model model){
-		//TODO check money, permission
-		if (!Utils.hasRole(Constants.ROLE_C) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền duyệt đơn hàng");
-		}
-		try {
-			this.ordersService.approve(id);
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ModelAndView("redirect:cho-duyet");
-	}
-	
-	@RequestMapping(value = "/donhang/ghi-chu", method=RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseResult<String>> noteAnOrder(@RequestParam Long id, @RequestParam String content, Model model){
-		try {
-			this.ordersService.noteAnOrder(id, content);
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/donhang/mua-mat-hang", method=RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseResult<String>> saveRealPrice(@RequestParam Long id, @RequestParam Double value){
-		try {
-			this.ordersService.saveRealPrice(id, value);
-		} catch (SokokanriException ex) {
-			return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, ex.getErrorMessage(), null), HttpStatus.OK);
 		}
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}

@@ -31,13 +31,17 @@ public class MoneyExchangeDAOImpl implements MoneyExchangeDAO {
 	}
 
 	@Transactional
-	public MoneyExchange getMoneyExchange() {
+	public MoneyExchange getMoneyExchange() throws SokokanriException {
 		Session session = sessionFactory.getCurrentSession();
-		List list = session.createQuery("from MoneyExchange where id = '1'").list();
-		if (list == null || list.isEmpty()) {
-			return null;
+		try {
+			List list = session.createQuery("from MoneyExchange where id = '1'").list();
+			if (list == null || list.isEmpty()) {
+				return null;
+			}
+			return (MoneyExchange) list.get(0);
+		} catch (Exception ex) {
+			throw new SokokanriException(ex);
 		}
-		return (MoneyExchange) list.get(0);
 	}
 
 	@Transactional

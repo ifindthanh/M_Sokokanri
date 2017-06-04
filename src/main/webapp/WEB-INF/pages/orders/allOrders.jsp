@@ -39,6 +39,7 @@
 		<jsp:include page="/WEB-INF/pages/common/header.jsp" />
 	</div>
 	<div id="page_content">
+		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 row" style="height: 150px">
 				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>

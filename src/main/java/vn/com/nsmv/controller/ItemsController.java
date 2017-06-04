@@ -129,7 +129,7 @@ public class ItemsController {
 					"message", ex.getErrorMessage());
 			redirectAttributes.addFlashAttribute(
 					"order", category);
-			return new ModelAndView("redirect:/donhang/luu-error");
+			return new ModelAndView("redirect:/donhang/" + category.getId());
 		}
 	}
 	

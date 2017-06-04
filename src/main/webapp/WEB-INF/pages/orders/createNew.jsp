@@ -41,7 +41,8 @@
 	</div>
 	<div id="page_content">
 		<div class="col-sm-12">
-			<form:form method="POST" action="tao-moi" modelAttribute="order">
+			<p class="error">${message }</p>
+			<form:form id="createNewForm" method="POST" action="tao-moi" modelAttribute="order">
 				<table id="tableList" class="order_table">
 					<thead>
 						<tr class="headings" role="row">
@@ -62,13 +63,13 @@
 								<form:input type="hidden" path="items[${status.index}].id" value="${item.id }"/>
 								<td></td>
 								<td>
-									<form:input class="form-control" path="items[${status.index}].name" value="${item.name }" />
+									<form:input class="txtName form-control" path="items[${status.index}].name" value="${item.name }" />
 								</td>
 								<td><form:input class="form-control" path="items[${status.index}].brand" type="text" /></td>
-								<td><form:input class="form-control" path="items[${status.index}].link" type="text" /></td>
+								<td><form:input class="txtLink form-control" path="items[${status.index}].link" type="text" /></td>
 								<td><form:textarea class="description form-control" path="items[${status.index}].description" /></td>
 								<td><form:input class="txtCost form-control" path="items[${status.index}].cost" type="text" onchange="computeMoney(this)" /></td>
-								<td><form:input class="txtQuantity form-control" path="items[${status.index}].quantity" type="text" onchange="computeMoney(this)"/></td>
+								<td><form:input class="txtQuantity form-control" path="items[${status.index}].quantity" type="number" min ="1" max="999" onchange="computeMoney(this)"/></td>
 								<td><form:input class="txtTotal form-control" path="items[${status.index}].total" type="text" readonly="true"/></td>
 								<td><a class="myAction" href="#"><i class="fa fa-save"
 										aria-hidden="true"></i></a>
@@ -99,19 +100,19 @@
 					<h4><label>Thông tin khách hàng</label></h4>
 					<div class = "row">
 						<label class="col-xs-2">Họ và tên: </label>
-						<div class="col-xs-4"><form:input path="fullName" type="text" class="form-control"/></div>
+						<div class="col-xs-4"><form:input id="fullName" path="fullName" type="text" class="form-control"/></div>
 					</div>
 					<div class = "row">
 						<label class="col-xs-2">Email: </label>
-						<div class="col-xs-4"><form:input path="email" type="text"  class="form-control"/></div>
+						<div class="col-xs-4"><form:input id="email" path="email" type="text"  class="form-control"/></div>
 					</div>
 					<div class = "row">
 						<label class="col-xs-2">Số điện thoại: </label>
-						<div class="col-xs-4"><form:input path="phone" type="text"  class="form-control"/></div>
+						<div class="col-xs-4"><form:input id="phone" path="phone" type="text"  class="form-control"/></div>
 					</div>
 					<div class = "row">
 						<label class="col-xs-2">Địa chỉ: </label>
-						<div class="col-xs-4"><form:input path="address" type="text"  class="form-control"/></div>
+						<div class="col-xs-4"><form:input id="address" path="address" type="text"  class="form-control"/></div>
 					</div>
 					<div class = "row">
 						<label class="col-xs-2">Thành phố: </label>
@@ -123,7 +124,7 @@
 					</div>
 				</div>
 				<br/>
-				<input type="submit" class="btn btn-primary" value="Tạo đơn hàng"/>
+				<input type="submit" class="btn btn-primary" value="Tạo đơn hàng" onclick="return validateForm()"/>
 				<input type="hidden" value="${order.items.size()}" id="item_size"/>
 				<form:input type="hidden" path = "userId" value="${order.userId}"/>
 			</form:form>
@@ -182,12 +183,12 @@
     		$("#item_size").val(index + 1);
             table.row.add( [
             	"",
-            	"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].name\" value=\"\" />",
+            	"<input class=\"txtName form-control\" type=\"text\" name=\"items[" + index + "].name\" value=\"\" />",
         		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].brand\" />",
-        		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].link\" />",
+        		"<input class=\"txtLink form-control\" type=\"text\" name=\"items[" + index + "].link\" />",
         		"<textarea class=\"description form-control\" name=\"items[" + index + "].description\"> </textarea>",
         		"<input class=\"txtCost form-control\" type=\"text\" name=\"items[" + index + "].cost\" onchange=\"computeMoney(this)\" />",
-        		"<input class=\"txtQuantity form-control\" type=\"text\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
+        		"<input class=\"txtQuantity form-control\" type=\"number\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
         		"<input class=\"txtTotal form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].total\"/>",
         		"<a class= \"myAction\" href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i></a>/<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
             ] ).draw( false );
@@ -232,6 +233,89 @@
     			total_price += parseFloat($(this).val());
     	});
     	$("#total_price").html(total_price);
+    }
+    
+    function validateForm() {
+    	var BreakException = {};
+    	var errorMessage = "";
+    	try {
+	    	$("#createNewForm table tr").each(function(){
+	    		var name = $(this).find(".txtName").val();
+	    		var link = $(this).find(".txtLink").val();
+	    		var quantity = $(this).find(".txtQuantity").val();
+	    		var cost = $(this).find(".txtCost").val();
+	    		if ((!name || name == "") && (!link || link == "")
+	    				&& (!quantity || quantity == "") && (!cost || cost == "")) {
+	    			return;
+	    		}
+	    		
+	    		if (!name || name == "") {
+	    			errorMessage = "Tên mặt hàng không được để trống";
+	    			$(this).find(".txtName").focus();
+	    			throw BreakException;
+	    		}
+	    		
+	    		if (!link || link == "") {
+	    			errorMessage = "Đường dẫn đến mặt hàng không được để trống";
+	    			$(this).find(".txtLink").focus();
+	    			throw BreakException;
+	    		}
+	    		
+	    		if (!quantity || quantity == "") {
+	    			errorMessage = "Số lượng không được để trống";
+	    			$(this).find(".txtQuantity").focus();
+	    			throw BreakException;
+	    		}
+	    		
+	    		if (parseInt(quantity) < 1) {
+	    			errorMessage = "Số lượng phải lớn hơn 0";
+	    			$(this).find(".txtQuantity").focus();
+	    			throw BreakException;
+	    		}
+	    		
+	    		if (!cost || cost == "") {
+	    			errorMessage = "Đơn giá không được để trống";
+	    			$(this).find(".txtCost").focus();
+	    			throw BreakException;
+	    		}
+	    		
+	    		if (parseFloat(cost) <= 0) {
+	    			errorMessage = "Đơn giá phải lớn hơn 0";
+	    			$(this).find(".txtCost").focus();
+	    			throw BreakException;
+	    		}
+	    	})
+    	} catch (e) {
+    		if (e !== BreakException) throw e;
+    	}
+    	
+    	if (errorMessage != "") {
+    		alert (errorMessage);
+        	return false;
+    	}
+    	
+    	if (!$("#fullName").val() || $("#fullName").val() == "") {
+    		alert("Vui lòng điền họ và tên của bạn");
+    		return false;
+    	}
+    	
+    	if (!$("#email").val() || $("#email").val() == "") {
+    		alert("Vui lòng điền địa chỉ email");
+    		return false;
+    	}
+    	
+    	if (!$("#phone").val() || $("#phone").val() == "") {
+    		alert("Vui lòng điền số điện thoại");
+    		return false;
+    	}
+    	
+    	if (!$("#address").val() || $("#address").val() == "") {
+    		alert("Vui lòng điền địa chỉ nhận hàng");
+    		return false;
+    	}
+    		
+    	return true;
+    	
     }
     
     </script>

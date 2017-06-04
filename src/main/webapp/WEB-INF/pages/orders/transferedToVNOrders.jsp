@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
+<%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
 <head>
@@ -40,19 +41,30 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="tat-ca" method="POST">
-			<div class="col-sm-12 row" style="height: 150px">
-				
-				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
+		<form action="da-chuyen-vn" method="POST">
+			<div class="col-xs-12 row" style="height: 150px">
+				<div class="row">
+					<label class="col-xs-2 right_align top_margin_5" >Vận đơn: </label>
+					<div class="col-xs-4">
+						<input type="hidden" name="status" value="${ searchCondition.status}" />
+						<input type="text" name= "transferId" value="${ searchCondition.transferId}" class="form-control">
+					</div>
+					<div>
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
+						</button>
+					</div>
+				</div>
 			</div>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
 							<th>Mã đơn hàng</th>
+							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
 							<th>Trạng thái</th>
-							<th>Tổng tiền</th>
+							<th>Tổng tiền thực tế</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -62,6 +74,7 @@
 								<td>
 									${item.formattedId}
 								</td>
+								<th>${item.transferId}</th>
 								<td>
 									${item.user.fullname}
 								</td>
@@ -69,7 +82,7 @@
 									<order:status status="${item.status }"/>
 								</td>
 								<td>
-									${item.getOrderPrice() }
+									${item.getOrderRealPrice() }
 								</td>
 								<td>
 									<a href="${item.id }"><i class="fa fa-info"
@@ -88,6 +101,11 @@
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			
+			<div class="col-sm-12" style="margin-bottom: 20px;">
+				<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
+					<i class="fa" aria-hidden="true" ></i> Nhập kho
+				</button>
+			</div>
 		</form>
 	</div>
 	
@@ -120,8 +138,16 @@
 	 	   	"ordering": false,
 	        "info":     false
  	   	});
+		
     });
     
+	function approval(){
+		var check = confirm("Thao tác này không thể hoàn lại, bạn có muốn tiến hành nhập kho cho tất cả các đơn hàng?");
+    	if (check) {
+    		window.location.href = "nhap-kho";
+    	}
+	}
+	
 	
     </script>
 </body>

@@ -12,6 +12,8 @@ public final class SearchCondition
 	private Integer status;
 	private Long userId;
 	private String customerName; 
+	private String transferId;
+	private Long billId;
 	
 	
 	public SearchCondition() {
@@ -68,6 +70,16 @@ public final class SearchCondition
 			// TODO join to user table
 		}
 		
+		if (!Utils.isEmpty(this.transferId)) {
+			searching.append(" and transferId like :transferId");
+			params.put("transferId", "%" + this.transferId + "%");
+		}
+		
+		if (this.billId != null) {
+			searching.append(" and billId like :billId");
+			params.put("billId", "%" + this.billId + "%");
+		}
+		
 		return searching;
 	}
 
@@ -86,7 +98,22 @@ public final class SearchCondition
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-	
+
+	public String getTransferId() {
+		return transferId;
+	}
+
+	public void setTransferId(String transferId) {
+		this.transferId = transferId;
+	}
+
+	public Long getBillId() {
+		return billId;
+	}
+
+	public void setBillId(Long billId) {
+		this.billId = billId;
+	}
 	
 
 }

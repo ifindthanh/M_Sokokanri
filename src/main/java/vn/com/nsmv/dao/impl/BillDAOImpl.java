@@ -14,13 +14,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import vn.com.nsmv.common.SokokanriException;
-import vn.com.nsmv.dao.CategoryDAO;
+import vn.com.nsmv.dao.BillDAO;
+import vn.com.nsmv.entity.Bill;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.javabean.SearchCondition;
-import vn.com.nsmv.javabean.SortCondition;
 
-public class CategoryDAOImpl implements CategoryDAO {
-	private static final Logger logger = Logger.getLogger(CategoryDAOImpl.class);
+public class BillDAOImpl implements BillDAO{
+
+	private static final Logger logger = Logger.getLogger(BillDAOImpl.class);
 	private SessionFactory sessionFactory;
 
 	public void setSessionFactory(SessionFactory sessionFactory)
@@ -28,33 +29,12 @@ public class CategoryDAOImpl implements CategoryDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
-	public Long add(Category category) throws SokokanriException {
-		try
-		{
-			category.setCreatedDate(new Date());
-			Session session = this.sessionFactory.getCurrentSession();
-			session.persist(category);
-			return category.getId();
-		}
-		catch (Exception ex)
-		{
-			logger.debug(ex);
-			throw new SokokanriException(ex);
-		}
-		
-	}
-
-	public Category getById(Long categoryId) throws SokokanriException {
+	public Long add(Bill bill) throws SokokanriException {
 		try
 		{
 			Session session = this.sessionFactory.getCurrentSession();
-			Query query = session.createQuery("from Category where id = :category_id");
-			List list = query.setParameter("category_id", categoryId).list();
-			if (list == null || list.isEmpty()) {
-				return null;
-			}
-			Category category = (Category) list.get(0);
-			return category;
+			session.persist(bill);
+			return bill.getId();
 		}
 		catch (Exception ex)
 		{
@@ -63,32 +43,23 @@ public class CategoryDAOImpl implements CategoryDAO {
 		}
 	}
 
-	public void saveCategory(Category category) throws SokokanriException {
-		try
-		{
-			category.setUpdateDate(new Date());
-			Session session = this.sessionFactory.getCurrentSession();
-			session.saveOrUpdate(category);
-		}
-		catch (Exception ex)
-		{
-			logger.debug(ex);
-			throw new SokokanriException(ex);
-		}
-	}
-
-	
-	public List<Category> getAllOrders(SearchCondition searchCondition, SortCondition sortCondition, Integer offset,
-			Integer maxResults) throws SokokanriException {
+	public List<Bill> getAllBills(SearchCondition searchCondition, Integer offset, Integer maxResults)
+			throws SokokanriException {
 		try
 		{
 			Session session = this.sessionFactory.getCurrentSession();
 			StringBuilder sql = new StringBuilder();
-			sql.append("from Category where id <> 0");
+			sql.append("from Category c JOIN c.bill b where b.id > 0");
 			Map<String, Object> params = new HashMap<String, Object>();
-			if (searchCondition != null) {
-				sql.append(searchCondition.getSearching(searchCondition, params));
+			if (searchCondition.getStatus() != null) {
+				sql.append(" and c.status = :status ");
+				params.put("status", searchCondition.getStatus());
 			}
+			if (searchCondition.getBillId() != null) {
+				sql.append(" and b.id = :billId ");
+				params.put("billId", searchCondition.getBillId());
+			}
+			sql.append("group by b.id");
 			Query query = session.createQuery(sql.toString());
 			Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
 			while (iterator.hasNext()) {
@@ -104,9 +75,16 @@ public class CategoryDAOImpl implements CategoryDAO {
 			{
 				query = query.setMaxResults(maxResults);
 			}
-			List<Category> result = query.list();
-			if (result == null) {
-				result = new ArrayList<Category>();
+			List<Object[]> resultSet = query.list();
+			List<Bill> result = new ArrayList<Bill>();
+			if (resultSet != null) {
+				for (Object[] item : resultSet) {
+					if (Bill.class.isInstance(item[0])) {
+						result.add((Bill) item[0]);
+						continue;
+					} 
+					result.add((Bill) item[1]);
+				}
 			}
 			return result;
 		}
@@ -117,14 +95,20 @@ public class CategoryDAOImpl implements CategoryDAO {
 		}
 	}
 
-	public int countAllOrders(SearchCondition searchCondition) throws SokokanriException {
+	public int countAllBills(SearchCondition searchCondition) throws SokokanriException {
 		try
 		{
 			Session session = this.sessionFactory.getCurrentSession();
-			StringBuilder sql = new StringBuilder("select COUNT(*) from Category where id <> 0 ");
+			StringBuilder sql = new StringBuilder();
+			sql.append("select count (distinct b.id) from Category c JOIN c.bill b where b.id > 0");
 			Map<String, Object> params = new HashMap<String, Object>();
-			if (searchCondition != null) {
-				sql.append(searchCondition.getSearching(searchCondition, params));
+			if (searchCondition.getStatus() != null) {
+				sql.append(" and c.status = :status ");
+				params.put("status", searchCondition.getStatus());
+			}
+			if (searchCondition.getBillId() != null) {
+				sql.append(" and b.id = :billId ");
+				params.put("billId", searchCondition.getBillId());
 			}
 			Query query = session.createQuery(sql.toString());
 			Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
@@ -140,4 +124,24 @@ public class CategoryDAOImpl implements CategoryDAO {
 			throw new SokokanriException(ex);
 		}
 	}
+
+	public Bill getById(Long id) throws SokokanriException {
+		try
+		{
+			Session session = this.sessionFactory.getCurrentSession();
+			Query query = session.createQuery("from Bill where id = :bill_id");
+			List list = query.setParameter("bill_id", id).list();
+			if (list == null || list.isEmpty()) {
+				return null;
+			}
+			Bill bill = (Bill) list.get(0);
+			return bill;
+		}
+		catch (Exception ex)
+		{
+			logger.debug(ex);
+			throw new SokokanriException(ex);
+		}
+	}
+	
 }

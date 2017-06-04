@@ -36,6 +36,7 @@ public class Category implements java.io.Serializable {
 	private Long userId;
 	private String formattedId;
 	private String transferId;
+	private Bill bill;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -157,12 +158,28 @@ public class Category implements java.io.Serializable {
 	public void setTransferId(String transferId) {
 		this.transferId = transferId;
 	}
+	
+	@ManyToOne(fetch = FetchType.EAGER )
+	@JoinColumn(name = "BILL_ID", nullable = true)
+	public Bill getBill() {
+		return bill;
+	}
+	public void setBill(Bill bill) {
+		this.bill = bill;
+	}
+
 	@Transient
 	public String getFormattedId() {
 		return Utils.getFormattedId(this.id, 7);
 	}
+	
 	public void setFormattedId(String formattedId) {
 		this.formattedId = formattedId;
+	}
+	
+	@Transient
+	public String getFormattedId(Long anId) {
+		return Utils.getFormattedId(anId, 7);
 	}
 	
 	@Transient

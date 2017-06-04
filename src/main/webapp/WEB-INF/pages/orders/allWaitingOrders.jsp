@@ -39,6 +39,7 @@
 		<jsp:include page="/WEB-INF/pages/common/header.jsp" />
 	</div>
 	<div id="page_content">
+		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 row" style="height: 150px">
 				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
@@ -89,12 +90,13 @@
 					uri="${pageContext.request.contextPath}/donhang/tat-ca"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			
-			<div class="col-sm-12" style="margin-bottom: 20px;">
-				<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-					<i class="fa" aria-hidden="true" ></i> Duyệt đơn hàng
-				</button>
-			</div>
+			<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
+				<div class="col-sm-12" style="margin-bottom: 20px;">
+					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
+						<i class="fa" aria-hidden="true" ></i> Duyệt đơn hàng
+					</button>
+				</div>
+			</sec:authorize>
 		</form>
 	</div>
 	

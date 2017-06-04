@@ -62,6 +62,7 @@ public final class Constants
 	public static final String SPACE = " ";
 	public static final String SPACE_68 = "                                                                    ";
 	public static final String NON_SET_SUKKAYOTEIBI = "00000000";
+	public static final String ROLE_BG = "BG";
 	
 
 	public static class PHONE_TYPE
