@@ -37,6 +37,18 @@ public class Category implements java.io.Serializable {
 	private String formattedId;
 	private String transferId;
 	private Bill bill;
+	private Long approver;
+	private Date approvedDate;
+	private Long buyer;
+	private Date boughtDate;
+	private Long transported;
+	private Date transportedDate;
+	private Long transporterVn;
+	private Date transportedVnDate;
+	private Long checker;
+	private Date checkedDate;
+	private Long informer;
+	private Date informedDate;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -216,6 +228,102 @@ public class Category implements java.io.Serializable {
 			return "";
 		}
 		return String.format("%.4f", result);
+	}
+	
+	@Column(name = "APPROVER")
+	public Long getApprover() {
+		return approver;
+	}
+	public void setApprover(Long approver) {
+		this.approver = approver;
+	}
+	
+	@Column(name = "APPROVED_DATE")
+	public Date getApprovedDate() {
+		return approvedDate;
+	}
+	public void setApprovedDate(Date approvedDate) {
+		this.approvedDate = approvedDate;
+	}
+	
+	@Column(name = "BUYER")
+	public Long getBuyer() {
+		return buyer;
+	}
+	public void setBuyer(Long buyer) {
+		this.buyer = buyer;
+	}
+	
+	@Column(name = "BOUGHT_DATE")
+	public Date getBoughtDate() {
+		return boughtDate;
+	}
+	public void setBoughtDate(Date boughtDate) {
+		this.boughtDate = boughtDate;
+	}
+	
+	@Column(name = "TRANSPORTER")
+	public Long getTransported() {
+		return transported;
+	}
+	public void setTransported(Long transported) {
+		this.transported = transported;
+	}
+	
+	@Column(name = "TRANSPORTED_DATE")
+	public Date getTransportedDate() {
+		return transportedDate;
+	}
+	public void setTransportedDate(Date transportedDate) {
+		this.transportedDate = transportedDate;
+	}
+	
+	@Column(name = "TRANSPORTER_VN")
+	public Long getTransporterVn() {
+		return transporterVn;
+	}
+	public void setTransporterVn(Long transporterVn) {
+		this.transporterVn = transporterVn;
+	}
+	
+	@Column(name = "TRANSPORTED_VN_DATE")
+	public Date getTransportedVnDate() {
+		return transportedVnDate;
+	}
+	public void setTransportedVnDate(Date transportedVnDate) {
+		this.transportedVnDate = transportedVnDate;
+	}
+	
+	@Column(name = "CHECKER")
+	public Long getChecker() {
+		return checker;
+	}
+	public void setChecker(Long checker) {
+		this.checker = checker;
+	}
+	
+	@Column(name = "CHECKED_DATE")
+	public Date getCheckedDate() {
+		return checkedDate;
+	}
+	public void setCheckedDate(Date checkedDate) {
+		this.checkedDate = checkedDate;
+	}
+	
+	@Column(name = "INFORMER")
+	public Long getInformer() {
+		return informer;
+	}
+	public void setInformer(Long informer) {
+		this.informer = informer;
+	}
+	
+	@Column(name = "INFORMED_DATE")
+	public Date getInformedDate() {
+		return informedDate;
+	}
+	public void setInformedDate(Date informedDate) {
+		this.informedDate = informedDate;
 	}
 	
 	

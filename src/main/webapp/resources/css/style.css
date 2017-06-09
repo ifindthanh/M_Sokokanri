@@ -105,6 +105,10 @@ a.myAction {
 	margin-top: 5px;
 }
 
-.txtQuantity {
+.txtCost, .txtQuantity, .txtTotal, .real_price {
 	width: 100px
+}
+
+.red_text {
+	color : red;
 }

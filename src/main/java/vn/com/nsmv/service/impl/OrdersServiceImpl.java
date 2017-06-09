@@ -2,17 +2,30 @@ package vn.com.nsmv.service.impl;
 
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.dao.BillDAO;
@@ -141,6 +154,8 @@ public class OrdersServiceImpl implements OrdersService {
 		if (category.getStatus() == null || (category.getStatus() != 0 && category.getStatus() != -1)) {
 			throw new SokokanriException("Không thể duyệt đơn hàng đã chọn.");
 		}
+		category.setApprover(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		category.setApprovedDate(new Date());
 		category.setStatus(1);
 		this.categoryDAO.saveCategory(category);
 	}
@@ -162,6 +177,8 @@ public class OrdersServiceImpl implements OrdersService {
 			throw new SokokanriException("Không thể ghi chú đơn hàng đã chọn.");
 		}
 		category.setStatus(-1);
+		category.setApprover(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		category.setApprovedDate(new Date());
 		this.categoryDAO.saveCategory(category);
 	}
 
@@ -184,6 +201,8 @@ public class OrdersServiceImpl implements OrdersService {
 		if (category.getStatus() == null || (category.getStatus() != 1 && category.getStatus() != -2)) {
 			throw new SokokanriException("Không thể ghi chú đơn hàng đã chọn.");
 		}
+		category.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		category.setBoughtDate(new Date());
 		category.setStatus(-2);
 		this.categoryDAO.saveCategory(category);
 		
@@ -202,6 +221,8 @@ public class OrdersServiceImpl implements OrdersService {
 		if (category.getStatus() == null || (category.getStatus() != 2)) {
 			throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
 		}
+		category.setTransported(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		category.setTransportedDate(new Date());
 		category.setTransferId(tranferID);
 		category.setStatus(3);
 		this.categoryDAO.saveCategory(category);
@@ -237,6 +258,8 @@ public class OrdersServiceImpl implements OrdersService {
 			throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
 		}
 		category.setStatus(4);
+		category.setTransporterVn(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		category.setTransportedVnDate(new Date());
 		this.categoryDAO.saveCategory(category);
 	}
 
@@ -247,10 +270,12 @@ public class OrdersServiceImpl implements OrdersService {
 		Iterator<Entry<Long, List<Category>>> iterator = classificationOrders.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<Long, List<Category>> entry = iterator.next();
-			Long billId = this.billDAO.add(bill);
+			this.billDAO.add(bill);
 			for (Category item : entry.getValue()) {
 				item.setBill(bill);
 				item.setStatus(5);
+				item.setChecker(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+				item.setCheckedDate(new Date());
 				this.categoryDAO.saveCategory(item);
 			}
 		}
@@ -314,10 +339,140 @@ public class OrdersServiceImpl implements OrdersService {
 					throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
 				}
 				cart.setStatus(6);
+				cart.setInformer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+				cart.setInformedDate(new Date());
 				this.categoryDAO.saveCategory(cart);
 
 			}
 		}
 
 	}
+
+	@Transactional
+	public Long doUpload(MultipartFile uploadFile) throws SokokanriException {
+		Workbook workbook;
+		ByteArrayInputStream byteArrayInputStream = null;
+		try
+		{
+			byteArrayInputStream = new ByteArrayInputStream(uploadFile.getBytes());
+			if (uploadFile.getOriginalFilename().endsWith("xls")) {
+                workbook = new HSSFWorkbook(byteArrayInputStream);
+            } else if (uploadFile.getOriginalFilename().endsWith("xlsx")) {
+                workbook = new XSSFWorkbook(byteArrayInputStream);
+            } else {
+                throw new SokokanriException("File vừa chọn không phải là excel file.");
+            }
+			Sheet firstSheet = workbook.getSheetAt(0);
+	        Iterator<Row> iterator = firstSheet.iterator();
+	        int index = 0;
+	        Category category = new Category();
+	        CustomUser customUser = (CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	        User user = new User();
+	        user.setId(customUser.getUserId());
+	        category.setUser(user);
+			category.setStatus(0);
+	        Long result = categoryDAO.add(category);
+	        while (iterator.hasNext()) {
+	        	
+	            Row nextRow = iterator.next();
+	            //We ignore the first row because it is the label of items
+	        	if (index ++ == 0) {
+	        		continue;
+	        	}
+	            Iterator<Cell> cellIterator = nextRow.cellIterator();
+	            Item item = new Item();
+	            int columnIndex = 0;
+	            while (cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					item.setCategory(category);
+					switch (columnIndex) {
+					case 0:
+						if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+							break;
+						}
+						if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
+							throw new SokokanriException("Tên sản phẩm không hợp lệ");
+						}
+						item.setName(cell.getStringCellValue());
+						break;
+
+					case 1:
+						if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+							break;
+						}
+						if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
+							throw new SokokanriException("Nhà phân phối sản phẩm không hợp lệ");
+						}
+						item.setBrand(cell.getStringCellValue());
+						break;
+					case 2:
+						if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+							break;
+						}
+						if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
+							throw new SokokanriException("Đường link của sản phẩm không hợp lệ");
+						}
+						item.setLink(cell.getStringCellValue());
+						break;
+					case 3:
+						if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+							break;
+						}
+						if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
+							throw new SokokanriException("Ghi chú của sản phẩm không hợp lệ");
+						}
+						item.setDescription(cell.getStringCellValue());
+						break;
+					case 4:
+						if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+							break;
+						}
+						if (!cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
+							throw new SokokanriException("Đơn giá của sản phẩm không hợp lệ");
+						}
+						item.setCost(cell.getNumericCellValue());
+						break;
+					case 5:
+						if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+							break;
+						}
+						cell.setCellType(CellType.STRING);
+						String value = cell.getStringCellValue();
+						try {
+							int quantity = Integer.parseInt(value);
+							item.setQuantity(quantity);
+						} catch (Exception ex) {
+							throw new SokokanriException("Số lượng phải là số nguyên");
+						}
+						break;
+					default:
+						break;
+					}
+					
+					columnIndex ++;
+	            }
+				if (item.ignore()) {
+					continue;
+				}
+	            item.validate();
+				this.itemDAO.add(item);
+	        }
+	         
+	        workbook.close();
+	        return result;
+		}
+		catch (IOException ex)
+		{
+			throw new SokokanriException(ex);
+		}
+		finally {
+			if (byteArrayInputStream != null) {
+				try {
+					byteArrayInputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
+	
 }

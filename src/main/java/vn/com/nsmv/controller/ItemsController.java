@@ -28,6 +28,7 @@ import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
+import vn.com.nsmv.javabean.UploadBean;
 import vn.com.nsmv.service.OrdersService;
 
 @Controller
@@ -80,7 +81,33 @@ public class ItemsController {
 		model.addAttribute("order", category);
 		return new ModelAndView("/orders/createNew");
 	}
-
+	
+	@RequestMapping(value = "/donhang/tao-tu-file", method=RequestMethod.GET)
+	public ModelAndView createFromFile(HttpServletRequest request, Model model) {
+		UploadBean uploadBean = new UploadBean();
+		model.addAttribute("uploadBean", uploadBean);
+		return new ModelAndView("/common/upload");
+	}
+	
+	@RequestMapping(value = "/donhang/tao-tu-file", method=RequestMethod.POST)
+	public ModelAndView uploadOneFileHandlerPOST(
+			HttpServletRequest request,
+			Model model, RedirectAttributes redirectAttributes, 
+			@ModelAttribute("uploadFile") UploadBean myUpload)
+		{
+		try
+		{
+			Long orderId = this.ordersService.doUpload(myUpload.getUploadFile());
+			return new ModelAndView("redirect:/donhang/" + orderId);
+		}
+		catch (SokokanriException ex)
+		{
+			redirectAttributes.addFlashAttribute(
+					"message", ex.getErrorMessage());
+			return new ModelAndView("redirect:/donhang/tao-tu-file");
+		}
+	}
+	
 	private Category createInitOrder() {
 		Category category = new Category();
 		List<Item> items = new  ArrayList<Item>();

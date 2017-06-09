@@ -78,9 +78,11 @@
 								</td>
 								<td rowspan="${item.categories.size()+1}">${item.getFormattedId()}</td>
 								<td>
-									<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
-										<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
-									</button>
+									<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+										<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
+											<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
+										</button>
+									</sec:authorize>
 								</td>
 								<td></td>
 								<td></td>
@@ -123,12 +125,13 @@
 					uri="${pageContext.request.contextPath}/donhang/tat-ca"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			
-			<div class="col-sm-12" style="margin-bottom: 20px;">
-				<button id="addRow" type="button" class="btn btn-primary" onclick="approvalExportBill()">
-					<i class="fa" aria-hidden="true" ></i> Đã xuất hóa đơn
-				</button>
-			</div>
+			<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+				<div class="col-sm-12" style="margin-bottom: 20px;">
+					<button id="addRow" type="button" class="btn btn-primary" onclick="approvalExportBill()">
+						<i class="fa" aria-hidden="true" ></i> Đã xuất hóa đơn
+					</button>
+				</div>
+			</sec:authorize>
 		</form>
 	</div>
 	

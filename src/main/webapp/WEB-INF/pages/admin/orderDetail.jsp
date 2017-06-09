@@ -8,7 +8,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
-<%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
 <head>
@@ -41,75 +40,98 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-chuyen-vn" method="POST">
-			<div class="col-xs-12 row" style="height: 150px">
-				<div class="row">
-					<label class="col-xs-2 right_align top_margin_5" >Vận đơn: </label>
-					<div class="col-xs-4">
-						<input type="hidden" name="status" value="${ searchCondition.status}" />
-						<input type="text" name= "transferId" value="${ searchCondition.transferId}" class="form-control">
-					</div>
-					<div>
-						<button type="submit" class="btn btn-primary">
-							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
-						</button>
-					</div>
-				</div>
-			</div>
+		<form action="tat-ca" method="POST">
 			<div class="col-sm-12">
-				<table id="tableList" class="listBusCard table">
+				<div style="position: absolute; float: left; left: 650px; margin-top: 20px">
+					<a type="button" class="btn btn-default" href="../tat-ca">Trở về </a>
+				</div>
+				<table id="tableList" class="listBusCard table" width = "600px">
 					<thead>
-						<tr class="headings" role="row">
-							<th>Mã đơn hàng</th>
-							<th>Vận đơn</th>
-							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
-							<th>Tổng tiền thực tế</th>
+						<tr>
+							<th></th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${allOrders}" varStatus="status">
-							<tr>
-								<td>
-									${item.formattedId}
-								</td>
-								<th>${item.transferId}</th>
-								<td>
-									${item.user.fullname}
-								</td>
-								<td>
-									<order:status status="${item.status }"/>
-								</td>
-								<td>
-									${item.getOrderRealPrice() }
-								</td>
-								<td>
-									<a href="${item.id }"><i class="fa fa-info"
-										aria-hidden="true"></i> View</a>
-								</td>
+						<tr class="headings" role="row">
+							<td>Mã đơn hàng</td>
+							<td>${category.formattedId}</td>
 						</tr>
-						</c:forEach>
+						<tr class="headings" role="row">
+							<td>Tên khách hàng</td>
+							<td>${category.user.fullname}</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Trạng thái</td>
+							<td><order:status status="${category.status }"/></td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Tổng tiền</td>
+							<td>${category.getOrderPrice() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Người duyệt đơn hàng</td>
+							<td>${category.getOrderPrice() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Ngày duyệt đơn hàng</td>
+							<td><fmt:formatDate value="${category.getApprovedDate()}"/> </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Người mua hàng</td>
+							<td>${category.getBuyer() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Ngày mua hàng</td>
+							<td><fmt:formatDate value="${category.getBoughtDate()}"/> </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Người chuyển hàng tại nước ngoài</td>
+							<td>${category.getTransported() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Ngày chuyển hàng tại nước ngoài</td>
+							<td><fmt:formatDate value="${category.getTransportedDate()}"/> </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Người chuyển hàng về VN</td>
+							<td>${category.getTransporterVn() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Ngày chuyển hàng về VN</td>
+							<td><fmt:formatDate value="${category.getTransportedVnDate()}"/> </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Vận đơn</td>
+							<td>${category.transferId } </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Người kiểm hàng</td>
+							<td>${category.getChecker() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Ngày kiểm hàng</td>
+							<td><fmt:formatDate value="${category.getCheckedDate()}"/> </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Người báo giá</td>
+							<td>${category.getInformer() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Ngày kiểm hàng</td>
+							<td><fmt:formatDate value="${category.getInformedDate()}"/> </td>
+						</tr>
+						<tr class="headings" role="row">
+							<td>Mã hóa đơn</td>
+							<td>${category.bill.getFormattedId() } </td>
+						</tr>
 					</tbody>
 				</table>
-				
+	
 			</div>
-			<div class="div-bottom">
-				<tag:paginate offset="${offset}" count="${count}"
-					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/tat-ca"
-					next="&raquo;" previous="&laquo;" />
-			</div>
-			<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-						<i class="fa" aria-hidden="true" ></i> Nhập kho
-					</button>
-				</div>
-			</sec:authorize>
 		</form>
 	</div>
-	
+
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
 	<script src="<c:url value="/resources/js/jquery.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
@@ -139,17 +161,7 @@
 	 	   	"ordering": false,
 	        "info":     false
  	   	});
-		
     });
-    
-	function approval(){
-		var check = confirm("Thao tác này không thể hoàn lại, bạn có muốn tiến hành nhập kho cho tất cả các đơn hàng?");
-    	if (check) {
-    		window.location.href = "nhap-kho";
-    	}
-	}
-	
-	
     </script>
 </body>
 </html>

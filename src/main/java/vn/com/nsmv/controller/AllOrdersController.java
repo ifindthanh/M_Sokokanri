@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -80,5 +81,22 @@ public class AllOrdersController {
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 		}
+	}
+	
+	@RequestMapping(value = "/donhang/admin/{orderId}")
+	public ModelAndView viewAnOrder(HttpServletRequest request, Model model, @PathVariable Long orderId) {
+		try {
+			Category category = this.ordersService.getCategory(orderId);
+			if (category == null) {
+				throw new SokokanriException("Đơn hàng không tồn tại");
+			}
+			model.addAttribute("category", category);
+			return new ModelAndView("/admin/orderDetail");
+		} catch (SokokanriException ex) {
+			model.addAttribute("message", ex.getErrorMessage());
+			model.addAttribute("category",  new Category());
+			return new ModelAndView("/orders/error");
+		}
+		
 	}
 }

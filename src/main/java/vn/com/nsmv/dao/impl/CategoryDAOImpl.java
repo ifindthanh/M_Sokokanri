@@ -84,7 +84,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 		{
 			Session session = this.sessionFactory.getCurrentSession();
 			StringBuilder sql = new StringBuilder();
-			sql.append("from Category where id <> 0");
+			sql.append("from Category c where id <> 0");
 			Map<String, Object> params = new HashMap<String, Object>();
 			if (searchCondition != null) {
 				sql.append(searchCondition.getSearching(searchCondition, params));

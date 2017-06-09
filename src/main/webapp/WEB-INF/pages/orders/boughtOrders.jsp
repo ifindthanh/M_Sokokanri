@@ -94,12 +94,13 @@
 					uri="${pageContext.request.contextPath}/donhang/tat-ca"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			
-			<div class="col-sm-12" style="margin-bottom: 20px;">
-				<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-					<i class="fa" aria-hidden="true" ></i> Chuyển hàng tại nước ngoài
-				</button>
-			</div>
+			<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">			
+				<div class="col-sm-12" style="margin-bottom: 20px;">
+					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
+						<i class="fa" aria-hidden="true" ></i> Chuyển hàng tại nước ngoài
+					</button>
+				</div>
+			</sec:authorize>
 		</form>
 	</div>
 	

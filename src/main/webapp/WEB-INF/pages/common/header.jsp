@@ -88,10 +88,10 @@
 				<p id= "errorMessage" class="error"></p>
 				
 				<br>
-				<form name='f' class ="login_form" id ="login_form" action="${pageContext.request.contextPath}/j_spring_security_check" method='POST'>
-					<input type="text" name="email" placeholder="Email"> 
-					<input type="password" name="password" placeholder="Password"> 
-					<input type="button" onclick="login()" class="login loginmodal-submit" value="Login">
+				<form onkeyup="onEnter(event)" name='f' class ="login_form" id ="login_form" action="${pageContext.request.contextPath}/j_spring_security_check" method='POST'>
+					<input type="text" name="email" onkeyup="onEnter(event)" placeholder="Email"> 
+					<input type="password" name="password" onkeyup="onEnter(event)" placeholder="Password"> 
+					<input type="button" id="loginBtn" onclick="login()" class="login loginmodal-submit" value="Login">
 				</form>
 
 				<div class="login-help">
@@ -117,5 +117,10 @@
 				}
 			
 			});
+		}
+		function onEnter(event) {
+		    if(event.keyCode == 13){
+		        $("#loginBtn").click();
+		    }
 		}
 	</script>

@@ -1,5 +1,6 @@
 package vn.com.nsmv.controller;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -115,6 +116,8 @@ public class WaitingToBuyController {
 	public ModelAndView approvalBuy(@ModelAttribute("order")Category category, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes){
 		try {
 			category.setStatus(2);
+			category.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+			category.setBoughtDate(new Date());
 			this.ordersService.saveOrder(category);
 			return new ModelAndView("redirect:/donhang/" + category.getId());
 		} catch (SokokanriException ex) {

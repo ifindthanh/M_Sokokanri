@@ -76,7 +76,7 @@
 								<td><form:input class="txtLink form-control" path="items[${status.index}].link" type="text" readonly="${read_only }"/></td>
 								<td><form:textarea class="description form-control" path="items[${status.index}].description" readonly="${read_only }"/></td>
 								<td><form:input class="txtCost form-control" path="items[${status.index}].cost" type="text" onchange="computeMoney(this)" readonly="${read_only }"/></td>
-								<td><form:input class="txtQuantity form-control" path="items[${status.index}].quantity" type="text" onchange="computeMoney(this)" readonly="${read_only }"/></td>
+								<td><form:input class="txtQuantity form-control" path="items[${status.index}].quantity" type="number" min ="1" max="999" onchange="computeMoney(this)" readonly="${read_only }"/></td>
 								<td><form:input class="txtTotal form-control" path="items[${status.index}].total" type="text" readonly="true"/></td>
 								<td>
 									<form:input class="real_price form-control" path="items[${status.index}].realPrice" type="text" readonly="${real_price_access }" onchange="saveRealPrice(this, ${item.id })"/>
@@ -95,7 +95,7 @@
 					</tbody>
 				</table>
 				<div style="position: relative">
-					<div>
+					<div style="min-height: 30px">
 						<c:if test="${read_only ne true}">
 							<button id="addRow" type="button" class="btn btn-default">
 								<i class="fa fa-plus" aria-hidden="true" ></i> Thêm sản phẩm
@@ -140,19 +140,19 @@
 				<div class="col-xs-12" style="margin-bottom: 20px">
 					<h4><label>Thông tin khách hàng</label></h4>
 					<div class = "row">
-						<label class="col-xs-2">Họ và tên: </label>
+						<label class="col-xs-2">Họ và tên:<span class="red_text">*</span> </label>
 						<div class="col-xs-4"><form:input id="fullName" path="fullName" type="text" class="form-control" readonly="${read_only }"/></div>
 					</div>
 					<div class = "row">
-						<label class="col-xs-2">Email: </label>
+						<label class="col-xs-2">Email:<span class="red_text">*</span> </label>
 						<div class="col-xs-4"><form:input id="email" path="email" type="text"  class="form-control" readonly="${read_only }"/></div>
 					</div>
 					<div class = "row">
-						<label class="col-xs-2">Số điện thoại: </label>
+						<label class="col-xs-2">Số điện thoại:<span class="red_text">*</span> </label>
 						<div class="col-xs-4"><form:input id="phone" path="phone" type="text"  class="form-control" readonly="${read_only }"/></div>
 					</div>
 					<div class = "row">
-						<label class="col-xs-2">Địa chỉ: </label>
+						<label class="col-xs-2">Địa chỉ:<span class="red_text">*</span> </label>
 						<div class="col-xs-4"><form:input id="address" path="address" type="text"  class="form-control" readonly="${read_only }"/></div>
 					</div>
 					<div class = "row">
@@ -241,7 +241,7 @@
     	if (!$(this).val() || $(this).val() == "") {
     		return;
     	}
-    	$("#total_real_price").html(parseFloat($("#total_real_price").html()) + parseFloat($(this).val()));
+    	$("#total_real_price").html(parseFloat(parseFloat($("#total_real_price").html()) + parseFloat($(this).val())).toFixed(4));
     })
     $(document).ready(function(){
 		//init datatables
@@ -298,7 +298,7 @@
         		"<input class=\"txtLink form-control\" type=\"text\" name=\"items[" + index + "].link\" />",
         		"<textarea class=\"description form-control\" name=\"items[" + index + "].description\"> </textarea>",
         		"<input class=\"txtCost form-control\" type=\"text\" name=\"items[" + index + "].cost\" onchange=\"computeMoney(this)\" />",
-        		"<input class=\"txtQuantity form-control\" type=\"text\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
+        		"<input class=\"txtQuantity form-control\" type=\"number\" min =\"1\" max=\"999\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
         		"<input class=\"txtTotal form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].total\"/>",
         		"<input class=\"real_price form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].realPrice\" />",
         		"<a class= \"myAction\" href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i></a>/<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
@@ -343,7 +343,7 @@
     		if ($(this).val() && $(this).val() != "")
     			total_price += parseFloat($(this).val());
     	});
-    	$("#total_price").html(total_price);
+    	$("#total_price").html(total_price.toFixed(4));
     }
     
     function approve() {

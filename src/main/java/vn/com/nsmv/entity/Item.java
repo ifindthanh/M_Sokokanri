@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
@@ -149,7 +148,7 @@ public class Item implements java.io.Serializable {
 		}
 		
 		if (Utils.isEmpty(this.link)) {
-			throw new SokokanriException("Đường dẫn đến mặt hàng không được để trống");
+			throw new SokokanriException("Đường link đến mặt hàng không được để trống");
 		}
 		
 		if (this.quantity == null) {

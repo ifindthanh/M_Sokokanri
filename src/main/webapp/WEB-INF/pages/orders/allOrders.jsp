@@ -73,8 +73,12 @@
 									${item.getOrderPrice() }
 								</td>
 								<td>
-									<a href="${item.id }"><i class="fa fa-info"
+									<a href="${item.id }"><i class="fa"
 										aria-hidden="true"></i> View</a>
+									<sec:authorize access="hasRole('ROLE_A')">
+										/ <a href="admin/${item.id }"><i class="fa"
+										aria-hidden="true"></i> Detail </a>
+									</sec:authorize>
 								</td>
 						</tr>
 						</c:forEach>

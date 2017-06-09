@@ -51,6 +51,11 @@ public class BillDAOImpl implements BillDAO{
 			StringBuilder sql = new StringBuilder();
 			sql.append("from Category c JOIN c.bill b where b.id > 0");
 			Map<String, Object> params = new HashMap<String, Object>();
+			if (searchCondition.getUserId() != null) {
+				sql.append(" and c.user.id = :userId");
+				params.put("userId", searchCondition.getUserId());
+			}
+			
 			if (searchCondition.getStatus() != null) {
 				sql.append(" and c.status = :status ");
 				params.put("status", searchCondition.getStatus());
