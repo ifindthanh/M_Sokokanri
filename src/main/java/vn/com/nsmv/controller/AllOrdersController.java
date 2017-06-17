@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.common.Constants;
@@ -56,9 +57,48 @@ public class AllOrdersController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 1);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/allOrders");
+	}
+	
+	@RequestMapping(value = "/donhang/tat-ca", method=RequestMethod.POST)
+	public RedirectView listAllOrdersPOST(HttpServletRequest request, Model model, 
+			Integer offset, Integer maxResults, SearchCondition searchCondition) {
+		if (this.maxResults == null)
+		{
+			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+		}
+		
+		if (offset != null)
+		{
+			this.offset = offset;
+		}
+		
+		if (maxResults != null)
+		{
+			this.maxResults = maxResults;
+		}
+		
+		if (maxResults != null)
+		{
+			this.maxResults = maxResults;
+		}
+		
+		if (searchCondition != null) 
+		{
+			this.searchCondition = searchCondition;
+		}
+		
+		return new RedirectView("tat-ca-tim-kiem");
+	}
+	
+	@RequestMapping(value = "/donhang/tat-ca-tim-kiem", method = RequestMethod.GET)
+	public String searchResult(HttpServletRequest request, Model model)
+	{
+		request.getSession().setAttribute("listType", 1);
+		this.doBusiness(model);
+		return "/orders/allOrders";
 	}
 
 	private void doBusiness(Model model) {

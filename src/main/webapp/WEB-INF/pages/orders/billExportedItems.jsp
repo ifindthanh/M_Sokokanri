@@ -41,7 +41,7 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-nhap-kho" method="POST">
+		<form action="da-xuat-hd" method="POST">
 			<div class="row" style="height: 150px">
 				<div class="col-xs-12 row">
 					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
@@ -108,6 +108,10 @@
 									<td>
 										<a href="${cart.id }"><i class="fa fa-info"
 											aria-hidden="true"></i> View</a>
+										<sec:authorize access="hasRole('ROLE_A')">
+											/ <a href="admin/${item.id }"><i class="fa"
+											aria-hidden="true"></i> Detail </a>
+										</sec:authorize>
 									</td>
 									
 								</tr>
@@ -120,14 +124,16 @@
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
 					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/tat-ca"
+					uri="${pageContext.request.contextPath}/donhang/da-xuat-hd"
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			
 			<div class="col-sm-12" style="margin-bottom: 20px;">
-				<button id="addRow" type="button" class="btn btn-primary" onclick="approvalExportBill()">
-					<i class="fa" aria-hidden="true" ></i> Đã xuất hóa đơn
-				</button>
+				<sec:authorize access="hasAnyRole('ROLE_A')">
+					<button id="addRow" type="button" class="btn btn-primary" onclick="alreadyToSend()">
+						<i class="fa" aria-hidden="true" ></i> Sẵn sàng để giao
+					</button>
+				</sec:authorize>
 			</div>
 		</form>
 	</div>
@@ -195,7 +201,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "nhap-kho/chon-don-hang?id=" + id,
+    			url : "da-xuat-hd/chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -204,7 +210,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "nhap-kho/bo-chon-don-hang?id=" + id,
+    			url : "da-xuat-hd/bo-chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -223,7 +229,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "nhap-kho/chon-tat-ca?ids="+ids,
+    			url : "da-xuat-hd/chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -233,7 +239,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "nhap-kho/bo-chon-tat-ca?ids="+ids,
+    			url : "da-xuat-hd/bo-chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -286,14 +292,14 @@
 
 	}
 	
-	function approvalExportBill() {
+	function alreadyToSend() {
 		if ($('.order_id:checkbox:checked').length == 0) {
 			alert("Vui lòng chọn một đơn hàng.");
 			return;
 		}
-		var check = confirm("Bạn có thật sự muốn chuyển trạng thái các đơn hàng đã chọn?");
+		var check = confirm("Bạn đang chuyển đơn hàng sang sẵn sàng để giao, hãy chắc chắn rằng đơn hàng đã được thanh toán đầy đủ?");
     	if (check) {
-    		window.location.href = "da-xuat-hoa-don"; 
+    		window.location.href = "san-sang-de-giao"; 
     	}
 		
 	}

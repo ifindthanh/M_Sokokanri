@@ -74,6 +74,10 @@
 								<td>
 									<a href="${item.id }"><i class="fa fa-info"
 										aria-hidden="true"></i> View</a>
+									<sec:authorize access="hasRole('ROLE_A')">
+										/ <a href="admin/${item.id }"><i class="fa"
+										aria-hidden="true"></i> Detail </a>
+									</sec:authorize>
 								</td>
 						</tr>
 						</c:forEach>
@@ -84,7 +88,7 @@
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
 					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/tat-ca"
+					uri="${pageContext.request.contextPath}/donhang/cho-mua"
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			

@@ -78,7 +78,7 @@
 								</td>
 								<td rowspan="${item.categories.size()+1}">${item.getFormattedId()}</td>
 								<td>
-									<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+									<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
 										<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
 											<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
 										</button>
@@ -110,6 +110,10 @@
 									<td>
 										<a href="${cart.id }"><i class="fa fa-info"
 											aria-hidden="true"></i> View</a>
+										<sec:authorize access="hasRole('ROLE_A')">
+											/ <a href="admin/${item.id }"><i class="fa"
+											aria-hidden="true"></i> Detail </a>
+										</sec:authorize>
 									</td>
 									
 								</tr>
@@ -122,10 +126,10 @@
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
 					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/tat-ca"
+					uri="${pageContext.request.contextPath}/donhang/da-nhap-kho"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+			<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
 				<div class="col-sm-12" style="margin-bottom: 20px;">
 					<button id="addRow" type="button" class="btn btn-primary" onclick="approvalExportBill()">
 						<i class="fa" aria-hidden="true" ></i> Đã xuất hóa đơn

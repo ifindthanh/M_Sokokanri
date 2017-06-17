@@ -28,9 +28,7 @@ import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
-import vn.com.nsmv.common.Constants.SESSION_PARAM;
 import vn.com.nsmv.entity.Category;
-import vn.com.nsmv.javabean.ExportingSearchCondition;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -41,6 +39,7 @@ public class CheckingOrdersController {
 	private SearchCondition searchCondition = new SearchCondition(4);
 	private Integer offset;
 	private Integer maxResults;
+	private Set<Long> selectedItems = new HashSet<Long>();
 	
 	@Autowired
 	private OrdersService ordersService;
@@ -51,6 +50,7 @@ public class CheckingOrdersController {
 		this.offset = 0;
 		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
 		this.searchCondition =  new SearchCondition(4);
+		this.selectedItems.clear();
 		return "redirect:/donhang/da-chuyen-vn";
 	}
 	
@@ -70,7 +70,7 @@ public class CheckingOrdersController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 6);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/transferedToVNOrders");
 	}
@@ -131,6 +131,7 @@ public class CheckingOrdersController {
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
 			model.addAttribute("searchCondition", this.searchCondition);
+			model.addAttribute("selectedItems", this.selectedItems);
 			model.addAttribute("count", count);
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
@@ -144,13 +145,16 @@ public class CheckingOrdersController {
 					null);
 			Map<Long, List<Category>> classificationOrders = new HashMap<Long, List<Category>>();
 			for (Category item : allOrders) {
-				Long id = item.getUser().getId();
-				if (classificationOrders.containsKey(id)) {
-					classificationOrders.get(id).add(item);
+				if (!this.selectedItems.contains(item.getId())) {
+					continue;
+				}
+				Long userID = item.getUser().getId();
+				if (classificationOrders.containsKey(userID)) {
+					classificationOrders.get(userID).add(item);
 				} else {
 					ArrayList<Category> orders = new ArrayList<Category>();
 					orders.add(item);
-					classificationOrders.put(id, orders);
+					classificationOrders.put(userID, orders);
 				}
 			}
 			this.ordersService.importToStorage(classificationOrders);
@@ -158,6 +162,52 @@ public class CheckingOrdersController {
 			model.addAttribute("message", e.getErrorMessage());
 		}
 		return new ModelAndView("redirect:/donhang/da-chuyen-vn/0");
+	}
+	
+	@RequestMapping(value = "/donhang/da-chuyen-vn/chon-don-hang", method=RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
+		this.selectedItems.add(id);
+		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/donhang/da-chuyen-vn/bo-chon-don-hang", method=RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
+		this.selectedItems.remove(id);
+		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/donhang/da-chuyen-vn/chon-tat-ca", method=RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
+		String[] allIds = ids.split(",");
+		for (String item : allIds) {
+			if (Utils.isEmpty(item)) {
+				continue;
+			}
+			try {
+				Long id = Long.parseLong(item);
+				this.selectedItems.add(id);
+			} catch (Exception ex) {
+				continue;
+			}
+		}
+		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/donhang/da-chuyen-vn/bo-chon-tat-ca", method=RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
+		String[] allIds = ids.split(",");
+		for (String item : allIds) {
+			if (Utils.isEmpty(item)) {
+				continue;
+			}
+			try {
+				Long id = Long.parseLong(item);
+				this.selectedItems.remove(id);
+			} catch (Exception ex) {
+				continue;
+			}
+		}
+		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
 }

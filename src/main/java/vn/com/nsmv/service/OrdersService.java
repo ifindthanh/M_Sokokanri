@@ -4,14 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.entity.Bill;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.javabean.SortCondition;
+import vn.com.nsmv.javabean.UploadBean;
 
 public interface OrdersService {
 	public Long createOrder(Category order) throws SokokanriException;
@@ -35,5 +34,8 @@ public interface OrdersService {
 	public void importToStorage(Map<Long, List<Category>> classificationOrders) throws SokokanriException;
 	public String exportBill(Long selectedItem, boolean toWeb) throws SokokanriException;
 	public void exportBill(Set<Long> selectedItems, boolean toWeb) throws SokokanriException;
-	public Long doUpload(MultipartFile uploadFile) throws SokokanriException;
+	public Long doUpload(UploadBean uploadFile) throws SokokanriException;
+	public void alreadyToSend(Set<Long> selectedItems) throws SokokanriException;
+	public void sendOrders(Set<Long> selectedItems) throws SokokanriException;
+	public void deleteOrders(Set<Long> selectedItems) throws SokokanriException;
 }

@@ -36,13 +36,62 @@
         <intercept-url pattern="/register/*" access="permitAll" />
         <intercept-url pattern="/api/*" access="permitAll" />
  
-        <intercept-url pattern="/donhang/cho-duyet" access="hasAnyRole('ROLE_U', 'ROLE_C', 'ROLE_A')" />
         <intercept-url pattern="/imported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/export/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/exported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/profile/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/user/list" access="hasAnyRole('ROLE_A', 'ROLE_S')" />
         <intercept-url pattern="/user/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
+        
+        <intercept-url pattern="/donhang/tao-moi" access="hasRole('ROLE_U')" />
+        <intercept-url pattern="/donhang/tat-ca" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/luu-don-hang" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/tao-tu-file" access="hasRole('ROLE_U')" />
+        
+        <intercept-url pattern="/donhang/cho-duyet" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_C')" />
+        <intercept-url pattern="/donhang/cho-duyet/**" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_C')" />
+        <intercept-url pattern="/donhang/duyet-don-hang" access="hasAnyRole('ROLE_A', 'ROLE_C')" />
+        <intercept-url pattern="/donhang/ghi-chu" access="hasAnyRole('ROLE_A', 'ROLE_C')" />
+        <intercept-url pattern="/donhang/duyet-nhieu-don-hang" access="hasAnyRole('ROLE_A', 'ROLE_C')" />
+        
+        <intercept-url pattern="/donhang/cho-mua" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_B')" />
+        <intercept-url pattern="/donhang/cho-mua/**" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_B')" />
+        <intercept-url pattern="/donhang/da-mua-nhieu-don-hang" access="hasAnyRole('ROLE_A', 'ROLE_B')" />
+        <intercept-url pattern="/donhang/mua-hang" access="hasAnyRole('ROLE_A', 'ROLE_B')" />
+        <intercept-url pattern="/donhang/ghi-chu-mua" access="hasAnyRole('ROLE_A', 'ROLE_B')" />
+        <intercept-url pattern="/donhang/mua-mat-hang" access="hasAnyRole('ROLE_A', 'ROLE_B')" />
+        
+        <intercept-url pattern="/donhang/da-mua" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_T1')" />
+        <intercept-url pattern="/donhang/da-mua/**" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_T1')" />
+        <intercept-url pattern="/donhang/chuyen-don-hang" access="hasAnyRole('ROLE_A', 'ROLE_T1')" />
+        <intercept-url pattern="/donhang/ghi-chu-van-don" access="hasAnyRole('ROLE_A', 'ROLE_T1')" />
+        
+        <intercept-url pattern="/donhang/da-chuyen" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_T2')" />
+        <intercept-url pattern="/donhang/da-chuyen/**" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_T2')" />
+        <intercept-url pattern="/donhang/chuyen-nhieu-don-hang-vn" access="hasAnyRole('ROLE_A', 'ROLE_T2')" />
+        <intercept-url pattern="/donhang/chuyen-don-hang-vn" access="hasAnyRole('ROLE_A', 'ROLE_T2')" />
+        
+        <intercept-url pattern="/donhang/da-chuyen-vn" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_K')" />
+        <intercept-url pattern="/donhang/da-chuyen-vn/**" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_K')" />
+        <intercept-url pattern="/donhang/da-chuyen-vn-tim-kiem" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_K')" />
+        <intercept-url pattern="/donhang/nhap-kho" access="hasAnyRole('ROLE_A', 'ROLE_K')" />
+        
+        <intercept-url pattern="/donhang/da-nhap-kho" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/nhap-kho/**" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/nhap-kho-tim-kiem" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/xuat-hoa-don" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/xuat-hoa-don-file" access="hasAnyRole('ROLE_U','ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/da-xuat-hoa-don" access="hasAnyRole('ROLE_A', 'ROLE_BG')" />
+        
+        <intercept-url pattern="/donhang/da-xuat-hd" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/da-xuat-hd/**" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/da-xuat-hd-tim-kiem" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/san-sang-de-giao" access="hasRole('ROLE_A')" />
+        
+        <intercept-url pattern="/donhang/giao-hang" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/giao-hang/**" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/giao-hang-tim-kiem" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
+        <intercept-url pattern="/donhang/da-giao-hang" access="hasRole('ROLE_A')" />
         
         <intercept-url pattern="/*" access="isAuthenticated()" />
  

@@ -1,14 +1,10 @@
 package vn.com.nsmv.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -35,9 +31,9 @@ import vn.com.nsmv.service.OrdersService;
 
 @Controller
 @Scope("session")
-public class StorageController {
+public class ShippingOrdersController {
 	
-	private SearchCondition searchCondition = new SearchCondition(5);
+	private SearchCondition searchCondition = new SearchCondition(7);
 	private Integer offset;
 	private Integer maxResults;
 	
@@ -46,17 +42,17 @@ public class StorageController {
 	
 	private Set<Long> selectedItems = new HashSet<Long>();
 	
-	@RequestMapping(value = "/donhang/da-nhap-kho/0", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang/0", method=RequestMethod.GET)
 	public String init()
 	{
 		this.offset = 0;
 		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		this.searchCondition =  new SearchCondition(5);
+		this.searchCondition =  new SearchCondition(7);
 		this.selectedItems.clear();
-		return "redirect:/donhang/da-nhap-kho";
+		return "redirect:/donhang/giao-hang";
 	}
 	
-	@RequestMapping(value = "/donhang/da-nhap-kho", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
 		if (this.maxResults == null)
 		{
@@ -72,13 +68,13 @@ public class StorageController {
 		{
 			this.maxResults = maxResults;
 		}
-		request.getSession().setAttribute("listType", 7);
+		request.getSession().setAttribute("listType", 9);
 		this.doBusiness(model);
-		return new ModelAndView("/orders/storagedItems");
+		return new ModelAndView("/orders/shippingOrders");
 	}
 	
 	
-	@RequestMapping(value = "/donhang/da-nhap-kho", method = RequestMethod.POST)
+	@RequestMapping(value = "/donhang/giao-hang", method = RequestMethod.POST)
 	public RedirectView search(
 		HttpServletRequest request,
 		Model model,
@@ -108,21 +104,21 @@ public class StorageController {
 			this.searchCondition = searchCondition;
 		}
 		
-		return new RedirectView("da-nhap-kho-tim-kiem");
+		return new RedirectView("giao-hang-tim-kiem");
 	}
 	
-	@RequestMapping(value = "/donhang/da-nhap-kho-tim-kiem", method = RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang-tim-kiem", method = RequestMethod.GET)
 	public String searchResult(HttpServletRequest request, Model model)
 	{
-		request.getSession().setAttribute("listType", 7);
+		request.getSession().setAttribute("listType", 9);
 		this.doBusiness(model);
-		return "/orders/storagedItems";
+		return "/orders/shippingOrders";
 	}
 	
 	
 	private void doBusiness(Model model) {
 		if (this.searchCondition == null) {
-			this.searchCondition = new SearchCondition(5);
+			this.searchCondition = new SearchCondition(7);
 		}
 		try {
 			if (Utils.isUser()) {
@@ -143,85 +139,20 @@ public class StorageController {
 		}
 	}
 	
-	@RequestMapping(value = "/donhang/xuat-hoa-don", method=RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseResult<String>> exportBill(Model model, @RequestParam Long id) {
-		try {
-			String billContent = this.ordersService.exportBill(id, true);
-			return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, billContent, billContent), HttpStatus.OK);
-		} catch (SokokanriException e) {
-			return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, e.getErrorMessage(), e.getErrorMessage()), HttpStatus.OK);
-		}
-		
-	}
 	
-	@RequestMapping(value = "/donhang/da-xuat-hoa-don", method=RequestMethod.GET)
-	public String exportBillAction(Model model) {
-		if (!Utils.hasRole(Constants.ROLE_BG) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
-		}
-		try {
-			this.ordersService.exportBill(this.selectedItems, true);
-			this.selectedItems.clear();
-			return "redirect:da-nhap-kho";
-		} catch (SokokanriException e) {
-			return "redirect:da-nhap-kho";
-		}
-		
-	}
-	
-	@RequestMapping(value = "/donhang/xuat-hoa-don-file", method=RequestMethod.GET)
-	public void exportBillToFile(Model model, HttpServletRequest request, HttpServletResponse response, @RequestParam Long id) {
-		try {
-			String billContent = this.ordersService.exportBill(id, false);
-			InputStream inputStream = null;
-			try
-			{
-				// set file as attached data and copy file data to response output stream
-				String mimeType = "application/octet-stream";
-
-				response.setContentType(mimeType);
-
-				/* "Content-Disposition : attachment" will be directly download, may provide save as popup, based on your browser setting*/
-				response.setHeader(
-					"Content-Disposition",
-					String.format("attachment; filename=\"chi_tiet_hoa_don.txt\""));
-				byte[] byteBuffer = new byte[4096];
-				//Copy bytes from source to destination, closes both streams.
-				// reads the file's bytes and writes them to the response stream
-				response.setCharacterEncoding("UTF-8");
-				ServletOutputStream outStream = response.getOutputStream();
-				try
-				{
-					outStream.write(billContent.getBytes());
-				}
-				catch (Exception ex)
-				{
-					outStream.close();
-					response.flushBuffer();
-				}
-			}
-			catch (IOException ex)
-			{
-			}
-			
-		} catch (SokokanriException e) {
-		}
-		
-	}
-	
-	@RequestMapping(value = "/donhang/nhap-kho/chon-don-hang", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang/chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
 		this.selectedItems.add(id);
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/nhap-kho/bo-chon-don-hang", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang/bo-chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
 		this.selectedItems.remove(id);
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/nhap-kho/chon-tat-ca", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang/chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
 		String[] allIds = ids.split(",");
 		for (String item : allIds) {
@@ -238,7 +169,7 @@ public class StorageController {
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/nhap-kho/bo-chon-tat-ca", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/giao-hang/bo-chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
 		String[] allIds = ids.split(",");
 		for (String item : allIds) {
@@ -253,5 +184,15 @@ public class StorageController {
 			}
 		}
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/donhang/da-giao-hang", method=RequestMethod.GET)
+	public ModelAndView alreadyToSend(Model model) {
+		try {
+			this.ordersService.sendOrders(this.selectedItems);
+		} catch (SokokanriException ex) {
+			model.addAttribute("message", ex.getErrorMessage());
+		}
+		return new ModelAndView("redirect:giao-hang");
 	}
 }

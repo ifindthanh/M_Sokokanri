@@ -14,4 +14,5 @@ public interface CategoryDAO {
 	public List<Category> getAllOrders(SearchCondition searchCondition, SortCondition sortCondition, Integer offset,
 			Integer maxResults) throws SokokanriException;
 	public int countAllOrders(SearchCondition searchCondition) throws SokokanriException;
+	public void deleteOrder(Long id) throws SokokanriException;
 }

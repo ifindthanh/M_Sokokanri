@@ -299,21 +299,25 @@
     	
     	if (!$("#fullName").val() || $("#fullName").val() == "") {
     		alert("Vui lòng điền họ và tên của bạn");
+    		$("#fullName").focus();
     		return false;
     	}
     	
     	if (!$("#email").val() || $("#email").val() == "") {
     		alert("Vui lòng điền địa chỉ email");
+    		$("#email").focus();
     		return false;
     	}
     	
     	if (!$("#phone").val() || $("#phone").val() == "") {
     		alert("Vui lòng điền số điện thoại");
+    		$("#phone").focus();
     		return false;
     	}
     	
     	if (!$("#address").val() || $("#address").val() == "") {
     		alert("Vui lòng điền địa chỉ nhận hàng");
+    		$("#address").focus();
     		return false;
     	}
     		

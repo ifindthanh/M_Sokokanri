@@ -21,6 +21,7 @@
 <link href="<c:url value="/resources/css/icheck/green.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/fonts/css/font-awesome.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/dialogbox.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/css/jquery-ui.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/dataTables.bootstrap.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/bootstrap-select.min.css" />" rel="stylesheet"><style>
 	.ui-datepicker-next::before {
@@ -42,7 +43,39 @@
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 row" style="height: 150px">
-				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
+				<div class="col-xs-12 row">
+					<label class="col-xs-2 right_align top_margin_5" >Trạng thái đơn hàng: </label>
+					<div class="col-xs-4">
+						<order:search status="${searchCondition.status }"/>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
+						</button>
+					</div>
+				</div>
+				<div class="col-xs-12 row">
+					<label class="col-xs-2 right_align top_margin_5" >Từ ngày: </label>
+					<div class="col-xs-2">
+						<input name="fromDate" type="text"
+							class="form-control has-feedback-left testDate"
+							style="ime-mode: disabled" id="dateStart"
+							placeholder="YYYY/MM/DD"
+							value="${searchCondition.fromDate}"> <span
+							class="fa fa-calendar form-control-feedback left"
+							aria-hidden="true"></span>
+					</div>
+					<label class="col-xs-1 top_margin_5" >Đến ngày: </label>
+					<div class="col-xs-2">
+						<input name="toDate" type="text"
+							class="form-control has-feedback-left testDate"
+							style="ime-mode: disabled" id="dateEnd"
+							placeholder="YYYY/MM/DD"
+							value="${searchCondition.toDate}"> <span
+							class="fa fa-calendar form-control-feedback left"
+							aria-hidden="true"></span>
+					</div>
+				</div>
 			</div>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
@@ -127,7 +160,41 @@
          table.column(0, {}).nodes().each( function (cell, i) {
  			cell.innerHTML = i+1;
  		} );
+         
+         $("#dateStart").datepicker({	
+         	dateFormat: 'yy/mm/dd',
+         	onSelect: function (selected) {
+                 var dt = new Date(selected);
+                 console.log(dt);
+                 $("#dateEnd").datepicker("option", "minDate", dt);
+             }
+         });
+         $("#dateEnd").datepicker({
+         	dateFormat: 'yy/mm/dd',
+         	onSelect: function (selected) {
+                 var dt = new Date(selected);
+                 $("#dateStart").datepicker("option", "maxDate", dt);
+             }
+         });
+         // Change events
+         $("#dateStart").change(function() {
+         	var dateStart = new Date($("#dateStart").val());
+         	console.log(dateStart);
+         	if ((dateStart == "") || (!isValidDate(dateStart)))
+        		{
+         		$("#dateEnd").datepicker("option", "minDate", dateStart);
+        		}
+         });
+         $("#dateEnd").change(function() {
+         	var dateEnd = new Date($("#dateEnd").val());
+         	if ((dateEnd == "") || (!isValidDate(dateEnd)))
+        		{	
+         		$("#dateStart").datepicker("option", "maxDate", dateEnd);
+        		}
+         });
     });
+    
+    
     </script>
 </body>
 </html>

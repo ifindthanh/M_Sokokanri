@@ -1,5 +1,6 @@
 package vn.com.nsmv.javabean;
 
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import vn.com.nsmv.common.Utils;
@@ -8,12 +9,28 @@ import vn.com.nsmv.common.Utils;
  */
 public final class SearchCondition
 {
+	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy/MM/dd");
+	
 	private String brand;
 	private Integer status;
 	private Long userId;
 	private String customerName; 
 	private String transferId;
 	private Long billId;
+	private String fromDate;
+	private String toDate;
+	private String fromApprovalDate;
+	private String toApprovalDate;
+	private String fromBoughtDate;
+	private String toBoughtDate;
+	private String fromTransferDate;
+	private String toTransferDate;
+	private String fromTransferToVNDate;
+	private String toTransferToVNDate;
+	private String fromCheckedVNDate;
+	private String toCheckedVNDate;
+	private String fromInformedDate;
+	private String toInformedDate;
 	
 	
 	public SearchCondition() {
@@ -55,7 +72,7 @@ public final class SearchCondition
 			params.put("userId", this.userId);
 		}
 		
-		if (this.status != null) {
+		if (this.status != null || this.status != 999) {
 			if (this.status == 0) {
 				searching.append(" and (status = :status or status = -1)");
 			} else if (this.status == 1) {
@@ -64,6 +81,8 @@ public final class SearchCondition
 				searching.append(" and status = :status");
 			}
 			params.put("status", this.status);
+		} else {
+			searching.append(" and status <> 8");
 		}
 		
 		if (Utils.isEmpty(this.customerName)) {
@@ -114,6 +133,117 @@ public final class SearchCondition
 	public void setBillId(Long billId) {
 		this.billId = billId;
 	}
-	
 
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
+
+	public String getFromApprovalDate() {
+		return fromApprovalDate;
+	}
+
+	public void setFromApprovalDate(String fromApprovalDate) {
+		this.fromApprovalDate = fromApprovalDate;
+	}
+
+	public String getToApprovalDate() {
+		return toApprovalDate;
+	}
+
+	public void setToApprovalDate(String toApprovalDate) {
+		this.toApprovalDate = toApprovalDate;
+	}
+
+	public String getFromBoughtDate() {
+		return fromBoughtDate;
+	}
+
+	public void setFromBoughtDate(String fromBoughtDate) {
+		this.fromBoughtDate = fromBoughtDate;
+	}
+
+	public String getToBoughtDate() {
+		return toBoughtDate;
+	}
+
+	public void setToBoughtDate(String toBoughtDate) {
+		this.toBoughtDate = toBoughtDate;
+	}
+
+	public String getFromTransferDate() {
+		return fromTransferDate;
+	}
+
+	public void setFromTransferDate(String fromTransferDate) {
+		this.fromTransferDate = fromTransferDate;
+	}
+
+	public String getToTransferDate() {
+		return toTransferDate;
+	}
+
+	public void setToTransferDate(String toTransferDate) {
+		this.toTransferDate = toTransferDate;
+	}
+
+	public String getFromTransferToVNDate() {
+		return fromTransferToVNDate;
+	}
+
+	public void setFromTransferToVNDate(String fromTransferToVNDate) {
+		this.fromTransferToVNDate = fromTransferToVNDate;
+	}
+
+	public String getToTransferToVNDate() {
+		return toTransferToVNDate;
+	}
+
+	public void setToTransferToVNDate(String toTransferToVNDate) {
+		this.toTransferToVNDate = toTransferToVNDate;
+	}
+
+	public String getFromCheckedVNDate() {
+		return fromCheckedVNDate;
+	}
+
+	public void setFromCheckedVNDate(String fromCheckedVNDate) {
+		this.fromCheckedVNDate = fromCheckedVNDate;
+	}
+
+	public String getToCheckedVNDate() {
+		return toCheckedVNDate;
+	}
+
+	public void setToCheckedVNDate(String toCheckedVNDate) {
+		this.toCheckedVNDate = toCheckedVNDate;
+	}
+
+	public String getFromInformedDate() {
+		return fromInformedDate;
+	}
+
+	public void setFromInformedDate(String fromInformedDate) {
+		this.fromInformedDate = fromInformedDate;
+	}
+
+	public String getToInformedDate() {
+		return toInformedDate;
+	}
+
+	public void setToInformedDate(String toInformedDate) {
+		this.toInformedDate = toInformedDate;
+	}
+	
 }

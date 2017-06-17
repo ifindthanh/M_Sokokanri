@@ -70,7 +70,7 @@ public class WaitingToBuyController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 3);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/buyingOrders");
 	}
@@ -118,6 +118,7 @@ public class WaitingToBuyController {
 			category.setStatus(2);
 			category.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 			category.setBoughtDate(new Date());
+			category.setNote("");
 			this.ordersService.saveOrder(category);
 			return new ModelAndView("redirect:/donhang/" + category.getId());
 		} catch (SokokanriException ex) {
@@ -125,7 +126,7 @@ public class WaitingToBuyController {
 					"message", ex.getErrorMessage());
 			redirectAttributes.addFlashAttribute(
 					"order", category);
-			return new ModelAndView("redirect:/donhang/luu-error");
+			return new ModelAndView("redirect:/donhang/" + category.getId());
 		}
 	}
 	

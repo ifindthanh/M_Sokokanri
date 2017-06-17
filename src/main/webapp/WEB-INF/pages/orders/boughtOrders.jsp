@@ -81,6 +81,10 @@
 								<td>
 									<a href="${item.id }"><i class="fa fa-info"
 										aria-hidden="true"></i> View</a>
+									<sec:authorize access="hasRole('ROLE_A')">
+										/ <a href="admin/${item.id }"><i class="fa"
+										aria-hidden="true"></i> Detail </a>
+									</sec:authorize>
 								</td>
 						</tr>
 						</c:forEach>
@@ -91,7 +95,7 @@
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
 					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/tat-ca"
+					uri="${pageContext.request.contextPath}/donhang/da-mua"
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">			
@@ -220,7 +224,7 @@
 			return;
 		}
 		
-		var check = confirm("Các thông tin về đơn hàng sẽ không thể thay đổi nữa. Bạn có thật sự muốn phê duyệt đơn hàng này?");
+		var check = confirm("Bạn có thật sự muốn chuyển đơn hàng này sang đã chuyển tại nước ngoài?");
     	if (check) {
     		$('#addNoteModal').modal('show');
     	}

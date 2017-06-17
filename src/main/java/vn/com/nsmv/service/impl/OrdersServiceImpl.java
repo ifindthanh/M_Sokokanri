@@ -37,6 +37,7 @@ import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.javabean.SortCondition;
+import vn.com.nsmv.javabean.UploadBean;
 import vn.com.nsmv.service.OrdersService;
 
 @Service("ordersService")
@@ -56,6 +57,7 @@ public class OrdersServiceImpl implements OrdersService {
 		user.setId(category.getUserId());
 		category.setUser(user);
 		category.setStatus(0);
+		category.validate();
 		Long categoryId = categoryDAO.add(category);
 		
 		Iterator<Item> iterator = category.getItems().iterator();
@@ -96,6 +98,7 @@ public class OrdersServiceImpl implements OrdersService {
 		User user = new User();
 		user.setId(category.getUserId());
 		category.setUser(user);
+		category.validate();
 		this.categoryDAO.saveCategory(category);
 		Iterator<Item> iterator = category.getItems().iterator();
 		while (iterator.hasNext()) {
@@ -118,6 +121,13 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	public void deleteItemById(Long id) throws SokokanriException {
+		Item item = this.itemDAO.findById(id);
+		if (item == null) {
+			throw new SokokanriException("Item không tồn tại");
+		}
+		if (item.getCategory().getStatus() != 0 && item.getCategory().getStatus() != -1) {
+			throw new SokokanriException("Đơn hàng đã được duyệt, không thể xóa đơn hàng.");
+		}
 		this.itemDAO.deleteById(id);
 	}
 
@@ -154,6 +164,7 @@ public class OrdersServiceImpl implements OrdersService {
 		if (category.getStatus() == null || (category.getStatus() != 0 && category.getStatus() != -1)) {
 			throw new SokokanriException("Không thể duyệt đơn hàng đã chọn.");
 		}
+		category.setNote("");
 		category.setApprover(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 		category.setApprovedDate(new Date());
 		category.setStatus(1);
@@ -176,6 +187,7 @@ public class OrdersServiceImpl implements OrdersService {
 		if (category.getStatus() == null || (category.getStatus() != 0 && category.getStatus() != -1)) {
 			throw new SokokanriException("Không thể ghi chú đơn hàng đã chọn.");
 		}
+		category.setNote(content);
 		category.setStatus(-1);
 		category.setApprover(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 		category.setApprovedDate(new Date());
@@ -201,6 +213,7 @@ public class OrdersServiceImpl implements OrdersService {
 		if (category.getStatus() == null || (category.getStatus() != 1 && category.getStatus() != -2)) {
 			throw new SokokanriException("Không thể ghi chú đơn hàng đã chọn.");
 		}
+		category.setNote(content);
 		category.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 		category.setBoughtDate(new Date());
 		category.setStatus(-2);
@@ -265,10 +278,10 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Transactional
 	public void importToStorage(Map<Long, List<Category>> classificationOrders) throws SokokanriException {
-		Bill bill = new Bill();
-		bill.setStatus(1);
 		Iterator<Entry<Long, List<Category>>> iterator = classificationOrders.entrySet().iterator();
 		while (iterator.hasNext()) {
+			Bill bill = new Bill();
+			bill.setStatus(1);
 			Entry<Long, List<Category>> entry = iterator.next();
 			this.billDAO.add(bill);
 			for (Category item : entry.getValue()) {
@@ -349,11 +362,12 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Transactional
-	public Long doUpload(MultipartFile uploadFile) throws SokokanriException {
+	public Long doUpload(UploadBean uploadBean) throws SokokanriException {
 		Workbook workbook;
 		ByteArrayInputStream byteArrayInputStream = null;
 		try
 		{
+			MultipartFile uploadFile = uploadBean.getUploadFile();
 			byteArrayInputStream = new ByteArrayInputStream(uploadFile.getBytes());
 			if (uploadFile.getOriginalFilename().endsWith("xls")) {
                 workbook = new HSSFWorkbook(byteArrayInputStream);
@@ -371,6 +385,13 @@ public class OrdersServiceImpl implements OrdersService {
 	        user.setId(customUser.getUserId());
 	        category.setUser(user);
 			category.setStatus(0);
+			category.setFullName(uploadBean.getFullName());
+			category.setPhone(uploadBean.getPhone());
+			category.setAddress(uploadBean.getAddress());
+			category.setEmail(uploadBean.getEmail());
+			category.setNote(uploadBean.getNote());
+			category.setCity(uploadBean.getCity());
+			category.validate();
 	        Long result = categoryDAO.add(category);
 	        while (iterator.hasNext()) {
 	        	
@@ -455,6 +476,7 @@ public class OrdersServiceImpl implements OrdersService {
 					continue;
 				}
 	            item.validate();
+	            item.setTotal(item.getQuantity() * item.getCost());
 				this.itemDAO.add(item);
 	        }
 	         
@@ -472,6 +494,50 @@ public class OrdersServiceImpl implements OrdersService {
 				} catch (IOException e) {
 				}
 			}
+		}
+	}
+
+	@Transactional
+	public void alreadyToSend(Set<Long> selectedItems) throws SokokanriException {
+		for (Long billId : selectedItems) {
+			Bill bill = this.billDAO.getById(billId);
+			if (bill == null) {
+				throw new SokokanriException("Hóa đơn không tồn tại");
+			}
+			for (Category cart : bill.getCategories()) {
+				if (cart.getStatus() == null || (cart.getStatus() != 6)) {
+					throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+				}
+				cart.setStatus(7);
+				this.categoryDAO.saveCategory(cart);
+
+			}
+		}
+	}
+
+	@Transactional
+	public void sendOrders(Set<Long> selectedItems) throws SokokanriException {
+		for (Long billId : selectedItems) {
+			Bill bill = this.billDAO.getById(billId);
+			if (bill == null) {
+				throw new SokokanriException("Hóa đơn không tồn tại");
+			}
+			
+			for (Category cart : bill.getCategories()) {
+				if (cart.getStatus() == null || (cart.getStatus() != 7)) {
+					throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+				}
+				cart.setStatus(8);
+				this.categoryDAO.saveCategory(cart);
+
+			}
+		}
+	}
+
+	@Transactional
+	public void deleteOrders(Set<Long> selectedItems) throws SokokanriException {
+		for (Long id: selectedItems) {
+			this.categoryDAO.deleteOrder(id);
 		}
 	}
 	

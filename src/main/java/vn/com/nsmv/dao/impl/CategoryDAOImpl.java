@@ -140,4 +140,19 @@ public class CategoryDAOImpl implements CategoryDAO {
 			throw new SokokanriException(ex);
 		}
 	}
+
+	public void deleteOrder(Long id) throws SokokanriException {
+		try
+		{
+	    	Session session = this.sessionFactory.getCurrentSession();
+			String hql = "delete Category where id = :id";
+		    Query query = session.createQuery(hql).setParameter("id", id);
+		    query.executeUpdate();
+		}
+		catch (Exception ex)
+		{
+			logger.debug(ex);
+			throw new SokokanriException(ex);
+		}		
+	}
 }

@@ -14,4 +14,15 @@
       <type>int</type>
     </attribute>
   </tag>
+  <tag>
+    <name>search</name>
+    <tag-class>vn.com.nsmv.taglib.OrderStatusSearchingTaglib</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>status</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+  </tag>
 </taglib>

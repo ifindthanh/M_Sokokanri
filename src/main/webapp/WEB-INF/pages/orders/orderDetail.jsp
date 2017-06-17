@@ -41,6 +41,9 @@
 	</div>
 	<div id="page_content">
 		<div class="col-sm-12">
+			<c:if test="${not empty category.note}">
+				<p class="error">Lưu ý đơn hàng: ${category.note }</p>
+			</c:if>
 			<p class="error">${message }</p>
 			<form:form method="POST" action="luu-don-hang" modelAttribute="category" id="order_form">
 				<c:set var = "real_price_access" scope = "page" value = "true"></c:set>
@@ -83,9 +86,6 @@
 								</td>
 								<c:if test="${read_only ne true}">
 									<td>
-										<a class="myAction" href="#"><i class="fa fa-save"
-											aria-hidden="true"></i></a>
-											/
 										<a class="deleteItem myAction" item = "${item.id }"><i class="fa fa-trash-o"
 											aria-hidden="true"></i></a>
 									</td>
@@ -168,7 +168,32 @@
 				<c:if test="${read_only ne true}">
 					<input type="submit" class="btn btn-primary" value="Lưu thông tin" onclick="return validateForm()"/>
 				</c:if>
-
+				<c:set var = "cancelLink" scope = "session" value = ""></c:set>
+				<c:if test="${listType == 1}">
+					<c:set var = "cancelLink" value = "tat-ca"></c:set>
+				</c:if>
+				<c:if test="${listType == 2}">
+					<c:set var = "cancelLink" value = "cho-duyet"></c:set>
+				</c:if>
+				<c:if test="${listType == 3}">
+					<c:set var = "cancelLink" value = "cho-mua"></c:set>
+				</c:if>
+				<c:if test="${listType == 4}">
+					<c:set var = "cancelLink" value = "da-mua"></c:set>
+				</c:if>
+				<c:if test="${listType == 5}">
+					<c:set var = "cancelLink" value = "da-chuyen"></c:set>
+				</c:if>
+				<c:if test="${listType == 6}">
+					<c:set var = "cancelLink" value = "da-chuyen-vn"></c:set>
+				</c:if>
+				<c:if test="${listType == 7}">
+					<c:set var = "cancelLink" value = "da-nhap-kho"></c:set>
+				</c:if>
+				<c:if test="${listType == 8}">
+					<c:set var = "cancelLink" value = "da-xuat-hd"></c:set>
+				</c:if>
+				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
 				<input type="hidden" value="${category.items.size()}" id="item_size"/>
 				<form:input type="hidden" path = "userId" value="${category.userId}"/>
 				<form:input type="hidden" path = "id" value="${order.id}" id="orderId"/>
@@ -193,7 +218,7 @@
 					<textarea id="error_information" class="description form-control" placeholder="Điền thông tin sai sót của đơn hàng" style="width: 100%; height: 150px"></textarea>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="transfer()">Ghi chú</button>
+					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -506,21 +531,25 @@
     	
     	if (!$("#fullName").val() || $("#fullName").val() == "") {
     		alert("Vui lòng điền họ và tên của bạn");
+    		$("#fullName").focus();
     		return false;
     	}
     	
     	if (!$("#email").val() || $("#email").val() == "") {
     		alert("Vui lòng điền địa chỉ email");
+    		$("#email").focus();
     		return false;
     	}
     	
     	if (!$("#phone").val() || $("#phone").val() == "") {
     		alert("Vui lòng điền số điện thoại");
+    		$("#phone").focus();
     		return false;
     	}
     	
     	if (!$("#address").val() || $("#address").val() == "") {
     		alert("Vui lòng điền địa chỉ nhận hàng");
+    		$("#address").focus();
     		return false;
     	}
     		
