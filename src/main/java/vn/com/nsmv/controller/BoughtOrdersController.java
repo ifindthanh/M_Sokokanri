@@ -66,7 +66,7 @@ public class BoughtOrdersController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 4);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/boughtOrders");
 	}

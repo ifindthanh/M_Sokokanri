@@ -60,6 +60,7 @@
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
+							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
@@ -71,6 +72,9 @@
 					<tbody>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
+								<td>
+									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}"/>
+								</td>
 								<td>
 									${item.formattedId}
 								</td>
@@ -87,6 +91,10 @@
 								<td>
 									<a href="${item.id }"><i class="fa fa-info"
 										aria-hidden="true"></i> View</a>
+									<sec:authorize access="hasRole('ROLE_A')">
+										/ <a href="admin/${item.id }"><i class="fa"
+										aria-hidden="true"></i> Detail </a>
+									</sec:authorize>
 								</td>
 						</tr>
 						</c:forEach>
@@ -97,7 +105,7 @@
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
 					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/tat-ca"
+					uri="${pageContext.request.contextPath}/donhang/da-chuyen-vn"
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
@@ -149,6 +157,59 @@
     	}
 	}
 	
+	function selectItem(id, element) {
+    	var chkbox = $(element);
+    	if (chkbox.is(':checked')) {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen-vn/chon-don-hang?id=" + id,
+    			success : function(result) {
+    			},
+    			error : function() {
+    			}
+    		});
+    	} else {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen-vn/bo-chon-don-hang?id=" + id,
+    			success : function(result) {
+    			},
+    			error : function() {
+    			}
+    		});
+    	}
+    }
+    
+    function selectAllItems(element) {
+		var chkbox = $(element);
+		var ids = "";
+		$(".order_id").each(function (){
+			$(this).prop('checked', chkbox.is(':checked'));
+			ids += $(this).attr("order_id")+",";
+		})
+    	if (chkbox.is(':checked')) {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen-vn/chon-tat-ca?ids="+ids,
+    			success : function(result) {
+    				
+    			},
+    			error : function() {
+    			}
+    		});
+    	} else {
+    		$.ajax({
+    			type : "GET",
+    			url : "da-chuyen-vn/bo-chon-tat-ca?ids="+ids,
+    			success : function(result) {
+    				
+    			},
+    			error : function() {
+    				
+    			}
+    		});
+    	}
+    }
 	
     </script>
 </body>

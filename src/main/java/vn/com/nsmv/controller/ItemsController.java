@@ -85,6 +85,10 @@ public class ItemsController {
 	@RequestMapping(value = "/donhang/tao-tu-file", method=RequestMethod.GET)
 	public ModelAndView createFromFile(HttpServletRequest request, Model model) {
 		UploadBean uploadBean = new UploadBean();
+		CustomUser customUser = (CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		uploadBean.setFullName(customUser.getDisplayName());
+		uploadBean.setPhone(customUser.getPhone());
+		uploadBean.setEmail(customUser.getEmail());
 		model.addAttribute("uploadBean", uploadBean);
 		return new ModelAndView("/common/upload");
 	}
@@ -97,7 +101,7 @@ public class ItemsController {
 		{
 		try
 		{
-			Long orderId = this.ordersService.doUpload(myUpload.getUploadFile());
+			Long orderId = this.ordersService.doUpload(myUpload);
 			return new ModelAndView("redirect:/donhang/" + orderId);
 		}
 		catch (SokokanriException ex)

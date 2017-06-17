@@ -43,7 +43,32 @@
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12">
 				<div style="position: absolute; float: left; left: 650px; margin-top: 20px">
-					<a type="button" class="btn btn-default" href="../tat-ca">Trở về </a>
+					<c:set var = "cancelLink" scope = "session" value = ""></c:set>
+				<c:if test="${listType == 1}">
+					<c:set var = "cancelLink" value = "../tat-ca"></c:set>
+				</c:if>
+				<c:if test="${listType == 2}">
+					<c:set var = "cancelLink" value = "../cho-duyet"></c:set>
+				</c:if>
+				<c:if test="${listType == 3}">
+					<c:set var = "cancelLink" value = "../cho-mua"></c:set>
+				</c:if>
+				<c:if test="${listType == 4}">
+					<c:set var = "cancelLink" value = "../da-mua"></c:set>
+				</c:if>
+				<c:if test="${listType == 5}">
+					<c:set var = "cancelLink" value = "../da-chuyen"></c:set>
+				</c:if>
+				<c:if test="${listType == 6}">
+					<c:set var = "cancelLink" value = "../da-chuyen-vn"></c:set>
+				</c:if>
+				<c:if test="${listType == 7}">
+					<c:set var = "cancelLink" value = "../da-nhap-kho"></c:set>
+				</c:if>
+				<c:if test="${listType == 8}">
+					<c:set var = "cancelLink" value = "../da-xuat-hd"></c:set>
+				</c:if>
+				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
 				</div>
 				<table id="tableList" class="listBusCard table" width = "600px">
 					<thead>
@@ -71,7 +96,7 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người duyệt đơn hàng</td>
-							<td>${category.getOrderPrice() }</td>
+							<td>${category.getApprover() }</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày duyệt đơn hàng</td>

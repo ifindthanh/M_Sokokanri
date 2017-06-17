@@ -74,6 +74,12 @@
 				        <sec:authorize access="hasAnyRole('ROLE_A','ROLE_U')">
 				        	<li><a href="<c:url value= "/donhang/da-xuat-hd/0"/>">Đã xuất hóa đơn</a></li>
 				        </sec:authorize>
+				        <sec:authorize access="hasAnyRole('ROLE_A','ROLE_U')">
+				        	<li><a href="<c:url value= "/donhang/giao-hang/0"/>">Giao hàng</a></li>
+				        </sec:authorize>
+				        <sec:authorize access="hasAnyRole('ROLE_A')">
+				        	<li><a href="<c:url value= "/donhang/da-hoan-thanh/0"/>">Đã hoàn thành</a></li>
+				        </sec:authorize>
 				    </ul>
 				</li>
 			</sec:authorize>

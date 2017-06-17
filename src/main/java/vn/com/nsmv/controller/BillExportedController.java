@@ -1,14 +1,10 @@
 package vn.com.nsmv.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -72,7 +68,7 @@ public class BillExportedController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 8);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/billExportedItems");
 	}
@@ -114,6 +110,7 @@ public class BillExportedController {
 	@RequestMapping(value = "/donhang/da-xuat-hd-tim-kiem", method = RequestMethod.GET)
 	public String searchResult(HttpServletRequest request, Model model)
 	{
+		request.getSession().setAttribute("listType", 8);
 		this.doBusiness(model);
 		return "/orders/billExportedItems";
 	}
@@ -143,19 +140,19 @@ public class BillExportedController {
 	}
 	
 	
-	@RequestMapping(value = "/donhang/xuat-hd/chon-don-hang", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-xuat-hd/chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
 		this.selectedItems.add(id);
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/xuat-hd/bo-chon-don-hang", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-xuat-hd/bo-chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
 		this.selectedItems.remove(id);
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/xuat-hd/chon-tat-ca", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-xuat-hd/chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
 		String[] allIds = ids.split(",");
 		for (String item : allIds) {
@@ -172,7 +169,7 @@ public class BillExportedController {
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/donhang/xuat-hd/bo-chon-tat-ca", method=RequestMethod.GET)
+	@RequestMapping(value = "/donhang/da-xuat-hd/bo-chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
 		String[] allIds = ids.split(",");
 		for (String item : allIds) {
@@ -187,5 +184,15 @@ public class BillExportedController {
 			}
 		}
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/donhang/san-sang-de-giao", method=RequestMethod.GET)
+	public ModelAndView alreadyToSend(Model model) {
+		try {
+			this.ordersService.alreadyToSend(this.selectedItems);
+		} catch (SokokanriException ex) {
+			model.addAttribute("message", ex.getErrorMessage());
+		}
+		return new ModelAndView("redirect:da-xuat-hd");
 	}
 }

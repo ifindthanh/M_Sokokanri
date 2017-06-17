@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 
 
@@ -326,5 +327,22 @@ public class Category implements java.io.Serializable {
 		this.informedDate = informedDate;
 	}
 	
-	
+	public void validate() throws SokokanriException{
+		
+		if (Utils.isEmpty(this.fullName)) {
+			throw new SokokanriException("Họ và tên không được để trống");
+		}
+		
+		if (Utils.isEmpty(this.email)) {
+			throw new SokokanriException("Địa chỉ email không được để trống");
+		}
+		
+		if (Utils.isEmpty(this.phone)) {
+			throw new SokokanriException("Số điện thoại không được để trống");
+		}
+		
+		if (Utils.isEmpty(this.address)) {
+			throw new SokokanriException("Địa chỉ không được để trống");
+		}
+	}
 }

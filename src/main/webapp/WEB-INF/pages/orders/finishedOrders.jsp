@@ -41,14 +41,27 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="tat-ca" method="POST">
-			<div class="col-sm-12 row" style="height: 150px">
+		<form action="da-nhap-kho" method="POST">
+			<div class="row" style="height: 150px">
+				<div class="col-xs-12 row">
+					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
+					<div class="col-xs-4">
+						<input type="hidden" name="status" value="${ searchCondition.status}" />
+						<input type="text" name= "billId" value="${ searchCondition.billId}" class="form-control">
+					</div>
+					<div>
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
+						</button>
+					</div>
+				</div>
 			</div>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>						
+							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
@@ -58,33 +71,51 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${allOrders}" varStatus="status">
+						<c:forEach var="item" items="${allBills}" varStatus="status">
 							<tr>
 								<td>
 									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}"/>
 								</td>
+								<td rowspan="${item.categories.size()+1}">${item.getFormattedId()}</td>
 								<td>
-									${item.formattedId}
+									<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
+										<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
+									</button>
 								</td>
-								<th>${item.transferId}</th>
-								<td>
-									${item.user.fullname}
-								</td>
-								<td>
-									<order:status status="${item.status }"/>
-								</td>
-								<td>
-									${item.getOrderRealPrice() }
-								</td>
-								<td>
-									<a href="${item.id }"><i class="fa fa-info"
-										aria-hidden="true"></i> View</a>
-									<sec:authorize access="hasRole('ROLE_A')">
-										/ <a href="admin/${item.id }"><i class="fa"
-										aria-hidden="true"></i> Detail </a>
-									</sec:authorize>
-								</td>
-						</tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<c:forEach var="cart" items="${item.categories}" varStatus="cartstatus">
+								<tr>
+									<td style="display:none"></td>
+									<td></td>
+									<td>
+										${cart.formattedId}
+									</td>
+									<td>${cart.transferId}</td>
+									<td>
+										${cart.user.fullname}
+									</td>
+									<td>
+										<order:status status="${cart.status }"/>
+									</td>
+									<td>
+										${cart.getOrderRealPrice() }
+									</td>
+									<td>
+										<a href="${cart.id }"><i class="fa fa-info"
+											aria-hidden="true"></i> View</a>
+										<sec:authorize access="hasRole('ROLE_A')">
+											/ <a href="admin/${item.id }"><i class="fa"
+											aria-hidden="true"></i> Detail </a>
+										</sec:authorize>
+									</td>
+									
+								</tr>
+							</c:forEach>
 						</c:forEach>
 					</tbody>
 				</table>
@@ -93,17 +124,42 @@
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
 					steps="${maxResult}"
-					uri="${pageContext.request.contextPath}/donhang/da-chuyen"
+					uri="${pageContext.request.contextPath}/donhang/giao-hang"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-						<i class="fa" aria-hidden="true" ></i> Chuyển về Việt Nam
-					</button>
-				</div>
-			</sec:authorize>
+			
+			<div class="col-sm-12" style="margin-bottom: 20px;">
+				<button id="addRow" type="button" class="btn btn-primary" onclick="deleteOrders()">
+					<i class="fa" aria-hidden="true" ></i> Xóa đơn hàng
+				</button>
+			</div>
 		</form>
+	</div>
+	
+	
+	<!-- Modal -->
+	<div class="modal fade" id="billContent" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Thông tin hóa đơn</h4>
+				</div>
+				<div class="modal-body">
+					<div id="content" ></div>
+					<input type="hidden" id="selectedBill"/>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="exportBill()">Xuất ra file</button>
+					<button type="button" class="btn btn-default" onclick="printBill()">In hóa đơn</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
 	</div>
 	
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
@@ -143,7 +199,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "da-chuyen/chon-don-hang?id=" + id,
+    			url : "giao-hang/chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -152,7 +208,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "da-chuyen/bo-chon-don-hang?id=" + id,
+    			url : "giao-hang/bo-chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -171,7 +227,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "da-chuyen/chon-tat-ca?ids="+ids,
+    			url : "giao-hang/chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -181,7 +237,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "da-chuyen/bo-chon-tat-ca?ids="+ids,
+    			url : "giao-hang/bo-chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -192,15 +248,60 @@
     	}
     }
     
-	
-	function approval(){
-		var check = confirm("Bạn có thật sự muốn phê duyệt đơn hàng này?");
-    	if (check) {
-    		window.location.href = "chuyen-nhieu-don-hang-vn"; 
-    	}
+	function approval(id){
+		$.ajax({
+			type : "GET",
+			url : "xuat-hoa-don?id="+id,
+			success : function(result) {
+				if (result.status == 0) {
+					alert(result.message);
+					return;
+				}
+				$("#content").html(result.result);
+				$("#billContent").modal('show');
+				$("#selectedBill").val(id);
+			},
+			error : function() {
+			}
+		});
 	}
 	
+	function exportBill() {
+		$("#billContent").modal('hide');
+		window.location.href = "xuat-hoa-don-file?id="+$("#selectedBill").val();
+	}
 	
-    </script>
+	function printBill() {
+		var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+		mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+		mywindow.document.write('</head><body >');
+		mywindow.document.write('<h1>' + document.title  + '</h1>');
+		mywindow.document.write($("#content").html());
+		mywindow.document.write('</body></html>');
+
+		mywindow.document.close(); // necessary for IE >= 10
+		mywindow.focus(); // necessary for IE >= 10*/
+
+		mywindow.print();
+		mywindow.close();
+
+		return true;
+
+	}
+	
+	function deleteOrders() {
+		if ($('.order_id:checkbox:checked').length == 0) {
+			alert("Vui lòng chọn một đơn hàng.");
+			return;
+		}
+		var check = confirm("Bạn có thực sự muốn xóa vĩnh viễn các đơn hàng đã chọn không?");
+    	if (check) {
+    		window.location.href = "xoa-don-hang"; 
+    	}
+		
+	}
+	
+</script>
 </body>
 </html>

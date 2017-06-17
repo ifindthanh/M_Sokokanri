@@ -70,7 +70,7 @@ public class WaitingToBuyController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 3);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/buyingOrders");
 	}
@@ -125,7 +125,7 @@ public class WaitingToBuyController {
 					"message", ex.getErrorMessage());
 			redirectAttributes.addFlashAttribute(
 					"order", category);
-			return new ModelAndView("redirect:/donhang/luu-error");
+			return new ModelAndView("redirect:/donhang/" + category.getId());
 		}
 	}
 	

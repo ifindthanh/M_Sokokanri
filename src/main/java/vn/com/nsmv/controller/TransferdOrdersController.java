@@ -67,7 +67,7 @@ public class TransferdOrdersController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 5);
 		this.doBusiness(model);
 		return new ModelAndView("/orders/transferedOrders");
 	}
