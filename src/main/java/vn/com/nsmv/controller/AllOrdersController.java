@@ -79,7 +79,7 @@ public class AllOrdersController {
 		{
 			this.maxResults = maxResults;
 		}
-		
+		request.getSession().setAttribute("listType", 1);
 		if (maxResults != null)
 		{
 			this.maxResults = maxResults;
