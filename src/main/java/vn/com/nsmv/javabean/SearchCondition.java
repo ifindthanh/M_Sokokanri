@@ -12,7 +12,7 @@ public final class SearchCondition
 	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy/MM/dd");
 	
 	private String brand;
-	private Integer status;
+	private Integer status = 999;
 	private Long userId;
 	private String customerName; 
 	private String transferId;
@@ -72,7 +72,7 @@ public final class SearchCondition
 			params.put("userId", this.userId);
 		}
 		
-		if (this.status != null || this.status != 999) {
+		if (this.status != null && this.status != 999) {
 			if (this.status == 0) {
 				searching.append(" and (status = :status or status = -1)");
 			} else if (this.status == 1) {
