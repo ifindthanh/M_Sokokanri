@@ -23,10 +23,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 	private static final Logger logger = Logger.getLogger(CategoryDAOImpl.class);
 	private SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory)
-	{
-		this.sessionFactory = sessionFactory;
-	}
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 	
 	public Long add(Category category) throws SokokanriException {
 		try
@@ -117,29 +116,6 @@ public class CategoryDAOImpl implements CategoryDAO {
 		}
 	}
 
-	public int countAllOrders(SearchCondition searchCondition) throws SokokanriException {
-		try
-		{
-			Session session = this.sessionFactory.getCurrentSession();
-			StringBuilder sql = new StringBuilder("select COUNT(*) from Category where id <> 0 ");
-			Map<String, Object> params = new HashMap<String, Object>();
-			if (searchCondition != null) {
-				sql.append(searchCondition.getSearching(searchCondition, params));
-			}
-			Query query = session.createQuery(sql.toString());
-			Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Entry<String, Object> element = iterator.next();
-				query.setParameter(element.getKey(), element.getValue());
-			}
-			return ((Number) query.uniqueResult()).intValue();
-		}
-		catch (Exception ex)
-		{
-			logger.debug(ex);
-			throw new SokokanriException(ex);
-		}
-	}
 
 	public void deleteOrder(Long id) throws SokokanriException {
 		try

@@ -29,6 +29,7 @@ import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
+import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -124,9 +125,9 @@ public class CheckingOrdersController {
 				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
+			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
-			int count = this.ordersService.countAllOrders(this.searchCondition);
+			int count = this.ordersService.countAllItems(this.searchCondition);
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
@@ -141,10 +142,10 @@ public class CheckingOrdersController {
 	@RequestMapping(value = "/donhang/nhap-kho", method=RequestMethod.GET)
 	public ModelAndView importToStorage(Model model) {
 		try {
-			List<Category> allOrders = this.ordersService.getAllOrders(new SearchCondition(4), null, null,
+			List<Item> allOrders = this.ordersService.getAllOrders(new SearchCondition(4), null, null,
 					null);
-			Map<Long, List<Category>> classificationOrders = new HashMap<Long, List<Category>>();
-			for (Category item : allOrders) {
+			Map<Long, List<Item>> classificationOrders = new HashMap<Long, List<Item>>();
+			for (Item item : allOrders) {
 				if (!this.selectedItems.contains(item.getId())) {
 					continue;
 				}
@@ -152,7 +153,7 @@ public class CheckingOrdersController {
 				if (classificationOrders.containsKey(userID)) {
 					classificationOrders.get(userID).add(item);
 				} else {
-					ArrayList<Category> orders = new ArrayList<Category>();
+					ArrayList<Item> orders = new ArrayList<Item>();
 					orders.add(item);
 					classificationOrders.put(userID, orders);
 				}

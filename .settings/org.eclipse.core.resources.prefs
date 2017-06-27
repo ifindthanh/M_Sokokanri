@@ -3,6 +3,7 @@ encoding//src/main/java/vn/com/nsmv/common/Utils.java=UTF-8
 encoding//src/main/java/vn/com/nsmv/entity/Item.java=UTF-8
 encoding//src/main/java/vn/com/nsmv/i18n/SokokanriMessage.java=UTF-8
 encoding//src/main/java/vn/com/nsmv/service/impl/OrdersServiceImpl.java=UTF-8
+encoding//src/main/java/vn/com/nsmv/taglib/OrderStatusSearchingTaglib.java=UTF-8
 encoding//src/main/java/vn/com/nsmv/taglib/PaginationTaglib.java=UTF-8
 encoding//src/main/resources/messages.properties=UTF-8
 encoding//src/main/resources/messages_ja_JP.properties=UTF-8

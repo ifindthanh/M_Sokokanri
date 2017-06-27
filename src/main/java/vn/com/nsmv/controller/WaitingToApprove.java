@@ -25,6 +25,7 @@ import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
+import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -80,9 +81,9 @@ public class WaitingToApprove {
 				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
+			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
-			int count = this.ordersService.countAllOrders(this.searchCondition);
+			int count = this.ordersService.countAllItems(this.searchCondition);
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);

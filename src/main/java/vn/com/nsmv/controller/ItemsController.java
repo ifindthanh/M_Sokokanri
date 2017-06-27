@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,7 +55,6 @@ public class ItemsController {
 			boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || (Utils.isUser() && category.getStatus() != null && category.getStatus() == 0 ));
 			
 			model.addAttribute("read_only", Boolean.valueOf(readOnly));
-			category.setUserId(category.getUser().getId());
 			model.addAttribute("category", category);
 			return new ModelAndView("/orders/orderDetail");
 		} catch (SokokanriException ex) {
@@ -74,6 +74,17 @@ public class ItemsController {
 			return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, e.getErrorMessage(), null), HttpStatus.OK);
 		}
 	}
+	
+	@RequestMapping(value = "/donhang/luu-item", method=RequestMethod.POST,  
+	    consumes = "application/json", produces = "application/json")
+    public @ResponseBody ResponseEntity<ResponseResult<String>> saveItem(HttpServletRequest request, @RequestBody Item item) {
+        try {
+            this.ordersService.saveItem(item);
+            return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+        } catch (SokokanriException e) {
+            return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, e.getErrorMessage(), null), HttpStatus.OK);
+        }
+    }
 	
 	@RequestMapping(value = "/donhang/tao-moi", method=RequestMethod.GET)
 	public ModelAndView createNew(HttpServletRequest request, Model model) {

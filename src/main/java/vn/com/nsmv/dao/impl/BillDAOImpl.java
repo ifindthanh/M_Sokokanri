@@ -1,12 +1,13 @@
 package vn.com.nsmv.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -16,7 +17,6 @@ import org.hibernate.SessionFactory;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.dao.BillDAO;
 import vn.com.nsmv.entity.Bill;
-import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.javabean.SearchCondition;
 
 public class BillDAOImpl implements BillDAO{
@@ -64,7 +64,6 @@ public class BillDAOImpl implements BillDAO{
 				sql.append(" and b.id = :billId ");
 				params.put("billId", searchCondition.getBillId());
 			}
-			sql.append("group by b.id");
 			Query query = session.createQuery(sql.toString());
 			Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
 			while (iterator.hasNext()) {
@@ -82,13 +81,17 @@ public class BillDAOImpl implements BillDAO{
 			}
 			List<Object[]> resultSet = query.list();
 			List<Bill> result = new ArrayList<Bill>();
+			Set<String> loadedBill = new HashSet<String>();
 			if (resultSet != null) {
 				for (Object[] item : resultSet) {
-					if (Bill.class.isInstance(item[0])) {
+					if (Bill.class.isInstance(item[0]) 
+					    && loadedBill.add(String.valueOf(((Bill) item[0]).getId()))) {
 						result.add((Bill) item[0]);
 						continue;
 					} 
-					result.add((Bill) item[1]);
+					if (loadedBill.add(String.valueOf(((Bill) item[1]).getId()))) {
+					    result.add((Bill) item[1]);
+					}
 				}
 			}
 			return result;

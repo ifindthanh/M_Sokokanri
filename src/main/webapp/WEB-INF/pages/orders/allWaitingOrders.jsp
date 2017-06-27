@@ -48,11 +48,16 @@
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'cho-duyet')" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
-							<th>Tổng tiền</th>
+							<th style="width: 180px">Tên sản phẩm</th>
+							<th style="width: 150px">Nhà phân phối</th>
+							<th style="width: 150px">Link</th>
+							<th style="width: 180px">Mô tả thêm</th>
+							<th style="width: 50px">Đơn giá</th>
+							<th style="width: 50px">Số lượng</th>
+							<th style="width: 100px">Thành tiền</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -60,7 +65,7 @@
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td>
-									<input type="checkbox" class="order_id" order_id="${item.id }" onchange="selectItem(${item.id }, this)" />
+									<input type="checkbox" class="order_id" order_id="${item.id }" onchange="selectItem(${item.id }, this, 'cho-duyet')" />
 								</td>
 								<td>
 									${item.formattedId}
@@ -69,17 +74,72 @@
 									${item.user.fullname}
 								</td>
 								<td>
-									<order:status status="${item.status }"/>
+									<div class="lblName">${item.name }
+									</div>
+									<input type="text" value= "${item.name }" class="form-control hiddenAction txtName"/>
 								</td>
 								<td>
-									${item.getOrderPrice() }
+									<div class="lblBrand">${item.brand }
+									</div>
+									<input type="text" value= "${item.brand }" class="form-control hiddenAction txtBrand"/>
 								</td>
 								<td>
-									<a href="${item.id }"><i class="fa fa-info"
-										aria-hidden="true"></i> View</a>
+									<div class="lblLink">${item.link }
+									</div>
+									<input type="text" value= "${item.link }" class="form-control hiddenAction txtLink"/>
+								</td>
+								<td>
+									<div class="lblDesc">${item.description }
+									</div>
+									<textarea class="form-control hiddenAction description">${item.description } </textarea>
+								</td>
+								<td>
+									<div class="lblCost">${item.cost }
+									</div>
+									<input type="number" value= "${item.cost }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtCost"/>
+								</td>
+								<td>
+									<div class="lblQuantity">${item.quantity }
+									</div>
+									<input type="number" value= "${item.quantity }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtQuantity"/>
+								</td>
+								<td>
+									<div class="lblTotal">${item.total }
+									</div>
+									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
+								</td>
+								
+								<td>
+									<c:if test="${item.isReadonly() ne true}">
+										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
+										aria-hidden="true"></i></a>
+										<div class= "action">
+											<a onclick="save(this)" class="myBtn" item = "${item.id }"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
+												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
+										</div>
+									</c:if>
+									<div>
+										
+									</div>
+									
+									<c:if test="${item.status eq 0 or item.status eq -1}">
+										<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
+											<a class="myBtn origin" orderId = "${item.id }"
+												title="Duyện đơn hàng" onclick="approveAnOrder(this)">
+												<i class="fa fa-thumbs-up icon-resize-small" aria-hidden="true"></i>
+											</a>
+											<a class="myBtn openNote origin" data-id="${item.id }"
+												title="Ghi chú đơn hàng">
+												<i class="fa fa-exclamation-circle  icon-resize-small" aria-hidden="true"></i>
+											</a>
+													
+										</sec:authorize>
+									</c:if>
+									
 									<sec:authorize access="hasRole('ROLE_A')">
-										/ <a href="admin/${item.id }"><i class="fa"
-											aria-hidden="true"></i> Detail </a>
+										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
+										aria-hidden="true"></i> </a>
 									</sec:authorize>
 								</td>
 						</tr>
@@ -104,6 +164,29 @@
 		</form>
 	</div>
 	
+	<!-- Modal -->
+	<div id="addNoteModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Ghi chú đơn hàng</h4>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="action" />
+					<textarea id="error_information" class="description form-control" placeholder="Điền thông tin sai sót của đơn hàng" style="width: 100%; height: 150px"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
 	<script src="<c:url value="/resources/js/jquery.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
@@ -117,6 +200,9 @@
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
 	<script src="<c:url value="/resources/js/datePicker.custom.js"/>"></script>
+	
+	
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
     <script>
     var table;
     $(document).ready(function(){
@@ -133,62 +219,14 @@
 	 	   	"ordering": false,
 	        "info":     false
  	   	});
+		
+        $(".openNote").on("click", function () {
+              var action = $(this).data('id');
+              $("#action").val( action );
+              $('#addNoteModal').modal('show');
+         });
     });
     
-    function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "cho-duyet/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "cho-duyet/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-	function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "cho-duyet/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "cho-duyet/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
-	
 	function approval(){
 		if ($('.order_id:checkbox:checked').length == 0) {
 			alert("Vui lòng chọn đơn hàng.");
@@ -199,6 +237,36 @@
     		window.location.href = "duyet-nhieu-don-hang";
     	}
 	}
+	
+	function approveAnOrder(element) {
+    	var check = confirm("Các thông tin về đơn hàng sẽ không thể thay đổi nữa. Bạn có thật sự muốn phê duyệt đơn hàng này?");
+    	if (check) {
+    		window.location.href = "duyet-don-hang?id="+element.getAttribute("orderId");
+    	}
+    }
+	
+	function addNote() {
+    	if (!$("#error_information").val() || $("#error_information").val() == "") {
+    		alert("Vui lòng nhập thông tin sai sót của đơn hàng");
+    		return;
+    	}
+    	var base_url;
+   		base_url = "ghi-chu";
+    	$.ajax({
+			type : "GET",
+			url : base_url+"?id=" + $("#action").val()+"&content=" + $("#error_information").val(),
+			success : function(response) {
+				if (response.status == 0) {
+					alert(response.message);
+					return;
+				}
+				window.location.href = window.location.href.split("#")[0];
+			},
+			error : function() {
+			}
+
+		});
+    }
     </script>
 </body>
 </html>

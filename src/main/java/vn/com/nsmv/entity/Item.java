@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import javassist.bytecode.ConstantAttribute;
+import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 
@@ -19,6 +22,7 @@ import vn.com.nsmv.common.Utils;
 @Table(name = "items")
 public class Item implements java.io.Serializable {
 	private Long id;
+	private Integer status;
 	private String name;
 	private String brand;
 	private String description; //color and size
@@ -30,7 +34,25 @@ public class Item implements java.io.Serializable {
 	private Category category;
 	private Date createdDate;
 	private Date updateDate;
-	private Boolean cannotBuy;
+	private String transferId;
+    private Bill bill;
+    private Long approver;
+    private Date approvedDate;
+    private Long buyer;
+    private Date boughtDate;
+    private Long transported;
+    private Date transportedDate;
+    private Long transporterVn;
+    private Date transportedVnDate;
+    private Long checker;
+    private Date checkedDate;
+    private Long informer;
+    private Date informedDate;
+    private String note;
+    private User user;
+    private Long userId;
+    private String approvalNote;
+    private String buyNote;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +63,14 @@ public class Item implements java.io.Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	@Column(name = "STATUS")
+    public Integer getStatus() {
+        return status;
+    }
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 	
 	@Column(name = "NAME")
 	public String getName() {
@@ -137,7 +167,170 @@ public class Item implements java.io.Serializable {
 		this.updateDate = updateDate;
 	}
 	
-	public void validate() throws SokokanriException{
+	@Column(name = "TRANSFER_ID")
+    public String getTransferId() {
+        return transferId;
+    }
+    public void setTransferId(String transferId) {
+        this.transferId = transferId;
+    }
+    
+    @ManyToOne(fetch = FetchType.EAGER )
+    @JoinColumn(name = "BILL_ID", nullable = true)
+    public Bill getBill() {
+        return bill;
+    }
+    public void setBill(Bill bill) {
+        this.bill = bill;
+    }
+
+    @Transient
+    public String getFormattedId() {
+        return Utils.getFormattedId(this.id, 7);
+    }
+    
+    
+    @Column(name = "APPROVER")
+    public Long getApprover() {
+        return approver;
+    }
+    public void setApprover(Long approver) {
+        this.approver = approver;
+    }
+    
+    @Column(name = "APPROVED_DATE")
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
+    }
+    
+    @Column(name = "BUYER")
+    public Long getBuyer() {
+        return buyer;
+    }
+    public void setBuyer(Long buyer) {
+        this.buyer = buyer;
+    }
+    
+    @Column(name = "BOUGHT_DATE")
+    public Date getBoughtDate() {
+        return boughtDate;
+    }
+    public void setBoughtDate(Date boughtDate) {
+        this.boughtDate = boughtDate;
+    }
+    
+    @Column(name = "TRANSPORTER")
+    public Long getTransported() {
+        return transported;
+    }
+    public void setTransported(Long transported) {
+        this.transported = transported;
+    }
+    
+    @Column(name = "TRANSPORTED_DATE")
+    public Date getTransportedDate() {
+        return transportedDate;
+    }
+    public void setTransportedDate(Date transportedDate) {
+        this.transportedDate = transportedDate;
+    }
+    
+    @Column(name = "TRANSPORTER_VN")
+    public Long getTransporterVn() {
+        return transporterVn;
+    }
+    public void setTransporterVn(Long transporterVn) {
+        this.transporterVn = transporterVn;
+    }
+    
+    @Column(name = "TRANSPORTED_VN_DATE")
+    public Date getTransportedVnDate() {
+        return transportedVnDate;
+    }
+    public void setTransportedVnDate(Date transportedVnDate) {
+        this.transportedVnDate = transportedVnDate;
+    }
+    
+    @Column(name = "CHECKER")
+    public Long getChecker() {
+        return checker;
+    }
+    public void setChecker(Long checker) {
+        this.checker = checker;
+    }
+    
+    @Column(name = "CHECKED_DATE")
+    public Date getCheckedDate() {
+        return checkedDate;
+    }
+    public void setCheckedDate(Date checkedDate) {
+        this.checkedDate = checkedDate;
+    }
+    
+    @Column(name = "INFORMER")
+    public Long getInformer() {
+        return informer;
+    }
+    public void setInformer(Long informer) {
+        this.informer = informer;
+    }
+    
+    @Column(name = "INFORMED_DATE")
+    public Date getInformedDate() {
+        return informedDate;
+    }
+    public void setInformedDate(Date informedDate) {
+        this.informedDate = informedDate;
+    }
+	
+    @Column(name = "NOTE")
+    public String getNote() {
+        return note;
+    }
+    public void setNote(String note) {
+        this.note = note;
+    }
+    
+    @Transient
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    
+    @ManyToOne(fetch = FetchType.EAGER )
+    @JoinColumn(name = "USER_ID", nullable = false)
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    
+    @Column(name = "APPROVAL_NOTE")
+    public String getApprovalNote() {
+        return approvalNote;
+    }
+    
+    public void setApprovalNote(String warnNote) {
+        this.approvalNote = warnNote;
+    }
+    
+    
+    @Column(name = "BUY_NOTE")
+    public String getBuyNote() {
+        return buyNote;
+    }
+    
+    public void setBuyNote(String buyNote) {
+        this.buyNote = buyNote;
+    }
+    public void validate() throws SokokanriException{
 		if (Utils.isEmpty(this.name) && Utils.isEmpty(this.link) 
 				&& this.quantity == null && this.cost == null) {
 			return;
@@ -166,5 +359,19 @@ public class Item implements java.io.Serializable {
 		if (this.cost <= 0) {
 			throw new SokokanriException("Đơn giá phải lớn hơn 0");
 		}
+	}
+	
+	@Transient
+	public boolean isReadonly(){
+	    if (Utils.hasRole(Constants.ROLE_A)) {
+	        return false;
+	    }
+	    
+	    if ((Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_U)) && (this.status == 0 || this.status == -1)) {
+	        return false;
+	    }
+	    
+	    
+	    return true;
 	}
 }

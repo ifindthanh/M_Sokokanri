@@ -20,6 +20,7 @@ import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
+import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -110,10 +111,10 @@ public class AllOrdersController {
 				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
+			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
-			int count = this.ordersService.countAllOrders(this.searchCondition);
-			model.addAttribute("allOrders", allOrders);
+			int count = this.ordersService.countAllItems(this.searchCondition);
+			model.addAttribute("items", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
 			model.addAttribute("searchCondition", this.searchCondition);
@@ -126,11 +127,11 @@ public class AllOrdersController {
 	@RequestMapping(value = "/donhang/admin/{orderId}")
 	public ModelAndView viewAnOrder(HttpServletRequest request, Model model, @PathVariable Long orderId) {
 		try {
-			Category category = this.ordersService.getCategory(orderId);
-			if (category == null) {
+			Item item = this.ordersService.getItem(orderId);
+			if (item == null) {
 				throw new SokokanriException("Đơn hàng không tồn tại");
 			}
-			model.addAttribute("category", category);
+			model.addAttribute("category", item);
 			return new ModelAndView("/admin/orderDetail");
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());

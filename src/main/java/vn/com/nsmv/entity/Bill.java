@@ -20,7 +20,7 @@ import vn.com.nsmv.common.Utils;
 public class Bill implements Serializable{
 	private Long id;
 	private Integer status;
-	private List<Category> categories;
+	private List<Item> items;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,11 +41,11 @@ public class Bill implements Serializable{
 	}
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "bill")
-	public List<Category> getCategories() {
-		return categories;
+	public List<Item> getItems() {
+		return items;
 	}
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 	
 	@Transient

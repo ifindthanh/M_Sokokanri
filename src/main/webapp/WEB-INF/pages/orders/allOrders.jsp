@@ -7,7 +7,7 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
-<%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
+<%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld"%>
 
 <html>
 <head>
@@ -81,16 +81,22 @@
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th>Số thứ tự</th>
+							<th style="width: 20px">No.</th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th>Trạng thái</th>
-							<th>Tổng tiền</th>
+							<th style="width: 180px">Tên sản phẩm</th>
+							<th style="width: 150px">Nhà phân phối</th>
+							<th style="width: 150px">Link</th>
+							<th style="width: 180px">Mô tả thêm</th>
+							<th style="width: 50px">Đơn giá</th>
+							<th style="width: 50px">Số lượng</th>
+							<th style="width: 100px">Thành tiền</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${allOrders}" varStatus="status">
+						<c:forEach var="item" items="${items}" varStatus="status">
 							<tr>
 								<td></td>
 								<td>
@@ -103,14 +109,57 @@
 									<order:status status="${item.status }"/>
 								</td>
 								<td>
-									${item.getOrderPrice() }
+									<div class="lblName">${item.name }
+									</div>
+									<input type="text" value= "${item.name }" class="form-control hiddenAction txtName"/>
 								</td>
 								<td>
-									<a href="${item.id }"><i class="fa"
-										aria-hidden="true"></i> View</a>
+									<div class="lblBrand">${item.brand }
+									</div>
+									<input type="text" value= "${item.brand }" class="form-control hiddenAction txtBrand"/>
+								</td>
+								<td>
+									<div class="lblLink">${item.link }
+									</div>
+									<input type="text" value= "${item.link }" class="form-control hiddenAction txtLink"/>
+								</td>
+								<td>
+									<div class="lblDesc">${item.description }
+									</div>
+									<textarea class="form-control hiddenAction description">${item.description } </textarea>
+								</td>
+								<td>
+									<div class="lblCost">${item.cost }
+									</div>
+									<input type="number" value= "${item.cost }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtCost"/>
+								</td>
+								<td>
+									<div class="lblQuantity">${item.quantity }
+									</div>
+									<input type="number" value= "${item.quantity }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtQuantity"/>
+								</td>
+								<td>
+									<div class="lblTotal">${item.total }
+									</div>
+									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
+								</td>
+								<td>
+									<c:if test="${item.isReadonly() ne true}">
+										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
+										aria-hidden="true"></i></a>
+										<div class= "action">
+											<a onclick="save(this)" class="myBtn" item = "${item.id }"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
+												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
+										</div>
+									</c:if>
+									<div>
+										
+									</div>
+									
 									<sec:authorize access="hasRole('ROLE_A')">
-										/ <a href="admin/${item.id }"><i class="fa"
-										aria-hidden="true"></i> Detail </a>
+										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
+										aria-hidden="true"></i> </a>
 									</sec:authorize>
 								</td>
 						</tr>
@@ -141,6 +190,7 @@
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
 	<script src="<c:url value="/resources/js/datePicker.custom.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
     <script>
     var table;
     $(document).ready(function(){
@@ -155,7 +205,8 @@
  	   		"order": [[ 1, 'asc' ]],
  	   		"iDisplayLength" : 100,
 	 	   	"ordering": false,
-	        "info":     false
+	        "info":     false,
+	        "scrollX": true
  	   	});
          table.column(0, {}).nodes().each( function (cell, i) {
  			cell.innerHTML = i+1;
@@ -193,7 +244,6 @@
         		}
          });
     });
-    
     
     </script>
 </body>

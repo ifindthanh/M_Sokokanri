@@ -18,9 +18,9 @@ public interface OrdersService {
 	public Category getCategory(Long categoryId) throws SokokanriException;
 	public void saveOrder(Category category) throws SokokanriException;
 	public void deleteItemById(Long id) throws SokokanriException;
-	public List<Category> getAllOrders(SearchCondition searchCondition, SortCondition sortCondition, Integer offset, Integer maxResults) throws SokokanriException;
+	public List<Item> getAllOrders(SearchCondition searchCondition, SortCondition sortCondition, Integer offset, Integer maxResults) throws SokokanriException;
 	public List<Bill> getAllBills(SearchCondition searchCondition, Integer offset, Integer maxResults) throws SokokanriException;
-	public int countAllOrders(SearchCondition searchCondition) throws SokokanriException;
+	public int countAllItems(SearchCondition searchCondition) throws SokokanriException;
 	public int countAllBills(SearchCondition searchCondition) throws SokokanriException;
 	public void approve(Long id) throws SokokanriException;
 	public void approveOrders(Set<Long> selectedItems) throws SokokanriException;
@@ -31,11 +31,15 @@ public interface OrdersService {
 	public void transferOrders(Set<Long> selectedItems, String tranferID) throws SokokanriException;
 	public void transferOrdersToVN(Set<Long> selectedItems) throws SokokanriException;
 	public void transferOrderToVN(Long id) throws SokokanriException;
-	public void importToStorage(Map<Long, List<Category>> classificationOrders) throws SokokanriException;
+	public void importToStorage(Map<Long, List<Item>> classificationOrders) throws SokokanriException;
 	public String exportBill(Long selectedItem, boolean toWeb) throws SokokanriException;
 	public void exportBill(Set<Long> selectedItems, boolean toWeb) throws SokokanriException;
 	public Long doUpload(UploadBean uploadFile) throws SokokanriException;
 	public void alreadyToSend(Set<Long> selectedItems) throws SokokanriException;
 	public void sendOrders(Set<Long> selectedItems) throws SokokanriException;
 	public void deleteOrders(Set<Long> selectedItems) throws SokokanriException;
+	public void saveOrder(Item item) throws SokokanriException;
+	public Item getItem(Long id) throws SokokanriException;
+    public void saveItem(Item item) throws SokokanriException;
+	
 }

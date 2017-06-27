@@ -70,7 +70,7 @@
 				</c:if>
 				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
 				</div>
-				<table id="tableList" class="listBusCard table" width = "600px">
+				<table id="tableList" class="listBusCard table" width="600px">
 					<thead>
 						<tr>
 							<th></th>
@@ -88,11 +88,11 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Trạng thái</td>
-							<td><order:status status="${category.status }"/></td>
+							<td><order:status status="${category.status }" /></td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Tổng tiền</td>
-							<td>${category.getOrderPrice() }</td>
+							<td>${category.getTotal() }</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người duyệt đơn hàng</td>
@@ -100,7 +100,8 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày duyệt đơn hàng</td>
-							<td><fmt:formatDate value="${category.getApprovedDate()}"/> </td>
+							<td><fmt:formatDate value="${category.getApprovedDate()}" />
+							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người mua hàng</td>
@@ -108,7 +109,7 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày mua hàng</td>
-							<td><fmt:formatDate value="${category.getBoughtDate()}"/> </td>
+							<td><fmt:formatDate value="${category.getBoughtDate()}" /></td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người chuyển hàng tại nước ngoài</td>
@@ -116,7 +117,8 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày chuyển hàng tại nước ngoài</td>
-							<td><fmt:formatDate value="${category.getTransportedDate()}"/> </td>
+							<td><fmt:formatDate value="${category.getTransportedDate()}" />
+							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người chuyển hàng về VN</td>
@@ -124,11 +126,12 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày chuyển hàng về VN</td>
-							<td><fmt:formatDate value="${category.getTransportedVnDate()}"/> </td>
+							<td><fmt:formatDate
+									value="${category.getTransportedVnDate()}" /></td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Vận đơn</td>
-							<td>${category.transferId } </td>
+							<td>${category.transferId }</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người kiểm hàng</td>
@@ -136,7 +139,8 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày kiểm hàng</td>
-							<td><fmt:formatDate value="${category.getCheckedDate()}"/> </td>
+							<td><fmt:formatDate value="${category.getCheckedDate()}" />
+							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Người báo giá</td>
@@ -144,15 +148,16 @@
 						</tr>
 						<tr class="headings" role="row">
 							<td>Ngày kiểm hàng</td>
-							<td><fmt:formatDate value="${category.getInformedDate()}"/> </td>
+							<td><fmt:formatDate value="${category.getInformedDate()}" />
+							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td>Mã hóa đơn</td>
-							<td>${category.bill.getFormattedId() } </td>
+							<td>${category.bill.getFormattedId() }</td>
 						</tr>
 					</tbody>
 				</table>
-	
+
 			</div>
 		</form>
 	</div>

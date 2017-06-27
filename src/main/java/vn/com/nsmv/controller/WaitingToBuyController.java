@@ -27,7 +27,7 @@ import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
-import vn.com.nsmv.entity.Category;
+import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -84,9 +84,9 @@ public class WaitingToBuyController {
 				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Category> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
+			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
-			int count = this.ordersService.countAllOrders(this.searchCondition);
+			int count = this.ordersService.countAllItems(this.searchCondition);
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
@@ -113,20 +113,20 @@ public class WaitingToBuyController {
 	}
 	
 	@RequestMapping(value = "/donhang/mua-hang", method=RequestMethod.POST)
-	public ModelAndView approvalBuy(@ModelAttribute("order")Category category, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes){
+	public ModelAndView approvalBuy(@ModelAttribute("order")Item item, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes){
 		try {
-			category.setStatus(2);
-			category.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
-			category.setBoughtDate(new Date());
-			category.setNote("");
-			this.ordersService.saveOrder(category);
-			return new ModelAndView("redirect:/donhang/" + category.getId());
+			item.setStatus(2);
+			item.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+			item.setBoughtDate(new Date());
+			item.setBuyNote("");
+			this.ordersService.saveOrder(item);
+			return new ModelAndView("redirect:/donhang/" + item.getId());
 		} catch (SokokanriException ex) {
 			redirectAttributes.addFlashAttribute(
 					"message", ex.getErrorMessage());
 			redirectAttributes.addFlashAttribute(
-					"order", category);
-			return new ModelAndView("redirect:/donhang/" + category.getId());
+					"order", item);
+			return new ModelAndView("redirect:/donhang/" + item.getId());
 		}
 	}
 	
