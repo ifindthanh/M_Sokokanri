@@ -13,9 +13,12 @@
  		<!-- <property name="url" value="jdbc:mysql://localhost:3306/sale_management?UseUnicode=true&amp;characterEncoding=utf8" /> 
  		<property name="username" value="root" /> 
  		<property name="password" value="123456" /> -->
- 		<property name="url" value="jdbc:mysql://sql12.freesqldatabase.com:3306/sql12181427?UseUnicode=true&amp;characterEncoding=utf8" /> 
+ 		<!-- <property name="url" value="jdbc:mysql://sql12.freesqldatabase.com:3306/sql12181427?UseUnicode=true&amp;characterEncoding=utf8" /> 
  		<property name="username" value="sql12181427" /> 
- 		<property name="password" value="CqRfTHE9T9" />
+ 		<property name="password" value="CqRfTHE9T9" /> -->
+ 		<property name="url" value="jdbc:mysql://localhost:3306/sale_management?UseUnicode=true&amp;characterEncoding=utf8" /> 
+ 		<property name="username" value="root" /> 
+ 		<property name="password" value="123456" />
 		
 		
 	</bean>
@@ -28,15 +31,18 @@
 				<value>vn.com.nsmv.entity.UserRole</value>
 				<value>vn.com.nsmv.entity.MoneyExchange</value>
 				<value>vn.com.nsmv.entity.Item</value>
+				<value>vn.com.nsmv.entity.ItemHistory</value>
 				<value>vn.com.nsmv.entity.Category</value>
 				<value>vn.com.nsmv.entity.Bill</value>
+				<value>vn.com.nsmv.entity.VBrand</value>
+				<value>vn.com.nsmv.entity.VBuyingCode</value>
 				
 				<value>vn.com.nsmv.entity.PriShainBas</value>
 				<value>vn.com.nsmv.entity.Nyuko</value>
 				<value>vn.com.nsmv.entity.Trans</value>
 				<value>vn.com.nsmv.entity.ShukkaBody</value>
 				<value>vn.com.nsmv.entity.ShukkaHead</value>
-				<value>vn.com.nsmv.entity.VBuzaiKigo</value>
+				
 				<value>vn.com.nsmv.entity.VKakoMongon</value>
 				<value>vn.com.nsmv.entity.VZaisitu</value>
 				<value>vn.com.nsmv.entity.LogRequest</value>

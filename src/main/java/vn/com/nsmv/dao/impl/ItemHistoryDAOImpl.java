@@ -1,14 +1,11 @@
 package vn.com.nsmv.dao.impl;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.dao.ItemHistoryDAO;
-import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.entity.ItemHistory;
 
 public class ItemHistoryDAOImpl implements ItemHistoryDAO {

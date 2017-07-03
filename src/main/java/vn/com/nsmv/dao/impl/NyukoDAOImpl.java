@@ -220,14 +220,14 @@ public class NyukoDAOImpl implements NyukoDAO
 			throw new SokokanriException(ex);
 		}
 	}
-	public List<VBuzaiKigo> getAllBuzaiKigo(String sokoCd)
+	public List<VBrand> getAllBuzaiKigo(String sokoCd)
 	{
 		Session session = this.sessionFactory.getCurrentSession();
 		try
 		{
 			String sql = "from VBuzaiKigo where soko_cd = '" + sokoCd + "'";
 			@SuppressWarnings("unchecked")
-			List<VBuzaiKigo> list = session.createQuery(sql).list();
+			List<VBrand> list = session.createQuery(sql).list();
 			if (list != null)
 			{
 				return list;
@@ -235,9 +235,9 @@ public class NyukoDAOImpl implements NyukoDAO
 		}
 		catch (Exception ex)
 		{
-			return new ArrayList<VBuzaiKigo>();
+			return new ArrayList<VBrand>();
 		}
-		return new ArrayList<VBuzaiKigo>();
+		return new ArrayList<VBrand>();
 	}
 	public List<VKakoMongon> getAllKakoMongon(String sokoCd)
 	{

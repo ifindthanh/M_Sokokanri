@@ -8,10 +8,11 @@ import javax.servlet.jsp.JspWriter;
 public class CheckboxStatusTaglib extends AbstractTaglib{
 	
 	private Set<Long> selectedItems;
+	private String action;
 	private Long item;
 	@Override
 	protected void printUI(JspWriter writer) throws IOException {
-		writer.append("<input type=\"checkbox\" class=\"order_id\" order_id=\"" + this.item + "\" onchange=\"selectItem('" + this.item + "', this)\"");
+		writer.append("<input type=\"checkbox\" class=\"order_id\" order_id=\"" + this.item + "\" onchange=\"selectItem('" + this.item + "', this, '"+this.action+"')\"");
 		if (this.selectedItems.contains(item)) {
 			writer.append(" checked ");
 		}
@@ -29,5 +30,13 @@ public class CheckboxStatusTaglib extends AbstractTaglib{
 	public void setItem(Long item) {
 		this.item = item;
 	}
+    
+    public String getAction() {
+        return action;
+    }
+    
+    public void setAction(String action) {
+        this.action = action;
+    }
 	
 }

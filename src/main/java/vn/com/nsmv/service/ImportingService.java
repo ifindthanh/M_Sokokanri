@@ -27,7 +27,7 @@ public interface ImportingService
 		Integer status,
 		String sokoCd);
 	public void importItem(String id, String sokoCd) throws SokokanriException;
-	public List<VBuzaiKigo> getAllBuzaiKigo(String sokoCd);
+	public List<VBrand> getAllBuzaiKigo(String sokoCd);
 	public List<VKakoMongon> getAllKakoMongon(String sokoCd);
 	public List<VZaisitu> getAllZaisitu(String sokoCd);
 	public void setExportedFlg(Nyuko item);

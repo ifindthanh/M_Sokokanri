@@ -24,7 +24,6 @@ import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
-import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
@@ -87,6 +86,7 @@ public class WaitingToApprove {
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
+			model.addAttribute("selectedItems", this.selectedItems);
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("count", count);
 		} catch (SokokanriException ex) {
@@ -169,9 +169,12 @@ public class WaitingToApprove {
 	}
 	
 	@RequestMapping(value = "/donhang/ghi-chu", method=RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseResult<String>> noteAnOrder(@RequestParam Long id, @RequestParam String content, Model model){
+	public @ResponseBody ResponseEntity<ResponseResult<String>> noteAnOrder(@RequestParam String content, Model model){
 		try {
-			this.ordersService.noteAnOrder(id, content);
+		    if (this.selectedItems.size() != 1) {
+		        throw new SokokanriException("Vui lòng chọn một đơn hàng.");
+		    }
+			this.ordersService.noteAnOrder(this.selectedItems.iterator().next(), content);
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
 		}
@@ -187,4 +190,36 @@ public class WaitingToApprove {
 		}
 		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/donhang/cho-duyet/xoa-don-hang", method=RequestMethod.GET)
+    public String deleteOrders(Model model){
+        try {
+            this.ordersService.deleteItems(this.selectedItems);
+            this.selectedItems.clear();
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+        }
+        return "redirect:/donhang/cho-duyet";
+    }
+	
+	@RequestMapping(value = "/donhang/cho-duyet/huy-don-hang", method=RequestMethod.GET)
+    public String cancelOrders(Model model){
+        try {
+            this.ordersService.cancelItems(this.selectedItems);
+            this.selectedItems.clear();
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+        }
+        return "redirect:/donhang/cho-duyet";
+    }
+	
+	@RequestMapping(value = "/donhang/cho-duyet/bo-ghi-chu", method=RequestMethod.GET)
+    public String removeNote(Model model, @RequestParam Long id){
+        try {
+            this.ordersService.removeNote(id);
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+        }
+        return "redirect:/donhang/cho-duyet";
+    }
 }

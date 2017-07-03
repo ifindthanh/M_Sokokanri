@@ -63,7 +63,7 @@
 				        	<li><a href="<c:url value= "/donhang/da-mua/0"/>">Đã mua</a></li>
 				        </sec:authorize>
 				        <sec:authorize access="hasAnyRole('ROLE_T2','ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/da-chuyen/0"/>">Đã chuyển hàng tại nước ngoài</a></li>
+				        	<li><a href="<c:url value= "/donhang/da-chuyen/0"/>">Đã nhận hàng tại nước ngoài</a></li>
 				        </sec:authorize>
 				        <sec:authorize access="hasAnyRole('ROLE_K','ROLE_A','ROLE_U')">
 				        	<li><a href="<c:url value= "/donhang/da-chuyen-vn/0"/>">Đã chuyển về Việt Nam</a></li>

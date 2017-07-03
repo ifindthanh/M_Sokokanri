@@ -41,5 +41,10 @@ public interface OrdersService {
 	public void saveOrder(Item item) throws SokokanriException;
 	public Item getItem(Long id) throws SokokanriException;
     public void saveItem(Item item) throws SokokanriException;
-	
+    public List<String> getAllBrands(Long userId, Integer status) throws SokokanriException;
+    public List<String> getAllBuyingCodes(Long userId, Integer status) throws SokokanriException;
+    public void deleteItems(Set<Long> selectedItems) throws SokokanriException;
+    public void cancelItems(Set<Long> selectedItems) throws SokokanriException;
+    public void removeNote(Long id) throws SokokanriException;
+    public void buyOrders(Set<Long> selectedItems) throws SokokanriException;
 }

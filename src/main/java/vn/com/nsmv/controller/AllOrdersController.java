@@ -106,14 +106,17 @@ public class AllOrdersController {
 		if (this.searchCondition == null) {
 			this.searchCondition = new SearchCondition();
 		}
+		Long userId = null;
 		try {
 			if (Utils.isUser()) {
-				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+			    userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
 			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
 			int count = this.ordersService.countAllItems(this.searchCondition);
+			List<String> allBrands = this.ordersService.getAllBrands(userId, this.searchCondition.getStatus());
+			model.addAttribute("allBrands", allBrands);
 			model.addAttribute("items", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);

@@ -34,7 +34,7 @@ public interface NyukoDAO
 
 	public Nyuko getItemById(String id, String sokoCd) throws SokokanriException;
 
-	public List<VBuzaiKigo> getAllBuzaiKigo(String sokoCd);
+	public List<VBrand> getAllBuzaiKigo(String sokoCd);
 
 	public List<VKakoMongon> getAllKakoMongon(String sokoCd);
 

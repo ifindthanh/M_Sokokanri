@@ -17,6 +17,19 @@
     	currentElement.closest('tr').find(".txtQuantity").show();
     	currentElement.closest('tr').find(".lblTotal").hide();
     	currentElement.closest('tr').find(".txtTotal").show();
+    	
+    	currentElement.closest('tr').find(".lblRealCost").hide();
+    	currentElement.closest('tr').find(".txtRealCost").show();
+    	currentElement.closest('tr').find(".lblRealQuantity").hide();
+    	currentElement.closest('tr').find(".txtRealQuantity").show();
+    	currentElement.closest('tr').find(".lblRealPrice").hide();
+    	currentElement.closest('tr').find(".txtRealPrice").show();
+    	currentElement.closest('tr').find(".lblComputeCost").hide();
+    	currentElement.closest('tr').find(".txtComputeCost").show();
+    	currentElement.closest('tr').find(".lblComputePrice").hide();
+    	currentElement.closest('tr').find(".txtComputePrice").show();
+    	currentElement.closest('tr').find(".lblBuyingCode").hide();
+    	currentElement.closest('tr').find(".txtBuyingCode").show();
     }
     
 	function save(element) {
@@ -36,9 +49,12 @@
     		"link": currentElement.closest('tr').find(".txtLink").val(),
     		"description": currentElement.closest('tr').find(".description").val(),
     		"cost": currentElement.closest('tr').find(".txtCost").val(),
-    		"quantity": parseInt(currentElement.closest('tr').find(".txtQuantity").val())
+    		"quantity": parseInt(currentElement.closest('tr').find(".txtQuantity").val()),
+    		"realCost": currentElement.closest('tr').find(".txtRealCost").val(),
+    		"realQuantity": parseInt(currentElement.closest('tr').find(".txtRealQuantity").val()),
+    		"computeCost": currentElement.closest('tr').find(".txtComputeCost").val(),
+    		"buyingCode": currentElement.closest('tr').find(".txtBuyingCode").val()
     	};
-    	$("#page_content").append("<div class='waiting'></div>")
     	$.ajax({
 			type : "POST",
 			url : "luu-item",
@@ -57,7 +73,13 @@
 		    	currentElement.closest('tr').find(".lblDesc").html(param.description);
 		    	currentElement.closest('tr').find(".lblCost").html(param.cost);
 		    	currentElement.closest('tr').find(".lblQuantity").html(param.quantity);
+		    	currentElement.closest('tr').find(".lblRealCost").html(param.realCost);
+		    	currentElement.closest('tr').find(".lblRealQuantity").html(param.realQuantity);
+		    	currentElement.closest('tr').find(".lblRealPrice").html(currentElement.closest('tr').find(".txtRealPrice").val());
+		    	currentElement.closest('tr').find(".lblComputeCost").html(param.computeCost);
+		    	currentElement.closest('tr').find(".lblComputePrice").html(currentElement.closest('tr').find(".txtComputePrice").val());
 		    	currentElement.closest('tr').find(".lblTotal").html(currentElement.closest('tr').find(".txtTotal").val());
+		    	currentElement.closest('tr').find(".lblBuyingCode").html(currentElement.closest('tr').find(".txtBuyingCode").val());
 				action.hide();
 				displayBack(currentElement);
 				
@@ -88,7 +110,7 @@
     	var txtQuantity = currentElement.closest('tr').find(".txtQuantity");
     	if (txtCost.val() && txtCost.val() != "" 
     			&& txtQuantity.val() && txtQuantity.val() != "") {
-    		txtTotal.val(parseInt(txtQuantity.val())* parseFloat(txtCost.val()));
+    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
     	} else {
     		txtTotal.val("");
     	}
@@ -109,6 +131,22 @@
     	currentElement.closest('tr').find(".txtQuantity").hide();
     	currentElement.closest('tr').find(".lblTotal").show();
     	currentElement.closest('tr').find(".txtTotal").hide();
+    	
+    	
+    	currentElement.closest('tr').find(".lblRealCost").show();
+    	currentElement.closest('tr').find(".txtRealCost").hide();
+    	currentElement.closest('tr').find(".lblRealQuantity").show();
+    	currentElement.closest('tr').find(".txtRealQuantity").hide();
+    	currentElement.closest('tr').find(".lblRealPrice").show();
+    	currentElement.closest('tr').find(".txtRealPrice").hide();
+    	
+    	currentElement.closest('tr').find(".lblComputeCost").show();
+    	currentElement.closest('tr').find(".txtComputeCost").hide();
+    	currentElement.closest('tr').find(".lblComputePrice").show();
+    	currentElement.closest('tr').find(".txtComputePrice").hide();
+    	
+    	currentElement.closest('tr').find(".lblBuyingCode").show();
+    	currentElement.closest('tr').find(".txtBuyingCode").hide();
 	}
 	
 	function selectItem(id, element, baseUrl) {

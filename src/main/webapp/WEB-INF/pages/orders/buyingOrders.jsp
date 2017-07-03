@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
+<%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
 <head>
@@ -40,13 +41,36 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="tat-ca" method="POST">
-			<div class="col-sm-12 row" style="height: 150px">
-				
-				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
+		<form action="cho-mua" method="POST" id="approvedOrders">
+			<div class="col-sm-12 row" style="height: 100px">
+				<label class="col-xs-2 right_align top_margin_5" >Nhãn hàng: </label>
+				<div class="col-xs-4">
+					<select name="brands" multiple="multiple" class="selectpicker form-control inputstl" onchange="search()">
+						<c:forEach var="brand" items="${allBrands}" varStatus="status">
+							<option value="${brand }" <c:if test="${searchCondition.brands.contains(brand)}">selected</c:if>>${brand }</option>
+						</c:forEach>
+					</select>
+				</div>
 			</div>
+			<input type="hidden" name="status" value = "${searchCondition.status }" />
 			<div class="col-sm-12">
-				<table id="tableList" class="listBusCard table">
+				<div class="col-sm-2">
+					<div class="dropdown">
+					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+					  <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+								<li><a onclick="approval()">Duyệt đơn hàng</a></li>
+								<li><a onclick="noteAnOrder()">Ghi chú đơn hàng</a></li>
+							</sec:authorize>
+							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="table_container">
+				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
 							<th><input type="checkbox" onchange="selectAllItems(this, 'da-duyet')" /></th>
@@ -59,91 +83,107 @@
 							<th style="width: 50px">Đơn giá</th>
 							<th style="width: 50px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
+							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+								<th style="width: 50px">Giá mua</th>
+								<th style="width: 50px">Số lượng mua</th>
+								<th style="width: 100px">Tiền thực mua</th>
+								<th style="width: 50px">Đơn giá tính tiền</th>
+								<th style="width: 100px">Tiền để tính</th>
+							</sec:authorize>
+							<th style="width: 100px">Mã mua hàng</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
+								<td class="fixed"><chkbox2:chbox item="${item.id }"
+										selectedItems="${selectedItems}" action="cho-mua" /></td>
+								<td class="fixed">
+									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
+									${item.formattedId} </div>
+								</td>
+								<td>${item.user.fullname}</td>
 								<td>
-									<input type="checkbox" class="order_id" order_id="${item.id }" onchange="selectItem(${item.id }, this, 'da-duyet')" />
+									<div class="lblName">${item.name }</div> 
+									<input type="text" value="${item.name }" class="form-control hiddenAction txtName" />
 								</td>
 								<td>
-									${item.formattedId}
+									<div class="lblBrand">${item.brand }</div> 
+									<input type="text" value="${item.brand }" class="form-control hiddenAction txtBrand" />
 								</td>
 								<td>
-									${item.user.fullname}
+									<div class="lblLink">${item.link }</div> 
+									<input type="text" value="${item.link }" class="form-control hiddenAction txtLink" />
 								</td>
 								<td>
-									<div class="lblName">${item.name }
-									</div>
-									<input type="text" value= "${item.name }" class="form-control hiddenAction txtName"/>
-								</td>
-								<td>
-									<div class="lblBrand">${item.brand }
-									</div>
-									<input type="text" value= "${item.brand }" class="form-control hiddenAction txtBrand"/>
-								</td>
-								<td>
-									<div class="lblLink">${item.link }
-									</div>
-									<input type="text" value= "${item.link }" class="form-control hiddenAction txtLink"/>
-								</td>
-								<td>
-									<div class="lblDesc">${item.description }
-									</div>
+									<div class="lblDesc">${item.description }</div> 
 									<textarea class="form-control hiddenAction description">${item.description } </textarea>
 								</td>
 								<td>
-									<div class="lblCost">${item.cost }
-									</div>
-									<input type="number" value= "${item.cost }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtCost"/>
+									<div class="lblCost">${item.cost }</div> 
+									<input type="number" value="${item.cost }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtCost" />
 								</td>
 								<td>
-									<div class="lblQuantity">${item.quantity }
-									</div>
-									<input type="number" value= "${item.quantity }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtQuantity"/>
+									<div class="lblQuantity">${item.quantity }</div> 
+									<input type="number" value="${item.quantity }" onchange="computeMoney(this)"
+										class="small_width form-control hiddenAction txtQuantity" />
 								</td>
 								<td>
-									<div class="lblTotal">${item.total }
-									</div>
-									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
+									<div class="lblTotal">${item.total }</div> <input type="text"
+									value="${item.total }"
+									class="form-control hiddenAction txtTotal" disabled="disabled" />
 								</td>
-								
+								<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+									<td>
+										<div class="lblRealCost">${item.realCost }</div> <input
+										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
+										class="small_width form-control hiddenAction txtRealCost" />
+									</td>
+									<td>
+										<div class="lblRealQuantity">${item.realQuantity }</div> <input
+										type="number" value="${item.realQuantity}" onchange="computeMoneyFromRealQuantity(this)"
+										class="small_width form-control hiddenAction txtRealQuantity" />
+									</td>
+									<td>
+										<div class="lblRealPrice">${item.realPrice }</div> 
+										<input type="text" value="${item.realPrice }"
+										class="form-control hiddenAction txtRealPrice"
+										disabled="disabled" />
+									</td>
+									<td>
+										<div class="lblComputeCost">${item.computeCost }</div> 
+										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
+										class="small_width form-control hiddenAction txtComputeCost" />
+									</td>
+									<td>
+										<div class="lblComputePrice">${item.computePrice }</div> 
+										<input type="text" value="${item.computePrice}"
+											class="form-control hiddenAction txtComputePrice"
+											disabled="disabled" />
+									</td>
+								</sec:authorize>
 								<td>
+									<div class="lblBuyingCode">${item.buyingCode }</div> 
+									<input type="text" value="${item.buyingCode }" class="form-control hiddenAction txtBuyingCode" />	
+								</td>
+								<td class="fixed">
 									<c:if test="${item.isReadonly() ne true}">
-										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
-										aria-hidden="true"></i></a>
-										<div class= "action">
-											<a onclick="save(this)" class="myBtn" item = "${item.id }"><i
-												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
+										<a onclick="edit(this)" class="myBtn origin btnEdit"><i
+											class="fa fa-edit icon-resize-small" aria-hidden="true"></i></a>
+										<div class="action">
+											<a onclick="save(this)" class="myBtn" item="${item.id }"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a>
+											<a onclick="cancel(this)" class="myBtn"><i
 												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
 										</div>
-									</c:if>
-									<div>
-										
-									</div>
-									
-									<c:if test="${item.status eq 0 or item.status eq -1}">
-										<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
-											<a class="myBtn origin" orderId = "${item.id }"
-												title="Duyện đơn hàng" onclick="approveAnOrder(this)">
-												<i class="fa fa-thumbs-up icon-resize-small" aria-hidden="true"></i>
-											</a>
-											<a class="myBtn openNote origin" data-id="${item.id }"
-												title="Ghi chú đơn hàng">
-												<i class="fa fa-exclamation-circle  icon-resize-small" aria-hidden="true"></i>
-											</a>
-													
-										</sec:authorize>
-									</c:if>
-									
+									</c:if> 
 									<sec:authorize access="hasRole('ROLE_A')">
-										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
-										aria-hidden="true"></i> </a>
+										<a class="myBtn origin" href="admin/${item.id }"><i
+											class="fa fa-cogs" aria-hidden="true"></i> </a>
 									</sec:authorize>
 								</td>
-						</tr>
+							</tr>
 						</c:forEach>
 					</tbody>
 				</table>
@@ -159,6 +199,30 @@
 		</form>
 	</div>
 	
+	
+	<!-- Modal -->
+	<div id="addNoteModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Ghi chú đơn hàng</h4>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="action" />
+					<textarea id="error_information" class="description form-control" placeholder="Điền thông tin sai sót của đơn hàng" style="width: 100%; height: 150px"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
 	<script src="<c:url value="/resources/js/jquery.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
@@ -168,30 +232,139 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/tableHeadFixer.js"/>"></script>
 	<script src="<c:url value="/resources/js/common.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
 	<script src="<c:url value="/resources/js/datePicker.custom.js"/>"></script>
+	
     <script>
-    var table;
     $(document).ready(function(){
-		//init datatables
-          table = $('#tableList').DataTable({
-     		destroy: true,
-     		"paging":   false,
-     		"searching":   false,
- 	   		"aLengthMenu" : [
- 	   			[25, 50, 100, 200, -1],
- 	   			[25, 50, 100, 200, "All"]],
- 	   		"order": [[ 1, 'asc' ]],
- 	   		"iDisplayLength" : 100,
-	 	   	"ordering": false,
-	        "info":     false
- 	   	});
+    	$("#tableList").tableHeadFixer({"head" : false, "left" : 2, "right": 1}); 
     });
     
+    function search() {
+    	$("#approvedOrders").submit();
+    }
+    
+    function noteAnOrder() {
+    	if ($('.order_id:checkbox:checked').length != 1) {
+    		alert("Vui lòng chọn một đơn hàng.");
+    		return;
+    	}
+        $('#addNoteModal').modal('show');
+    }
+    
+    function removeNote(element) {
+    	var check = confirm("Bạn có chắc muốn bỏ ghi chú cho đơn hàng này?");
+    	if (check) {
+    		window.location.href = "cho-mua/bo-ghi-chu?id="+element.getAttribute("item");
+    	}
+    }
+    
+    function cancelOrders() {
+    	if ($('.order_id:checkbox:checked').length == 0) {
+    		alert("Vui lòng chọn đơn hàng.");
+    		return;
+    	}
+    	var check = confirm("Bạn có chắc muốn hủy đơn hàng này?");
+    	if (check) {
+    		window.location.href = "cho-mua/huy-don-hang";
+    	}
+    }
+    
+    function deleteOrders() {
+    	if ($('.order_id:checkbox:checked').length == 0) {
+    		alert("Vui lòng chọn đơn hàng.");
+    		return;
+    	}
+    	var check = confirm("Bạn có chắc muốn xóa đơn hàng này?");
+    	if (check) {
+    		window.location.href = "cho-mua/xoa-don-hang";
+    	}
+        
+    }
+    
+    
+    function addNote() {
+    	if (!$("#error_information").val() || $("#error_information").val() == "") {
+    		alert("Vui lòng nhập thông tin sai sót của đơn hàng");
+    		return;
+    	}
+    	$.ajax({
+			type : "GET",
+			url : "ghi-chu-mua?content=" + $("#error_information").val(),
+			success : function(response) {
+				if (response.status == 0) {
+					alert(response.message);
+					return;
+				}
+				window.location.href = window.location.href.split("#")[0];
+			},
+			error : function() {
+			}
+
+		});
+    }
+    
+    function approval(){
+		if ($('.order_id:checkbox:checked').length == 0) {
+			alert("Vui lòng chọn đơn hàng.");
+			return;
+		}
+		var check = confirm("Các thông tin về đơn hàng sẽ không thể thay đổi nữa. Bạn có thật sự muốn phê duyệt đơn hàng này?");
+    	if (check) {
+    		window.location.href = "mua-nhieu-don-hang";
+    	}
+	}
+    
+    function computeRealMoney(element) {
+    	var currentElement = $(element);
+    	var txtTotal = currentElement.closest('tr').find(".txtRealPrice");
+    	var txtCost = currentElement.closest('tr').find(".txtRealCost");
+    	var txtQuantity = currentElement.closest('tr').find(".txtRealQuantity");
+    	if (txtCost.val() && txtCost.val() != "" 
+    			&& txtQuantity.val() && txtQuantity.val() != "") {
+    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
+    	} else {
+    		txtTotal.val("");
+    	}
+    }
+    
+    function computeMoneyFromRealQuantity(element) {
+    	var currentElement = $(element);
+    	var txtTotal = currentElement.closest('tr').find(".txtRealPrice");
+    	var txtCost = currentElement.closest('tr').find(".txtRealCost");
+    	var txtComputeCost = currentElement.closest('tr').find(".txtComputeCost");
+    	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
+    	if (txtCost.val() && txtCost.val() != "" 
+    			&& currentElement.val() && currentElement.val() != "") {
+    		txtTotal.val((parseInt(currentElement.val())* parseFloat(txtCost.val())).toFixed(4));
+    	} else {
+    		txtTotal.val("");
+    	}
+    	
+    	if (txtComputeCost.val() && txtComputeCost.val() != "" 
+			&& currentElement.val() && currentElement.val() != "") {
+    		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtComputeCost.val())).toFixed(4));
+		} else {
+			txtComputePrice.val("");
+		}
+    }
 	
+    function computeMoneyFromRealCost(element) {
+    	var currentElement = $(element);
+    	var txtRealQuantity = currentElement.closest('tr').find(".txtRealQuantity");
+    	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
+    	
+    	if (txtRealQuantity.val() && txtRealQuantity.val() != "" 
+			&& currentElement.val() && currentElement.val() != "") {
+    		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtRealQuantity.val())).toFixed(4));
+		} else {
+			txtComputePrice.val("");
+		}
+    }
     </script>
 </body>
 </html>

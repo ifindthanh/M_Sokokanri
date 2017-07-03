@@ -55,6 +55,16 @@
 					</div>
 				</div>
 				<div class="col-xs-12 row">
+					<label class="col-xs-2 right_align top_margin_5" >Nhãn hàng: </label>
+					<div class="col-xs-4">
+						<select name="brands" multiple="multiple" class="selectpicker form-control inputstl" onchange="search()">
+							<c:forEach var="brand" items="${allBrands}" varStatus="status">
+								<option value="${brand }" <c:if test="${searchCondition.brands.contains(brand)}">selected</c:if>>${brand }</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 row">
 					<label class="col-xs-2 right_align top_margin_5" >Từ ngày: </label>
 					<div class="col-xs-2">
 						<input name="fromDate" type="text"
@@ -98,8 +108,8 @@
 					<tbody>
 						<c:forEach var="item" items="${items}" varStatus="status">
 							<tr>
-								<td></td>
-								<td>
+								<td class="fixed"></td>
+								<td class="fixed">
 									${item.formattedId}
 								</td>
 								<td>
@@ -143,19 +153,9 @@
 									</div>
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
 								</td>
-								<td>
-									<c:if test="${item.isReadonly() ne true}">
-										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
-										aria-hidden="true"></i></a>
-										<div class= "action">
-											<a onclick="save(this)" class="myBtn" item = "${item.id }"><i
-												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
-												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
-										</div>
-									</c:if>
-									<div>
-										
-									</div>
+								<td class="fixed">
+								<a href="${item.id }" class = "myBtn btnEdit"><i class="fa fa-edit icon-resize-small"
+									aria-hidden="true"></i></a>
 									
 									<sec:authorize access="hasRole('ROLE_A')">
 										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
@@ -244,6 +244,7 @@
         		}
          });
     });
+    
     
     </script>
 </body>

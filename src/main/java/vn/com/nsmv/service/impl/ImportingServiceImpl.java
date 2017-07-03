@@ -412,7 +412,7 @@ public class ImportingServiceImpl implements ImportingService
 		this.nyukoDAO.update(item);
 	}
 
-	public List<VBuzaiKigo> getAllBuzaiKigo(String sokoCd)
+	public List<VBrand> getAllBuzaiKigo(String sokoCd)
 	{
 		return this.nyukoDAO.getAllBuzaiKigo(sokoCd);
 	}

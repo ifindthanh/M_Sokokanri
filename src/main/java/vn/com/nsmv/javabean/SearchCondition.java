@@ -1,6 +1,7 @@
 package vn.com.nsmv.javabean;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 import vn.com.nsmv.common.Utils;
@@ -11,7 +12,8 @@ public final class SearchCondition
 {
 	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy/MM/dd");
 	
-	private String brand;
+	private List<String> brands;
+	private List<String> buyingCodes;
 	private Integer status = 999;
 	private Long userId;
 	private String customerName; 
@@ -41,16 +43,23 @@ public final class SearchCondition
 		this.status = status;
 	}
 	
-	public String getBrand() {
-		return brand;
+	public List<String> getBrands() {
+		return brands;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrands(List<String> brands) {
+		this.brands = brands;
 	}
 	
-	
-	public Long getUserId() {
+    public List<String> getBuyingCodes() {
+        return buyingCodes;
+    }
+    
+    public void setBuyingCodes(List<String> buyingCodes) {
+        this.buyingCodes = buyingCodes;
+    }
+
+    public Long getUserId() {
 		return userId;
 	}
 
@@ -61,11 +70,17 @@ public final class SearchCondition
 	public StringBuilder getSearching(SearchCondition searchCondition, Map<String,Object> params)
 	{
 		StringBuilder searching = new StringBuilder();
-		if (!Utils.isEmpty(this.brand))
+		if (this.brands != null && !this.brands.isEmpty())
 		{
-			searching.append(" and brand like %:brand%");
-			params.put("brand", this.brand);
+			searching.append(" and brand in :brands");
+			params.put("brands", this.brands);
 		}
+		
+		if (this.buyingCodes != null && !this.buyingCodes.isEmpty())
+        {
+            searching.append(" and buyingCode in :buyingCodes");
+            params.put("buyingCodes", this.buyingCodes);
+        }
 		
 		if (this.userId != null) {
 			searching.append(" and user_id = :userId");
@@ -82,7 +97,7 @@ public final class SearchCondition
 			}
 			params.put("status", this.status);
 		} else {
-			searching.append(" and status <> 8");
+			searching.append(" and status <> 8 and status <> -5");
 		}
 		
 		if (Utils.isEmpty(this.customerName)) {

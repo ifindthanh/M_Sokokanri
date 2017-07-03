@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import javassist.bytecode.ConstantAttribute;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
@@ -53,6 +52,11 @@ public class Item implements java.io.Serializable {
     private Long userId;
     private String approvalNote;
     private String buyNote;
+    private Double realCost;
+    private Double realQuantity;
+    private Double computeCost;
+    private Double computePrice;
+    private String buyingCode;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -330,6 +334,53 @@ public class Item implements java.io.Serializable {
     public void setBuyNote(String buyNote) {
         this.buyNote = buyNote;
     }
+    
+    @Column(name = "REAL_COST")
+    public Double getRealCost() {
+        return realCost;
+    }
+    
+    public void setRealCost(Double realCost) {
+        this.realCost = realCost;
+    }
+    
+    @Column(name = "REAL_QUANTITY")
+    public Double getRealQuantity() {
+        return realQuantity;
+    }
+    
+    public void setRealQuantity(Double realQuantity) {
+        this.realQuantity = realQuantity;
+    }
+    
+    @Column(name = "COMPUTE_COST")
+    public Double getComputeCost() {
+        return computeCost;
+    }
+    
+    public void setComputeCost(Double computeCost) {
+        this.computeCost = computeCost;
+    }
+    
+    @Column(name = "COMPUTE_PRICE")
+    public Double getComputePrice() {
+        return computePrice;
+    }
+    
+    public void setComputePrice(Double computePrice) {
+        this.computePrice = computePrice;
+    }
+    
+    @Column(name = "BUYING_CODE")    
+    public String getBuyingCode() {
+        return buyingCode;
+    }
+    
+    public void setBuyingCode(String buyingCode) {
+        this.buyingCode = buyingCode;
+    }
+    
+    
     public void validate() throws SokokanriException{
 		if (Utils.isEmpty(this.name) && Utils.isEmpty(this.link) 
 				&& this.quantity == null && this.cost == null) {

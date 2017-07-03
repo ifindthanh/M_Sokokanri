@@ -19,5 +19,11 @@
       <rtexprvalue>true</rtexprvalue>
       <type>Long</type>
     </attribute>
+    <attribute>
+      <name>action</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
 </taglib>

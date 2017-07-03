@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import vn.com.nsmv.bean.CustomUser;
 
 @Entity
-@Table(name = "items")
+@Table(name = "item_history")
 public class ItemHistory {
     private Long historyId;
     private Long id;
@@ -55,7 +58,8 @@ public class ItemHistory {
         this.historyId = historyId;
     }
     
-    @Column(name = "UPDATE_BY")
+    @ManyToOne(fetch = FetchType.EAGER )
+    @JoinColumn(name = "UPDATE_BY", nullable = false)
     public User getUpdateBy() {
         return updateBy;
     }

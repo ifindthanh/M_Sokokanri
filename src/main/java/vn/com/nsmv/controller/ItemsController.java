@@ -42,21 +42,22 @@ public class ItemsController {
 	@RequestMapping(value = "/donhang/{orderId}", method=RequestMethod.GET)
 	public ModelAndView viewAnOrder(HttpServletRequest request, Model model, @PathVariable Long orderId) {
 		try {
-			Category category = this.ordersService.getCategory(orderId);
-			if (category == null) {
+			Item item = this.ordersService.getItem(orderId);
+			if (item == null) {
 				throw new SokokanriException("Đơn hàng không tồn tại");
 			}
 			if (Utils.isUser()) {
-				if (!category.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+				if (!item.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
 					throw new SokokanriException("Bạn không được phép thao tác với đơn hàng này");
 				}
 			}
 			
-			boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || (Utils.isUser() && category.getStatus() != null && category.getStatus() == 0 ));
+			boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_U) 
+			    || (Utils.isUser() && item.getStatus() != null && item.getStatus() == 0 ));
 			
 			model.addAttribute("read_only", Boolean.valueOf(readOnly));
-			model.addAttribute("category", category);
-			return new ModelAndView("/orders/orderDetail");
+			model.addAttribute("item", item);
+			return new ModelAndView("/orders/itemDetails");
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 			model.addAttribute("category",  new Category());

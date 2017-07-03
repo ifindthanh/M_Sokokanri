@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
+<%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
 <head>
@@ -41,16 +42,29 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
-			<div class="col-sm-12 row" style="height: 150px">
-				<input name="brand" value="${searchCondition.brand }" class="form-control" placeholder=""/>
-			</div>
 			<div class="col-sm-12">
-				<table id="tableList" class="listBusCard table">
+				<div class="col-sm-2">
+					<div class="dropdown">
+					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+					  <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
+								<li><a onclick="approval()">Duyệt đơn hàng</a></li>
+								<li><a onclick="noteAnOrder()">Ghi chú đơn hàng</a></li>
+							</sec:authorize>
+							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="table_container">
+				<table id="tableList" class="listBusCard table" style="width: 1500px !important;">
 					<thead>
 						<tr class="headings" role="row">
 							<th><input type="checkbox" onchange="selectAllItems(this, 'cho-duyet')" /></th>
 							<th>Mã đơn hàng</th>
-							<th>Tên khách hàng</th>
+							<th style="width: 100px">Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
 							<th style="width: 150px">Nhà phân phối</th>
 							<th style="width: 150px">Link</th>
@@ -58,17 +72,21 @@
 							<th style="width: 50px">Đơn giá</th>
 							<th style="width: 50px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
-							<th></th>
+							<th style="width: 180px">Ghi chú</th>
+							<th style="width: 80px"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
-								<td>
-									<input type="checkbox" class="order_id" order_id="${item.id }" onchange="selectItem(${item.id }, this, 'cho-duyet')" />
+								<td class="fixed">
+									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}" action="cho-duyet"/>
 								</td>
-								<td>
-									${item.formattedId}
+								<td class="fixed">
+									<div
+										<c:if test="${item.status eq -1 }">class = "noted"</c:if>>
+										${item.formattedId}
+									</div>
 								</td>
 								<td>
 									${item.user.fullname}
@@ -108,8 +126,12 @@
 									</div>
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
 								</td>
-								
 								<td>
+									<div>${item.approvalNote}
+									</div>
+								</td>
+								
+								<td class="fixed">
 									<c:if test="${item.isReadonly() ne true}">
 										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
 										aria-hidden="true"></i></a>
@@ -118,24 +140,14 @@
 												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
 												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
 										</div>
+										<c:if test="${item.status eq -1 }">
+											<a onclick="removeNote(this)" class = "myBtn origin" item = "${item.id }"><i class="fa fa-wrench icon-resize-small"
+												aria-hidden="true"></i></a>
+										</c:if>
 									</c:if>
 									<div>
 										
 									</div>
-									
-									<c:if test="${item.status eq 0 or item.status eq -1}">
-										<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
-											<a class="myBtn origin" orderId = "${item.id }"
-												title="Duyện đơn hàng" onclick="approveAnOrder(this)">
-												<i class="fa fa-thumbs-up icon-resize-small" aria-hidden="true"></i>
-											</a>
-											<a class="myBtn openNote origin" data-id="${item.id }"
-												title="Ghi chú đơn hàng">
-												<i class="fa fa-exclamation-circle  icon-resize-small" aria-hidden="true"></i>
-											</a>
-													
-										</sec:authorize>
-									</c:if>
 									
 									<sec:authorize access="hasRole('ROLE_A')">
 										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
@@ -187,7 +199,6 @@
 		</div>
 	</div>
 	
-	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
 	<script src="<c:url value="/resources/js/jquery.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
@@ -196,6 +207,7 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/tableHeadFixer.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
@@ -207,25 +219,47 @@
     var table;
     $(document).ready(function(){
 		//init datatables
-          table = $('#tableList').DataTable({
-     		destroy: true,
-     		"paging":   false,
-     		"searching":   false,
- 	   		"aLengthMenu" : [
- 	   			[25, 50, 100, 200, -1],
- 	   			[25, 50, 100, 200, "All"]],
- 	   		"order": [[ 1, 'asc' ]],
- 	   		"iDisplayLength" : 100,
-	 	   	"ordering": false,
-	        "info":     false
- 	   	});
+		$("#tableList").tableHeadFixer({"head" : false, "left" : 2, "right": 1}); 
 		
-        $(".openNote").on("click", function () {
-              var action = $(this).data('id');
-              $("#action").val( action );
-              $('#addNoteModal').modal('show');
-         });
     });
+    
+    function noteAnOrder() {
+    	if ($('.order_id:checkbox:checked').length != 1) {
+    		alert("Vui lòng chọn một đơn hàng.");
+    		return;
+    	}
+        $('#addNoteModal').modal('show');
+    }
+    
+    function removeNote(element) {
+    	var check = confirm("Bạn có chắc muốn bỏ ghi chú cho đơn hàng này?");
+    	if (check) {
+    		window.location.href = "cho-duyet/bo-ghi-chu?id="+element.getAttribute("item");
+    	}
+    }
+    
+    function cancelOrders() {
+    	if ($('.order_id:checkbox:checked').length == 0) {
+    		alert("Vui lòng chọn đơn hàng.");
+    		return;
+    	}
+    	var check = confirm("Bạn có chắc muốn hủy đơn hàng này?");
+    	if (check) {
+    		window.location.href = "cho-duyet/huy-don-hang";
+    	}
+    }
+    
+    function deleteOrders() {
+    	if ($('.order_id:checkbox:checked').length == 0) {
+    		alert("Vui lòng chọn đơn hàng.");
+    		return;
+    	}
+    	var check = confirm("Bạn có chắc muốn xóa đơn hàng này?");
+    	if (check) {
+    		window.location.href = "cho-duyet/xoa-don-hang";
+    	}
+        
+    }
     
 	function approval(){
 		if ($('.order_id:checkbox:checked').length == 0) {
@@ -250,11 +284,9 @@
     		alert("Vui lòng nhập thông tin sai sót của đơn hàng");
     		return;
     	}
-    	var base_url;
-   		base_url = "ghi-chu";
     	$.ajax({
 			type : "GET",
-			url : base_url+"?id=" + $("#action").val()+"&content=" + $("#error_information").val(),
+			url : "ghi-chu?content=" + $("#error_information").val(),
 			success : function(response) {
 				if (response.status == 0) {
 					alert(response.message);

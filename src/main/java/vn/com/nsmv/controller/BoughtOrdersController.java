@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
@@ -72,18 +73,64 @@ public class BoughtOrdersController {
 		return new ModelAndView("/orders/boughtOrders");
 	}
 	
+	
+	@RequestMapping(value = "/donhang/da-mua", method = RequestMethod.POST)
+    public RedirectView search(
+        HttpServletRequest request,
+        Model model,
+        SearchCondition searchCondition,
+        Integer offset,
+        Integer maxResults)
+    {
+        this.selectedItems.clear();
+        
+        if (this.maxResults == null)
+        {
+            this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+        }
+        
+        if (offset != null)
+        {
+            this.offset = offset;
+        }
+        
+        if (maxResults != null)
+        {
+            this.maxResults = maxResults;
+        }
+        
+        if (searchCondition != null) 
+        {
+            this.searchCondition = searchCondition;
+        }
+        
+        return new RedirectView("da-mua-tim-kiem");
+    }
+    
+    @RequestMapping(value = "/donhang/da-mua-tim-kiem", method = RequestMethod.GET)
+    public String searchResult(HttpServletRequest request, Model model)
+    {
+        request.getSession().setAttribute("listType", 4);
+        this.doBusiness(model);
+        return "/orders/boughtOrders";
+    }
+	
+	
 	private void doBusiness(Model model) {
 		if (this.searchCondition == null) {
 			this.searchCondition = new SearchCondition(2);
 		}
 		try {
+		    Long userId = null;
 			if (Utils.isUser()) {
-				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+				userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
 			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
 			int count = this.ordersService.countAllItems(this.searchCondition);
+			model.addAttribute("allBrands", this.ordersService.getAllBrands(userId, searchCondition.getStatus()));
+			model.addAttribute("allBuyingCodes", this.ordersService.getAllBuyingCodes(userId, searchCondition.getStatus()));
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);

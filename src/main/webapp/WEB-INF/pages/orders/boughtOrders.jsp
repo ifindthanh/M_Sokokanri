@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
+<%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
 <head>
@@ -40,53 +41,162 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="tat-ca" method="POST">
-			<div class="col-sm-12 row" style="height: 150px">
-				
+		<form action="da-mua" method="POST" id="approvedOrders">
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5" >Nhãn hàng: </label>
+				<div class="col-xs-4">
+					<select name="brands" multiple="multiple" class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn nhãn hàng</option>
+						<c:forEach var="brand" items="${allBrands}" varStatus="status">
+							<option value="${brand }" <c:if test="${searchCondition.brands.contains(brand)}">selected</c:if>>${brand }</option>
+						</c:forEach>
+					</select>
+				</div>
 			</div>
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5">Mã mua hàng: </label>
+				<div class="col-xs-4">
+					<select name="buyingCodes" multiple="multiple"
+						class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
+						<c:forEach var="buyingCode" items="${allBuyingCodes}" varStatus="status">
+							<option value="${buyingCode }"
+								<c:if test="${searchCondition.buyingCodes.contains(buyingCode)}">selected</c:if>>${buyingCode }</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<input type="hidden" name="status" value = "${searchCondition.status }" />
 			<div class="col-sm-12">
-				<table id="tableList" class="listBusCard table">
+				<div class="col-sm-2">
+					<div class="dropdown">
+					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+					  <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+								<li><a onclick="approval()">Đã nhận hàng tại nước ngoài</a></li>
+							</sec:authorize>
+							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="table_container">
+				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>						
+							<th><input type="checkbox" onchange="selectAllItems(this, 'da-duyet')" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
-							<th>Tổng tiền</th>
-							<th>Tổng tiền thực tế</th>
+							<th style="width: 180px">Tên sản phẩm</th>
+							<th style="width: 150px">Nhà phân phối</th>
+							<th style="width: 150px">Link</th>
+							<th style="width: 180px">Mô tả thêm</th>
+							<th style="width: 50px">Đơn giá</th>
+							<th style="width: 50px">Số lượng</th>
+							<th style="width: 100px">Thành tiền</th>
+							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+								<th style="width: 50px">Giá mua</th>
+								<th style="width: 50px">Số lượng mua</th>
+								<th style="width: 100px">Tiền thực mua</th>
+								<th style="width: 50px">Đơn giá tính tiền</th>
+								<th style="width: 100px">Tiền để tính</th>
+							</sec:authorize>
+							<th style="width: 100px">Mã mua hàng</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
+								<td class="fixed"><chkbox2:chbox item="${item.id }"
+										selectedItems="${selectedItems}" action="cho-mua" /></td>
+								<td class="fixed">
+									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
+									${item.formattedId} </div>
+								</td>
+								<td>${item.user.fullname}</td>
 								<td>
-									<input type="checkbox" class="order_id" order_id="${item.id }" onchange="selectItem(${item.id }, this)" />
+									<div class="lblName">${item.name }</div> 
+									<input type="text" value="${item.name }" class="form-control hiddenAction txtName" />
 								</td>
 								<td>
-									${item.formattedId}
+									<div class="lblBrand">${item.brand }</div> 
+									<input type="text" value="${item.brand }" class="form-control hiddenAction txtBrand" />
 								</td>
 								<td>
-									${item.user.fullname}
+									<div class="lblLink">${item.link }</div> 
+									<input type="text" value="${item.link }" class="form-control hiddenAction txtLink" />
 								</td>
 								<td>
-									<order:status status="${item.status }"/>
+									<div class="lblDesc">${item.description }</div> 
+									<textarea class="form-control hiddenAction description">${item.description } </textarea>
 								</td>
 								<td>
-									${item.getOrderPrice() }
+									<div class="lblCost">${item.cost }</div> 
+									<input type="number" value="${item.cost }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtCost" />
 								</td>
 								<td>
-									${item.getOrderRealPrice() }
+									<div class="lblQuantity">${item.quantity }</div> 
+									<input type="number" value="${item.quantity }" onchange="computeMoney(this)"
+										class="small_width form-control hiddenAction txtQuantity" />
 								</td>
 								<td>
-									<a href="${item.id }"><i class="fa fa-info"
-										aria-hidden="true"></i> View</a>
+									<div class="lblTotal">${item.total }</div> <input type="text"
+									value="${item.total }"
+									class="form-control hiddenAction txtTotal" disabled="disabled" />
+								</td>
+								<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+									<td>
+										<div class="lblRealCost">${item.realCost }</div> <input
+										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
+										class="small_width form-control hiddenAction txtRealCost" />
+									</td>
+									<td>
+										<div class="lblRealQuantity">${item.realQuantity }</div> <input
+										type="number" value="${item.realQuantity}" onchange="computeMoneyFromRealQuantity(this)"
+										class="small_width form-control hiddenAction txtRealQuantity" />
+									</td>
+									<td>
+										<div class="lblRealPrice">${item.realPrice }</div> 
+										<input type="text" value="${item.realPrice }"
+										class="form-control hiddenAction txtRealPrice"
+										disabled="disabled" />
+									</td>
+									<td>
+										<div class="lblComputeCost">${item.computeCost }</div> 
+										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
+										class="small_width form-control hiddenAction txtComputeCost" />
+									</td>
+									<td>
+										<div class="lblComputePrice">${item.computePrice }</div> 
+										<input type="text" value="${item.computePrice}"
+											class="form-control hiddenAction txtComputePrice"
+											disabled="disabled" />
+									</td>
+								</sec:authorize>
+								<td class="fixed">
+									<div class="lblBuyingCode">${item.buyingCode }</div> 
+									<input type="text" value="${item.buyingCode }" class="form-control hiddenAction txtBuyingCode" />	
+								</td>
+								<td class="fixed">
+									<c:if test="${item.isReadonly() ne true}">
+										<a onclick="edit(this)" class="myBtn origin btnEdit"><i
+											class="fa fa-edit icon-resize-small" aria-hidden="true"></i></a>
+										<div class="action">
+											<a onclick="save(this)" class="myBtn" item="${item.id }"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a>
+											<a onclick="cancel(this)" class="myBtn"><i
+												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
+										</div>
+									</c:if> 
 									<sec:authorize access="hasRole('ROLE_A')">
-										/ <a href="admin/${item.id }"><i class="fa"
-										aria-hidden="true"></i> Detail </a>
+										<a class="myBtn origin" href="admin/${item.id }"><i
+											class="fa fa-cogs" aria-hidden="true"></i> </a>
 									</sec:authorize>
 								</td>
-						</tr>
+							</tr>
 						</c:forEach>
 					</tbody>
 				</table>
@@ -98,13 +208,6 @@
 					uri="${pageContext.request.contextPath}/donhang/da-mua"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">			
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-						<i class="fa" aria-hidden="true" ></i> Chuyển hàng tại nước ngoài
-					</button>
-				</div>
-			</sec:authorize>
 		</form>
 	</div>
 	
@@ -139,6 +242,8 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/tableHeadFixer.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
@@ -146,19 +251,7 @@
     <script>
     var table;
     $(document).ready(function(){
-		//init datatables
-          table = $('#tableList').DataTable({
-     		destroy: true,
-     		"paging":   false,
-     		"searching":   false,
- 	   		"aLengthMenu" : [
- 	   			[25, 50, 100, 200, -1],
- 	   			[25, 50, 100, 200, "All"]],
- 	   		"order": [[ 1, 'asc' ]],
- 	   		"iDisplayLength" : 100,
-	 	   	"ordering": false,
-	        "info":     false
- 	   	});
+    	$("#tableList").tableHeadFixer({"head" : false, "left" : 2, "right": 2}); 
 		
     });
     
@@ -238,6 +331,9 @@
 		window.location.href = "chuyen-don-hang?tranferID=" + $("#transfer_information").val(); 
 	}
 	
+	function search() {
+    	$("#approvedOrders").submit();
+    }
     </script>
 </body>
 </html>
