@@ -76,8 +76,8 @@
 							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
 								<li><a onclick="approval()">Đã nhận hàng tại nước ngoài</a></li>
 							</sec:authorize>
-							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+							<li><a onclick="cancelOrders('da-mua/huy-don-hang')">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders('da-mua/xoa-don-hang')">Xóa đơn hàng</a></li>
 						</ul>
 					</div>
 				</div>

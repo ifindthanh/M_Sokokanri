@@ -1,6 +1,7 @@
 package vn.com.nsmv.javabean;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +13,8 @@ public final class SearchCondition
 {
 	private static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy/MM/dd");
 	
-	private List<String> brands;
-	private List<String> buyingCodes;
+	private List<String> brands = new ArrayList<String>();
+	private List<String> buyingCodes = new ArrayList<String>();
 	private List<String> transferIds;
 	private Integer status = 999;
 	private Long userId;

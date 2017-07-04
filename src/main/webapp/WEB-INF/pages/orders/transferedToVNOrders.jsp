@@ -88,8 +88,8 @@
 							<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
 								<li><a onclick="approval()">Nhập kho</a></li>
 							</sec:authorize>
-							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+							<li><a onclick="cancelOrders('da-chuyen-vn/huy-don-hang')">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders('da-chuyen-vn/xoa-don-hang')">Xóa đơn hàng</a></li>
 						</ul>
 					</div>
 				</div>

@@ -52,8 +52,8 @@
 								<li><a onclick="approval()">Duyệt đơn hàng</a></li>
 								<li><a onclick="noteAnOrder()">Ghi chú đơn hàng</a></li>
 							</sec:authorize>
-							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+							<li><a onclick="cancelOrders('cho-duyet/huy-don-hang')">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders('cho-duyet/xoa-don-hang')">Xóa đơn hàng</a></li>
 						</ul>
 					</div>
 				</div>
@@ -238,28 +238,6 @@
     	}
     }
     
-    function cancelOrders() {
-    	if ($('.order_id:checkbox:checked').length == 0) {
-    		alert("Vui lòng chọn đơn hàng.");
-    		return;
-    	}
-    	var check = confirm("Bạn có chắc muốn hủy đơn hàng này?");
-    	if (check) {
-    		window.location.href = "cho-duyet/huy-don-hang";
-    	}
-    }
-    
-    function deleteOrders() {
-    	if ($('.order_id:checkbox:checked').length == 0) {
-    		alert("Vui lòng chọn đơn hàng.");
-    		return;
-    	}
-    	var check = confirm("Bạn có chắc muốn xóa đơn hàng này?");
-    	if (check) {
-    		window.location.href = "cho-duyet/xoa-don-hang";
-    	}
-        
-    }
     
 	function approval(){
 		if ($('.order_id:checkbox:checked').length == 0) {

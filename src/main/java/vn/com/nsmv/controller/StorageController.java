@@ -1,10 +1,7 @@
 package vn.com.nsmv.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -35,81 +32,44 @@ import vn.com.nsmv.service.OrdersService;
 
 @Controller
 @Scope("session")
-public class StorageController {
+public class StorageController extends AbstractController {
 	
 	private SearchCondition searchCondition = new SearchCondition(5);
-	private Integer offset;
-	private Integer maxResults;
 	
 	@Autowired
 	private OrdersService ordersService;
 	
-	private Set<Long> selectedItems = new HashSet<Long>();
 	
 	@RequestMapping(value = "/donhang/da-nhap-kho/0", method=RequestMethod.GET)
 	public String init()
 	{
-		this.offset = 0;
-		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
 		this.searchCondition =  new SearchCondition(5);
-		this.selectedItems.clear();
+		super.initController();
 		return "redirect:/donhang/da-nhap-kho";
 	}
 	
 	@RequestMapping(value = "/donhang/da-nhap-kho", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
-		if (this.maxResults == null)
-		{
-			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		}
-		
-		if (offset != null)
-		{
-			this.offset = offset;
-		}
-		
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
-		request.getSession().setAttribute("listType", 7);
-		this.doBusiness(model);
+	    request.getSession().setAttribute("listType", 7);
+		super.listAllOrdersInPage(request, model, offset, maxResults);
 		return new ModelAndView("/orders/storagedItems");
 	}
 	
 	
 	@RequestMapping(value = "/donhang/da-nhap-kho", method = RequestMethod.POST)
 	public RedirectView search(
-		HttpServletRequest request,
-		Model model,
 		SearchCondition searchCondition,
 		Integer offset,
 		Integer maxResults)
 	{
-		this.selectedItems.clear();
-		
-		if (this.maxResults == null)
-		{
-			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		}
-		
-		if (offset != null)
-		{
-			this.offset = offset;
-		}
-		
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
-		
+		this.reset(offset, maxResults);
 		if (searchCondition != null) 
-		{
-			this.searchCondition = searchCondition;
-		}
-		
+        {
+            this.searchCondition = searchCondition;
+        }
 		return new RedirectView("da-nhap-kho-tim-kiem");
 	}
+
 	
 	@RequestMapping(value = "/donhang/da-nhap-kho-tim-kiem", method = RequestMethod.GET)
 	public String searchResult(HttpServletRequest request, Model model)
@@ -120,24 +80,25 @@ public class StorageController {
 	}
 	
 	
-	private void doBusiness(Model model) {
+	public void doBusiness(Model model) {
 		if (this.searchCondition == null) {
 			this.searchCondition = new SearchCondition(5);
 		}
 		try {
+		    Long userId = null;
 			if (Utils.isUser()) {
-				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+			    userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Bill> allBills = this.ordersService.getAllBills(this.searchCondition, this.offset,
-					this.maxResults);
+			List<Bill> allBills = this.ordersService.getAllBills(this.searchCondition, this.getOffset(),
+					this.getMaxResults());
 			int count = this.ordersService.countAllBills(this.searchCondition);
 			model.addAttribute("allBills", allBills);
-			model.addAttribute("offset", this.offset);
-			model.addAttribute("maxResult", this.maxResults);
+			model.addAttribute("offset", this.getOffset());
+			model.addAttribute("maxResult", this.getMaxResults());
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("count", count);
-			model.addAttribute("selectedItems", this.selectedItems);
+			model.addAttribute("selectedItems", this.getSelectedItems());
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 		}
@@ -160,8 +121,8 @@ public class StorageController {
 			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
 		}
 		try {
-			this.ordersService.exportBill(this.selectedItems, true);
-			this.selectedItems.clear();
+			this.ordersService.exportBill(this.getSelectedItems(), true);
+			this.getSelectedItems().clear();
 			return "redirect:da-nhap-kho";
 		} catch (SokokanriException e) {
 			return "redirect:da-nhap-kho";
@@ -173,7 +134,6 @@ public class StorageController {
 	public void exportBillToFile(Model model, HttpServletRequest request, HttpServletResponse response, @RequestParam Long id) {
 		try {
 			String billContent = this.ordersService.exportBill(id, false);
-			InputStream inputStream = null;
 			try
 			{
 				// set file as attached data and copy file data to response output stream
@@ -185,7 +145,6 @@ public class StorageController {
 				response.setHeader(
 					"Content-Disposition",
 					String.format("attachment; filename=\"chi_tiet_hoa_don.txt\""));
-				byte[] byteBuffer = new byte[4096];
 				//Copy bytes from source to destination, closes both streams.
 				// reads the file's bytes and writes them to the response stream
 				response.setCharacterEncoding("UTF-8");
@@ -211,47 +170,21 @@ public class StorageController {
 	
 	@RequestMapping(value = "/donhang/nhap-kho/chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
-		this.selectedItems.add(id);
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+		return super.selectItem(id);
 	}
 	
 	@RequestMapping(value = "/donhang/nhap-kho/bo-chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
-		this.selectedItems.remove(id);
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+		return super.deSelectItem(id);
 	}
 	
 	@RequestMapping(value = "/donhang/nhap-kho/chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
-		String[] allIds = ids.split(",");
-		for (String item : allIds) {
-			if (Utils.isEmpty(item)) {
-				continue;
-			}
-			try {
-				Long id = Long.parseLong(item);
-				this.selectedItems.add(id);
-			} catch (Exception ex) {
-				continue;
-			}
-		}
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+		return super.selectAllItems(ids);
 	}
 	
 	@RequestMapping(value = "/donhang/nhap-kho/bo-chon-tat-ca", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
-		String[] allIds = ids.split(",");
-		for (String item : allIds) {
-			if (Utils.isEmpty(item)) {
-				continue;
-			}
-			try {
-				Long id = Long.parseLong(item);
-				this.selectedItems.remove(id);
-			} catch (Exception ex) {
-				continue;
-			}
-		}
-		return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+		return super.deSelectAllItems(ids);
 	}
 }

@@ -1,9 +1,7 @@
 package vn.com.nsmv.controller;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,78 +27,41 @@ import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Item;
-import vn.com.nsmv.entity.VBrand;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
 @Controller
 @Scope("session")
-public class WaitingToBuyController {
+public class WaitingToBuyController extends AbstractController{
 	
 	private SearchCondition searchCondition = new SearchCondition(1);
-	private Integer offset;
-	private Integer maxResults;
 	
 	@Autowired
 	private OrdersService ordersService;
 	
-	private Set<Long> selectedItems = new HashSet<Long>();
-	
 	@RequestMapping(value = "/donhang/cho-mua/0", method=RequestMethod.GET)
 	public String init()
 	{
-		this.offset = 0;
-		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		this.selectedItems.clear();
+		super.initController();
 		this.searchCondition = new SearchCondition(1);
 		return "redirect:/donhang/cho-mua";
 	}
 	
 	@RequestMapping(value = "/donhang/cho-mua", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
-		if (this.maxResults == null)
-		{
-			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		}
 		
-		if (offset != null)
-		{
-			this.offset = offset;
-		}
-		
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
 		request.getSession().setAttribute("listType", 3);
-		this.doBusiness(model);
+		super.listAllOrdersInPage(request, model, offset, maxResults);
 		return new ModelAndView("/orders/buyingOrders");
 	}
 	
 	@RequestMapping(value = "/donhang/cho-mua", method = RequestMethod.POST)
     public RedirectView search(
-        HttpServletRequest request,
-        Model model,
         SearchCondition searchCondition,
         Integer offset,
         Integer maxResults)
     {
-        this.selectedItems.clear();
-        
-        if (this.maxResults == null)
-        {
-            this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-        }
-        
-        if (offset != null)
-        {
-            this.offset = offset;
-        }
-        
-        if (maxResults != null)
-        {
-            this.maxResults = maxResults;
-        }
+        this.reset(offset, maxResults);
         
         if (searchCondition != null) 
         {
@@ -118,7 +79,7 @@ public class WaitingToBuyController {
         return "/orders/buyingOrders";
     }
 	
-	private void doBusiness(Model model) {
+	public void doBusiness(Model model) {
 		if (this.searchCondition == null) {
 			this.searchCondition = new SearchCondition(1);
 		}
@@ -128,16 +89,17 @@ public class WaitingToBuyController {
 				userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
-					this.maxResults);
+			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.getOffset(),
+					this.getMaxResults());
 			List<String> allBrands = this.ordersService.getAllBrands(userId, 1);
+			this.checkSearching(searchCondition.getBrands(), allBrands);
 			int count = this.ordersService.countAllItems(this.searchCondition);
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("allBrands", allBrands);
-			model.addAttribute("offset", this.offset);
-			model.addAttribute("maxResult", this.maxResults);
+			model.addAttribute("offset", this.getOffset());
+			model.addAttribute("maxResult", this.getMaxResults());
 			model.addAttribute("searchCondition", this.searchCondition);
-			model.addAttribute("selectedItems", this.selectedItems);
+			model.addAttribute("selectedItems", this.getSelectedItems());
 			model.addAttribute("count", count);
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
@@ -151,8 +113,8 @@ public class WaitingToBuyController {
 			model.addAttribute("message", "Bạn không có quyền duyệt đơn hàng");
 		}
 		try {
-			this.ordersService.buyOrders(this.selectedItems);
-			this.selectedItems.clear();
+			this.ordersService.buyOrders(this.getSelectedItems());
+			this.getSelectedItems().clear();
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
 		}
@@ -181,10 +143,10 @@ public class WaitingToBuyController {
 	@RequestMapping(value = "/donhang/ghi-chu-mua", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> noteAnOrder(@RequestParam String content, Model model){
 		try {
-		    if (this.selectedItems.size() != 1) {
+		    if (this.getSelectedItems().size() != 1) {
                 throw new SokokanriException("Vui lòng chọn một đơn hàng.");
             }
-			this.ordersService.noteABuyingOrder(this.selectedItems.iterator().next(), content);
+			this.ordersService.noteABuyingOrder(this.getSelectedItems().iterator().next(), content);
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
 		}
@@ -193,55 +155,29 @@ public class WaitingToBuyController {
 	
 	@RequestMapping(value = "/donhang/cho-mua/chon-don-hang", method=RequestMethod.GET)
     public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
-        this.selectedItems.add(id);
-        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+        return super.selectItem(id);
     }
 	
 	@RequestMapping(value = "/donhang/cho-mua/bo-chon-don-hang", method=RequestMethod.GET)
     public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
-        this.selectedItems.remove(id);
-        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+        return super.deSelectItem(id);
     }
     
     @RequestMapping(value = "/donhang/cho-mua/chon-tat-ca", method=RequestMethod.GET)
     public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
-        String[] allIds = ids.split(",");
-        for (String item : allIds) {
-            if (Utils.isEmpty(item)) {
-                continue;
-            }
-            try {
-                Long id = Long.parseLong(item);
-                this.selectedItems.add(id);
-            } catch (Exception ex) {
-                continue;
-            }
-        }
-        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+        return super.selectAllItems(ids);
     }
     
     @RequestMapping(value = "/donhang/cho-mua/bo-chon-tat-ca", method=RequestMethod.GET)
     public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
-        String[] allIds = ids.split(",");
-        for (String item : allIds) {
-            if (Utils.isEmpty(item)) {
-                continue;
-            }
-            try {
-                Long id = Long.parseLong(item);
-                this.selectedItems.remove(id);
-            } catch (Exception ex) {
-                continue;
-            }
-        }
-        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+       return super.deSelectAllItems(ids);
     }
     
     @RequestMapping(value = "/donhang/cho-mua/xoa-don-hang", method=RequestMethod.GET)
     public String deleteOrders(Model model){
         try {
-            this.ordersService.deleteItems(this.selectedItems);
-            this.selectedItems.clear();
+            this.ordersService.deleteItems(this.getSelectedItems());
+            this.getSelectedItems().clear();
         } catch (SokokanriException ex) {
             model.addAttribute("message", ex.getErrorMessage());
         }
@@ -251,8 +187,8 @@ public class WaitingToBuyController {
     @RequestMapping(value = "/donhang/cho-mua/huy-don-hang", method=RequestMethod.GET)
     public String cancelOrders(Model model){
         try {
-            this.ordersService.cancelItems(this.selectedItems);
-            this.selectedItems.clear();
+            this.ordersService.cancelItems(this.getSelectedItems());
+            this.getSelectedItems().clear();
         } catch (SokokanriException ex) {
             model.addAttribute("message", ex.getErrorMessage());
         }

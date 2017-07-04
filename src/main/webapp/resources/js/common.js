@@ -249,3 +249,26 @@
 			txtComputePrice.val("");
 		}
     }
+    
+    function cancelOrders(url) {
+    	if ($('.order_id:checkbox:checked').length == 0) {
+    		alert("Vui lòng chọn đơn hàng.");
+    		return;
+    	}
+    	var check = confirm("Bạn có chắc muốn hủy đơn hàng này?");
+    	if (check) {
+    		window.location.href = url;
+    	}
+    }
+    
+    function deleteOrders(url) {
+    	if ($('.order_id:checkbox:checked').length == 0) {
+    		alert("Vui lòng chọn đơn hàng.");
+    		return;
+    	}
+    	var check = confirm("Bạn có chắc muốn xóa đơn hàng này?");
+    	if (check) {
+    		window.location.href = url;
+    	}
+        
+    }

@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
-import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
@@ -26,10 +25,8 @@ import vn.com.nsmv.service.OrdersService;
 
 @Controller
 @Scope("session")
-public class AllOrdersController {
+public class AllOrdersController extends AbstractController{
 	private SearchCondition searchCondition = new SearchCondition();
-	private Integer offset;
-	private Integer maxResults;
 	
 	@Autowired
 	private OrdersService ordersService;
@@ -37,59 +34,29 @@ public class AllOrdersController {
 	@RequestMapping(value = "/donhang/tat-ca/0", method=RequestMethod.GET)
 	public String init()
 	{
-		this.offset = 0;
-		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+	    this.searchCondition = new SearchCondition();
+	    super.initController();
 		return "redirect:/donhang/tat-ca";
 	}
 	
 	@RequestMapping(value = "/donhang/tat-ca", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
-		if (this.maxResults == null)
-		{
-			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		}
-		
-		if (offset != null)
-		{
-			this.offset = offset;
-		}
-		
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
 		request.getSession().setAttribute("listType", 1);
-		this.doBusiness(model);
+		super.listAllOrdersInPage(request, model, offset, maxResults);
 		return new ModelAndView("/orders/allOrders");
 	}
 	
 	@RequestMapping(value = "/donhang/tat-ca", method=RequestMethod.POST)
 	public RedirectView listAllOrdersPOST(HttpServletRequest request, Model model, 
 			Integer offset, Integer maxResults, SearchCondition searchCondition) {
-		if (this.maxResults == null)
-		{
-			this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
-		}
-		
-		if (offset != null)
-		{
-			this.offset = offset;
-		}
-		
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
-		request.getSession().setAttribute("listType", 1);
-		if (maxResults != null)
-		{
-			this.maxResults = maxResults;
-		}
-		
+	    
+	    this.reset(offset, maxResults);
 		if (searchCondition != null) 
 		{
 			this.searchCondition = searchCondition;
 		}
+		
+		request.getSession().setAttribute("listType", 1);
 		
 		return new RedirectView("tat-ca-tim-kiem");
 	}
@@ -102,7 +69,7 @@ public class AllOrdersController {
 		return "/orders/allOrders";
 	}
 
-	private void doBusiness(Model model) {
+	public void doBusiness(Model model) {
 		if (this.searchCondition == null) {
 			this.searchCondition = new SearchCondition();
 		}
@@ -112,14 +79,15 @@ public class AllOrdersController {
 			    userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
-			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
-					this.maxResults);
+			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.getOffset(),
+					this.getMaxResults());
 			int count = this.ordersService.countAllItems(this.searchCondition);
 			List<String> allBrands = this.ordersService.getAllBrands(userId, this.searchCondition.getStatus());
+			this.checkSearching(searchCondition.getBrands(), allBrands);
 			model.addAttribute("allBrands", allBrands);
 			model.addAttribute("items", allOrders);
-			model.addAttribute("offset", this.offset);
-			model.addAttribute("maxResult", this.maxResults);
+			model.addAttribute("offset", this.getOffset());
+			model.addAttribute("maxResult", this.getMaxResults());
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("count", count);
 		} catch (SokokanriException ex) {

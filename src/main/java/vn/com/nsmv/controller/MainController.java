@@ -1,8 +1,6 @@
 package vn.com.nsmv.controller;
 
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
 /**
  * Handle user login action

@@ -76,8 +76,8 @@
 							<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
 								<li><a onclick="approval()">Chuyển về Việt Nam</a></li>
 							</sec:authorize>
-							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+							<li><a onclick="cancelOrders('da-chuyen/huy-don-hang')">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders('da-chuyen/xoa-don-hang')">Xóa đơn hàng</a></li>
 						</ul>
 					</div>
 				</div>
