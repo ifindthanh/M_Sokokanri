@@ -18,4 +18,5 @@ public interface ItemDAO {
 	public int countAllItems(SearchCondition searchCondition) throws SokokanriException;
 	public List<String> getAllBrands(Long userId, Integer status) throws SokokanriException;
     public List<String> getAllBuyingCodes(Long userId, Integer status) throws SokokanriException;
+    public List<String> getAllTransferId(Long userId, Integer status) throws SokokanriException;
 }

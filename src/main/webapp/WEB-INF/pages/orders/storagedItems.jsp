@@ -71,15 +71,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${allBills}" varStatus="status">
+						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
 								<td>
-									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}"/>
+									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action=""/>
 								</td>
-								<td rowspan="${item.categories.size()+1}">${item.getFormattedId()}</td>
+								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
 									<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
-										<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
+										<button type="button" class="btn btn-primary" onclick="approval(${bill.id})">
 											<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
 										</button>
 									</sec:authorize>
@@ -90,25 +90,24 @@
 								<td></td>
 								<td></td>
 							</tr>
-							<c:forEach var="cart" items="${item.categories}" varStatus="cartstatus">
+							<c:forEach var="item" items="${bill.items}" varStatus="itemstatus">
 								<tr>
 									<td style="display:none"></td>
 									<td></td>
 									<td>
-										${cart.formattedId}
 									</td>
-									<td>${cart.transferId}</td>
+									<td>${item.transferId}</td>
 									<td>
-										${cart.user.fullname}
-									</td>
-									<td>
-										<order:status status="${cart.status }"/>
+										${item.user.fullname}
 									</td>
 									<td>
-										${cart.getOrderRealPrice() }
+										<order:status status="${item.status }"/>
 									</td>
 									<td>
-										<a href="${cart.id }"><i class="fa fa-info"
+										${item.getRealPrice() }
+									</td>
+									<td>
+										<a href="${item.id }"><i class="fa fa-info"
 											aria-hidden="true"></i> View</a>
 										<sec:authorize access="hasRole('ROLE_A')">
 											/ <a href="admin/${item.id }"><i class="fa"

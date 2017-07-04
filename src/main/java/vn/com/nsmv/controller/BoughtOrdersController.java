@@ -49,6 +49,7 @@ public class BoughtOrdersController {
 		this.offset = 0;
 		this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
 		this.selectedItems.clear();
+		searchCondition = new SearchCondition(2);
 		return "redirect:/donhang/da-mua";
 	}
 	
@@ -144,15 +145,12 @@ public class BoughtOrdersController {
 	
 	
 	@RequestMapping(value = "/donhang/chuyen-don-hang", method=RequestMethod.GET)
-	public ModelAndView approval(@RequestParam String tranferID, Model model){
+	public ModelAndView approval(Model model){
 		if (!Utils.hasRole(Constants.ROLE_T1) && !Utils.hasRole(Constants.ROLE_A)) {
 			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
 		}
 		try {
-			if (Utils.isEmpty(tranferID)) {
-				throw new SokokanriException("Vui lòng ghi chú vận đơn");
-			}
-			this.ordersService.transferOrders(this.selectedItems, tranferID);
+			this.ordersService.transferOrders(this.selectedItems);
 			this.selectedItems.clear();
 			
 		} catch (SokokanriException e) {
@@ -161,22 +159,6 @@ public class BoughtOrdersController {
 		return new ModelAndView("redirect:da-mua");
 	}
 	
-	@RequestMapping(value = "/donhang/ghi-chu-van-don", method=RequestMethod.GET)
-	public ModelAndView noteOrder(@RequestParam Long id, @RequestParam String transferID, Model model){
-		if (!Utils.hasRole(Constants.ROLE_T1) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
-		}
-		try {
-			if (Utils.isEmpty(transferID)) {
-				throw new SokokanriException("Vui lòng ghi chú vận đơn");
-			}
-			this.ordersService.transferOrder(id, transferID);
-			
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ModelAndView("redirect:da-mua");
-	}
 	
 	@RequestMapping(value = "/donhang/da-mua/chon-don-hang", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){

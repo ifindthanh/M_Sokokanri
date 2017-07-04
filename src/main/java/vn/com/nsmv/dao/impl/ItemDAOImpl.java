@@ -166,35 +166,8 @@ public class ItemDAOImpl implements ItemDAO {
         try
         {
             StringBuilder sql = new StringBuilder("select distinct brand from VBrand where brand is not null");
-            Map<String, Object> params = new HashMap<String, Object>();
-            if (userId != null) {
-                sql.append(" AND userId = :userId ");
-                params.put("userId", userId);
-            }
-            
-            if (status != null && status != 999) {
-                
-                if (status == 0) {
-                    sql.append(" AND (status = :status or status = -1)");
-                } else if (status == 1) {
-                    sql.append(" AND (status = :status or status = -2)");
-                } else {
-                    sql.append(" AND status = :status");
-                }
-                params.put("status", status);
-            }  else {
-                sql.append(" and status <> 8 and status <> -5");
-            }
-            
-            Query query = session.createQuery(sql.toString());
-            Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<String, Object> element = iterator.next();
-                query.setParameter(element.getKey(), element.getValue());
-            }
-            
             @SuppressWarnings("unchecked")
-            List<String> list = query.list();
+            List<String> list = getList(userId, status, session, sql);
             if (list != null)
             {
                 return list;
@@ -212,35 +185,60 @@ public class ItemDAOImpl implements ItemDAO {
         try
         {
             StringBuilder sql = new StringBuilder("select distinct buyingCode from VBuyingCode where buyingCode is not null");
-            Map<String, Object> params = new HashMap<String, Object>();
-            if (userId != null) {
-                sql.append(" AND userId = :userId ");
-                params.put("userId", userId);
-            }
-            
-            if (status != null && status != 999) {
-                
-                if (status == 0) {
-                    sql.append(" AND (status = :status or status = -1)");
-                } else if (status == 1) {
-                    sql.append(" AND (status = :status or status = -2)");
-                } else {
-                    sql.append(" AND status = :status");
-                }
-                params.put("status", status);
-            }  else {
-                sql.append(" and status <> 8 and status <> -5");
-            }
-            
-            Query query = session.createQuery(sql.toString());
-            Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<String, Object> element = iterator.next();
-                query.setParameter(element.getKey(), element.getValue());
-            }
-            
             @SuppressWarnings("unchecked")
-            List<String> list = query.list();
+            List<String> list = getList(userId, status, session, sql);
+            if (list != null)
+            {
+                return list;
+            }
+        }
+        catch (Exception ex)
+        {
+            return new ArrayList<String>();
+        }
+        return new ArrayList<String>();
+    }
+
+    private List<String> getList(Long userId, Integer status, Session session, StringBuilder sql) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (userId != null) {
+            sql.append(" AND userId = :userId ");
+            params.put("userId", userId);
+        }
+        
+        if (status != null && status != 999) {
+            
+            if (status == 0) {
+                sql.append(" AND (status = :status or status = -1)");
+            } else if (status == 1) {
+                sql.append(" AND (status = :status or status = -2)");
+            } else {
+                sql.append(" AND status = :status");
+            }
+            params.put("status", status);
+        }  else {
+            sql.append(" and status <> 8 and status <> -5");
+        }
+        
+        Query query = session.createQuery(sql.toString());
+        Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<String, Object> element = iterator.next();
+            query.setParameter(element.getKey(), element.getValue());
+        }
+        
+        @SuppressWarnings("unchecked")
+        List<String> list = query.list();
+        return list;
+    }
+
+    public List<String> getAllTransferId(Long userId, Integer status) throws SokokanriException {
+        Session session = this.sessionFactory.getCurrentSession();
+        try
+        {
+            StringBuilder sql = new StringBuilder("select distinct transferId from VTransferId where transferId is not null");
+            @SuppressWarnings("unchecked")
+            List<String> list = getList(userId, status, session, sql);
             if (list != null)
             {
                 return list;

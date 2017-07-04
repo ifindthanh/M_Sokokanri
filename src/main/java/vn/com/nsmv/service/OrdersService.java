@@ -27,10 +27,8 @@ public interface OrdersService {
 	public void noteAnOrder(Long id, String content) throws SokokanriException;
 	public void saveRealPrice(Long id, Double value) throws SokokanriException;
 	public void noteABuyingOrder(Long id, String content) throws SokokanriException;
-	public void transferOrder(Long id, String tranferID) throws SokokanriException;
-	public void transferOrders(Set<Long> selectedItems, String tranferID) throws SokokanriException;
-	public void transferOrdersToVN(Set<Long> selectedItems) throws SokokanriException;
-	public void transferOrderToVN(Long id) throws SokokanriException;
+	public void transferOrders(Set<Long> selectedItems) throws SokokanriException;
+	public void transferOrdersToVN(Set<Long> selectedItems, String tranferID) throws SokokanriException;
 	public void importToStorage(Map<Long, List<Item>> classificationOrders) throws SokokanriException;
 	public String exportBill(Long selectedItem, boolean toWeb) throws SokokanriException;
 	public void exportBill(Set<Long> selectedItems, boolean toWeb) throws SokokanriException;
@@ -43,6 +41,7 @@ public interface OrdersService {
     public void saveItem(Item item) throws SokokanriException;
     public List<String> getAllBrands(Long userId, Integer status) throws SokokanriException;
     public List<String> getAllBuyingCodes(Long userId, Integer status) throws SokokanriException;
+    public List<String> getAllTransferIds(Long userId, Integer status) throws SokokanriException;
     public void deleteItems(Set<Long> selectedItems) throws SokokanriException;
     public void cancelItems(Set<Long> selectedItems) throws SokokanriException;
     public void removeNote(Long id) throws SokokanriException;

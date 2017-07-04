@@ -73,7 +73,7 @@
 					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 					  <span class="caret"></span></button>
 						<ul class="dropdown-menu">
-							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
 								<li><a onclick="approval()">Đã nhận hàng tại nước ngoài</a></li>
 							</sec:authorize>
 							<li><a onclick="cancelOrders()">Hủy đơn hàng</a></li>
@@ -211,28 +211,6 @@
 		</form>
 	</div>
 	
-	<!-- Modal -->
-	<div id="addNoteModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Ghi chú vận đơn</h4>
-				</div>
-				<div class="modal-body">
-					<input type="text" id="transfer_information" class="description form-control" placeholder="Ghi chú vận đơn" />
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
-	
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
 	<script src="<c:url value="/resources/js/jquery.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
@@ -319,16 +297,8 @@
 		
 		var check = confirm("Bạn có thật sự muốn chuyển đơn hàng này sang đã chuyển tại nước ngoài?");
     	if (check) {
-    		$('#addNoteModal').modal('show');
+    		window.location.href = "chuyen-don-hang"; 
     	}
-	}
-	
-	function addNote () {
-		if (!$("#transfer_information") || $("#transfer_information").val() == "") {
-			alert("Vui lòng ghi chú vận đơn");
-			return;
-		}
-		window.location.href = "chuyen-don-hang?tranferID=" + $("#transfer_information").val(); 
 	}
 	
 	function search() {

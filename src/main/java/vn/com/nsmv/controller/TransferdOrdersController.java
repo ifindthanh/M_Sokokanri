@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
@@ -72,18 +73,62 @@ public class TransferdOrdersController {
 		return new ModelAndView("/orders/transferedOrders");
 	}
 	
+	@RequestMapping(value = "/donhang/da-chuyen", method = RequestMethod.POST)
+    public RedirectView search(
+        HttpServletRequest request,
+        Model model,
+        SearchCondition searchCondition,
+        Integer offset,
+        Integer maxResults)
+    {
+        this.selectedItems.clear();
+        
+        if (this.maxResults == null)
+        {
+            this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+        }
+        
+        if (offset != null)
+        {
+            this.offset = offset;
+        }
+        
+        if (maxResults != null)
+        {
+            this.maxResults = maxResults;
+        }
+        
+        if (searchCondition != null) 
+        {
+            this.searchCondition = searchCondition;
+        }
+        
+        return new RedirectView("da-chuyen-tim-kiem");
+    }
+    
+    @RequestMapping(value = "/donhang/da-chuyen-tim-kiem", method = RequestMethod.GET)
+    public String searchResult(HttpServletRequest request, Model model)
+    {
+        request.getSession().setAttribute("listType", 5);
+        this.doBusiness(model);
+        return "/orders/transferedOrders";
+    }
+	
 	private void doBusiness(Model model) {
 		if (this.searchCondition == null) {
 			this.searchCondition = new SearchCondition(3);
 		}
 		try {
+		    Long userId = null;
 			if (Utils.isUser()) {
-				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+				userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
 			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
 					this.maxResults);
 			int count = this.ordersService.countAllItems(this.searchCondition);
+			model.addAttribute("allBrands", this.ordersService.getAllBrands(userId, searchCondition.getStatus()));
+            model.addAttribute("allBuyingCodes", this.ordersService.getAllBuyingCodes(userId, searchCondition.getStatus()));
 			model.addAttribute("allOrders", allOrders);
 			model.addAttribute("offset", this.offset);
 			model.addAttribute("maxResult", this.maxResults);
@@ -142,12 +187,15 @@ public class TransferdOrdersController {
 	}
 	
 	@RequestMapping(value = "/donhang/chuyen-nhieu-don-hang-vn", method=RequestMethod.GET)
-	public ModelAndView approvalOrders(Model model){
+	public ModelAndView approvalOrders(@RequestParam String tranferID, Model model){
 		if (!Utils.hasRole(Constants.ROLE_T2) && !Utils.hasRole(Constants.ROLE_A)) {
 			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
 		}
 		try {
-			this.ordersService.transferOrdersToVN(this.selectedItems);
+		    if (Utils.isEmpty(tranferID)) {
+                throw new SokokanriException("Vui lòng ghi chú vận đơn");
+            }
+			this.ordersService.transferOrdersToVN(this.selectedItems, tranferID);
 			this.selectedItems.clear();
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
@@ -155,17 +203,4 @@ public class TransferdOrdersController {
 		return new ModelAndView("redirect:da-chuyen");
 	}
 	
-	@RequestMapping(value = "/donhang/chuyen-don-hang-vn", method=RequestMethod.GET)
-	public ModelAndView approval(@RequestParam Long id, Model model){
-		if (!Utils.hasRole(Constants.ROLE_T2) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
-		}
-		try {
-			this.ordersService.transferOrderToVN(id);
-			
-		} catch (SokokanriException e) {
-			model.addAttribute("message", e.getErrorMessage());
-		}
-		return new ModelAndView("redirect:da-chuyen");
-	}
 }

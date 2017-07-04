@@ -14,6 +14,7 @@ public final class SearchCondition
 	
 	private List<String> brands;
 	private List<String> buyingCodes;
+	private List<String> transferIds;
 	private Integer status = 999;
 	private Long userId;
 	private String customerName; 
@@ -260,5 +261,15 @@ public final class SearchCondition
 	public void setToInformedDate(String toInformedDate) {
 		this.toInformedDate = toInformedDate;
 	}
+
+    
+    public List<String> getTransferIds() {
+        return transferIds;
+    }
+
+    
+    public void setTransferIds(List<String> transferIds) {
+        this.transferIds = transferIds;
+    }
 	
 }

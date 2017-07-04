@@ -49,7 +49,7 @@ public class BillDAOImpl implements BillDAO{
 		{
 			Session session = this.sessionFactory.getCurrentSession();
 			StringBuilder sql = new StringBuilder();
-			sql.append("from Category c JOIN c.bill b where b.id > 0");
+			sql.append("from Item c JOIN c.bill b where b.id > 0");
 			Map<String, Object> params = new HashMap<String, Object>();
 			if (searchCondition.getUserId() != null) {
 				sql.append(" and c.user.id = :userId");
@@ -108,7 +108,7 @@ public class BillDAOImpl implements BillDAO{
 		{
 			Session session = this.sessionFactory.getCurrentSession();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select count (distinct b.id) from Category c JOIN c.bill b where b.id > 0");
+			sql.append("select count (distinct b.id) from Item c JOIN c.bill b where b.id > 0");
 			Map<String, Object> params = new HashMap<String, Object>();
 			if (searchCondition.getStatus() != null) {
 				sql.append(" and c.status = :status ");

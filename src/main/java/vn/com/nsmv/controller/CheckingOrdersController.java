@@ -121,8 +121,9 @@ public class CheckingOrdersController {
 			this.searchCondition = new SearchCondition(4);
 		}
 		try {
+		    Long userId = null;
 			if (Utils.isUser()) {
-				Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+			    userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 				this.searchCondition.setUserId(userId);
 			}
 			List<Item> allOrders = this.ordersService.getAllOrders(this.searchCondition, null, this.offset,
@@ -133,6 +134,9 @@ public class CheckingOrdersController {
 			model.addAttribute("maxResult", this.maxResults);
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("selectedItems", this.selectedItems);
+			model.addAttribute("allBrands", this.ordersService.getAllBrands(userId, searchCondition.getStatus()));
+            model.addAttribute("allBuyingCodes", this.ordersService.getAllBuyingCodes(userId, searchCondition.getStatus()));
+            model.addAttribute("allTransferIds", this.ordersService.getAllTransferIds(userId, searchCondition.getStatus()));
 			model.addAttribute("count", count);
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());

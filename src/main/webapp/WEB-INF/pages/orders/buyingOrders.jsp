@@ -319,52 +319,6 @@
     	}
 	}
     
-    function computeRealMoney(element) {
-    	var currentElement = $(element);
-    	var txtTotal = currentElement.closest('tr').find(".txtRealPrice");
-    	var txtCost = currentElement.closest('tr').find(".txtRealCost");
-    	var txtQuantity = currentElement.closest('tr').find(".txtRealQuantity");
-    	if (txtCost.val() && txtCost.val() != "" 
-    			&& txtQuantity.val() && txtQuantity.val() != "") {
-    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
-    	} else {
-    		txtTotal.val("");
-    	}
-    }
-    
-    function computeMoneyFromRealQuantity(element) {
-    	var currentElement = $(element);
-    	var txtTotal = currentElement.closest('tr').find(".txtRealPrice");
-    	var txtCost = currentElement.closest('tr').find(".txtRealCost");
-    	var txtComputeCost = currentElement.closest('tr').find(".txtComputeCost");
-    	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
-    	if (txtCost.val() && txtCost.val() != "" 
-    			&& currentElement.val() && currentElement.val() != "") {
-    		txtTotal.val((parseInt(currentElement.val())* parseFloat(txtCost.val())).toFixed(4));
-    	} else {
-    		txtTotal.val("");
-    	}
-    	
-    	if (txtComputeCost.val() && txtComputeCost.val() != "" 
-			&& currentElement.val() && currentElement.val() != "") {
-    		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtComputeCost.val())).toFixed(4));
-		} else {
-			txtComputePrice.val("");
-		}
-    }
-	
-    function computeMoneyFromRealCost(element) {
-    	var currentElement = $(element);
-    	var txtRealQuantity = currentElement.closest('tr').find(".txtRealQuantity");
-    	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
-    	
-    	if (txtRealQuantity.val() && txtRealQuantity.val() != "" 
-			&& currentElement.val() && currentElement.val() != "") {
-    		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtRealQuantity.val())).toFixed(4));
-		} else {
-			txtComputePrice.val("");
-		}
-    }
     </script>
 </body>
 </html>

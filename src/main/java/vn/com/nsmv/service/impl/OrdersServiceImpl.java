@@ -233,11 +233,11 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Transactional
-    public void transferOrder(Long id, String tranferID) throws SokokanriException {
-        this.transferAnOrder(id, tranferID);
+    public void transferOrder(Long id) throws SokokanriException {
+        this.transferAnOrder(id);
     }
 
-    private void transferAnOrder(Long id, String tranferID) throws SokokanriException {
+    private void transferAnOrder(Long id) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
             throw new SokokanriException("Đơn hàng không tồn tại");
@@ -248,33 +248,27 @@ public class OrdersServiceImpl implements OrdersService {
         item.setTransported(
             ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
         item.setTransportedDate(new Date());
-        item.setTransferId(tranferID);
         item.setStatus(3);
         this.itemDAO.saveOrUpdate(item);
     }
 
     @Transactional
-    public void transferOrders(Set<Long> selectedItems, String tranferID) throws SokokanriException {
+    public void transferOrders(Set<Long> selectedItems) throws SokokanriException {
         for (Long id : selectedItems) {
-            this.transferAnOrder(id, tranferID);
+            this.transferAnOrder(id);
         }
 
     }
 
     @Transactional
-    public void transferOrdersToVN(Set<Long> selectedItems) throws SokokanriException {
+    public void transferOrdersToVN(Set<Long> selectedItems, String tranferID) throws SokokanriException {
         for (Long id : selectedItems) {
-            this.transferAnOrderToVN(id);
+            this.transferAnOrderToVN(id, tranferID);
         }
 
     }
 
-    @Transactional
-    public void transferOrderToVN(Long id) throws SokokanriException {
-        this.transferAnOrderToVN(id);
-    }
-
-    private void transferAnOrderToVN(Long id) throws SokokanriException {
+    private void transferAnOrderToVN(Long id, String tranferID) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
             throw new SokokanriException("Đơn hàng không tồn tại");
@@ -286,6 +280,7 @@ public class OrdersServiceImpl implements OrdersService {
         item.setTransporterVn(
             ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
         item.setTransportedVnDate(new Date());
+        item.setTransferId(tranferID);
         this.itemDAO.saveOrUpdate(item);
     }
 
@@ -612,6 +607,11 @@ public class OrdersServiceImpl implements OrdersService {
     public List<String> getAllBuyingCodes(Long userId, Integer status) throws SokokanriException {
         return this.itemDAO.getAllBuyingCodes(userId, status);
     }
+    
+    @Transactional
+    public List<String> getAllTransferIds(Long userId, Integer status) throws SokokanriException {
+        return this.itemDAO.getAllTransferId(userId, status);
+    }
 
     @Transactional
     public void deleteItems(Set<Long> selectedItems) throws SokokanriException {
@@ -674,5 +674,6 @@ public class OrdersServiceImpl implements OrdersService {
         }
 
     }
+
 
 }
