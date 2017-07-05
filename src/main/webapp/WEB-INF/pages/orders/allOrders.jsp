@@ -102,6 +102,9 @@
 							<th style="width: 50px">Đơn giá</th>
 							<th style="width: 50px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
+							<th style="width: 50px">Đơn giá mua</th>
+							<th style="width: 50px">Số lượng mua</th>
+							<th style="width: 100px">Thành tiền</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -153,10 +156,35 @@
 									</div>
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
 								</td>
+								<td>
+									<div class="lblComputeCost">${item.computeCost }</div> <input
+									type="number" value="${item.computeCost }"
+									onchange="computeMoneyFromRealCost(this)"
+									class="small_width form-control hiddenAction txtComputeCost" />
+								</td>
+								<td>
+									<div class="lblRealQuantity">${item.realQuantity }</div> <input
+									type="number" value="${item.realQuantity}"
+									onchange="computeMoneyFromRealQuantity(this)"
+									class="small_width form-control hiddenAction txtRealQuantity" />
+								</td>
+								<td>
+									<div class="lblComputePrice">${item.computePrice }</div> <input
+									type="text" value="${item.computePrice}"
+									class="form-control hiddenAction txtComputePrice"
+									disabled="disabled" />
+								</td>
 								<td class="fixed">
-								<a href="${item.id }" class = "myBtn btnEdit"><i class="fa fa-edit icon-resize-small"
-									aria-hidden="true"></i></a>
-									
+									<c:if test="${item.isReadonly() ne true}">
+										<a onclick="edit(this)" class="myBtn origin btnEdit"><i
+											class="fa fa-edit icon-resize-small" aria-hidden="true"></i></a>
+										<div class="action">
+											<a onclick="save(this)" class="myBtn" item="${item.id }"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a>
+											<a onclick="cancel(this)" class="myBtn"><i
+												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
+										</div>
+									</c:if> 
 									<sec:authorize access="hasRole('ROLE_A')">
 										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
 										aria-hidden="true"></i> </a>
@@ -199,14 +227,10 @@
      		destroy: true,
      		"paging":   false,
      		"searching":   false,
- 	   		"aLengthMenu" : [
- 	   			[25, 50, 100, 200, -1],
- 	   			[25, 50, 100, 200, "All"]],
  	   		"order": [[ 1, 'asc' ]],
  	   		"iDisplayLength" : 100,
 	 	   	"ordering": false,
-	        "info":     false,
-	        "scrollX": true
+	        "info":     false
  	   	});
          table.column(0, {}).nodes().each( function (cell, i) {
  			cell.innerHTML = i+1;

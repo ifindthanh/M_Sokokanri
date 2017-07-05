@@ -83,12 +83,12 @@
 							<th style="width: 50px">Đơn giá</th>
 							<th style="width: 50px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
+							<th style="width: 50px">Đơn giá mua</th>
+							<th style="width: 50px">Số lượng mua</th>
+							<th style="width: 100px">Thành tiền</th>
 							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
-								<th style="width: 50px">Giá mua</th>
-								<th style="width: 50px">Số lượng mua</th>
-								<th style="width: 100px">Tiền thực mua</th>
-								<th style="width: 50px">Đơn giá tính tiền</th>
-								<th style="width: 100px">Tiền để tính</th>
+								<th style="width: 50px">Thực mua</th>
+								<th style="width: 100px">Thành tiền</th>
 							</sec:authorize>
 							<th style="width: 100px">Mã mua hàng</th>
 							<th></th>
@@ -136,9 +136,9 @@
 								</td>
 								<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
 									<td>
-										<div class="lblRealCost">${item.realCost }</div> <input
-										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
-										class="small_width form-control hiddenAction txtRealCost" />
+										<div class="lblComputeCost">${item.computeCost }</div> 
+										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
+										class="small_width form-control hiddenAction txtComputeCost" />
 									</td>
 									<td>
 										<div class="lblRealQuantity">${item.realQuantity }</div> <input
@@ -146,21 +146,21 @@
 										class="small_width form-control hiddenAction txtRealQuantity" />
 									</td>
 									<td>
-										<div class="lblRealPrice">${item.realPrice }</div> 
-										<input type="text" value="${item.realPrice }"
-										class="form-control hiddenAction txtRealPrice"
-										disabled="disabled" />
-									</td>
-									<td>
-										<div class="lblComputeCost">${item.computeCost }</div> 
-										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
-										class="small_width form-control hiddenAction txtComputeCost" />
-									</td>
-									<td>
 										<div class="lblComputePrice">${item.computePrice }</div> 
 										<input type="text" value="${item.computePrice}"
 											class="form-control hiddenAction txtComputePrice"
 											disabled="disabled" />
+									</td>
+									<td>
+										<div class="lblRealCost">${item.realCost }</div> <input
+										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
+										class="small_width form-control hiddenAction txtRealCost" />
+									</td>
+									<td>
+										<div class="lblRealPrice">${item.realPrice }</div> 
+										<input type="text" value="${item.realPrice }"
+										class="form-control hiddenAction txtRealPrice"
+										disabled="disabled" />
 									</td>
 								</sec:authorize>
 								<td>

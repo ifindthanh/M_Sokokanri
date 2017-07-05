@@ -2,7 +2,6 @@ package vn.com.nsmv.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -310,39 +309,42 @@ public class OrdersServiceImpl implements OrdersService {
             throw new SokokanriException("Hóa đơn không tồn tại");
         }
         StringBuilder content = new StringBuilder("Chi tiết hóa đơn :" + Utils.getFormattedId(bill.getId(), 7));
-        String breakLine = System.lineSeparator();
+        String breakLine = "\r\n";
         if (toWeb) {
             breakLine = "<br />";
         }
         content.append(breakLine);
         content.append("Tên khách hàng: " + bill.getItems().get(0).getUser().getFullname());
         content.append(breakLine);
-        content.append(String.format("%70s", "").replaceAll(" ", "="));
+        content.append(String.format("%50s", "").replaceAll(" ", "="));
         content.append(breakLine);
         double total = 0;
         for (Item item : bill.getItems()) {
-            content.append("Đơn hàng: " + item.getFormattedId());
-            content.append(breakLine);
             if (toWeb) {
                 content.append(String.format("%-50s", item.getName() + ":").replaceAll(" ", "&nbsp;"));
+                content.append(breakLine);
+                content.append(String.format("%50s", item.getComputePrice()).replaceAll(" ", "&nbsp;"));
             } else {
                 content.append(String.format("%-50s", item.getName() + ":"));
+                content.append(breakLine);
+                content.append(String.format("%50s", item.getComputePrice()));
             }
-            content.append(item.getRealPrice());
+            
             content.append(breakLine);
             total += item.getRealPrice();
         }
         content.append(breakLine);
-        content.append(String.format("%70s", "").replaceAll(" ", "-"));
-        content.append(breakLine);
-        content.append(String.format("%70s", "").replaceAll(" ", "="));
+        content.append(String.format("%50s", "").replaceAll(" ", "="));
         content.append(breakLine);
         if (toWeb) {
             content.append(String.format("%-50s", "Tổng tiền:").replaceAll(" ", "&nbsp;"));
+            content.append(breakLine);
+            content.append(String.format("%50s", total).replaceAll(" ", "&nbsp;"));
         } else {
             content.append(String.format("%-50s", "Tổng tiền:"));
+            content.append(breakLine);
+            content.append(String.format("%50s", total));
         }
-        content.append(total);
         content.append(breakLine);
         return content.toString();
     }
@@ -545,13 +547,6 @@ public class OrdersServiceImpl implements OrdersService {
         for (Long id : selectedItems) {
             this.categoryDAO.deleteOrder(id);
         }
-
-        Comparator<Map<String, Object>> mapComparator = new Comparator<Map<String, Object>>() {
-
-            public int compare(Map<String, Object> m2, Map<String, Object> m1) {
-                return ((String) m1.get("Foo").toString()).compareTo((String) m2.get("Foo").toString());
-            }
-        };
     }
 
     @Transactional

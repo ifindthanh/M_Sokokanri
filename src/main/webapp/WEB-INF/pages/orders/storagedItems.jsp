@@ -95,6 +95,7 @@
 									<td style="display:none"></td>
 									<td></td>
 									<td>
+										${item.getFormattedId() }
 									</td>
 									<td>${item.transferId}</td>
 									<td>

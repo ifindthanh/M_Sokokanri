@@ -45,28 +45,28 @@
 				<div style="position: absolute; float: left; left: 650px; margin-top: 20px">
 					<c:set var = "cancelLink" scope = "session" value = ""></c:set>
 				<c:if test="${listType == 1}">
-					<c:set var = "cancelLink" value = "../tat-ca"></c:set>
+					<c:set var = "cancelLink" value = "tat-ca"></c:set>
 				</c:if>
 				<c:if test="${listType == 2}">
-					<c:set var = "cancelLink" value = "../cho-duyet"></c:set>
+					<c:set var = "cancelLink" value = "cho-duyet"></c:set>
 				</c:if>
 				<c:if test="${listType == 3}">
-					<c:set var = "cancelLink" value = "../cho-mua"></c:set>
+					<c:set var = "cancelLink" value = "cho-mua"></c:set>
 				</c:if>
 				<c:if test="${listType == 4}">
-					<c:set var = "cancelLink" value = "../da-mua"></c:set>
+					<c:set var = "cancelLink" value = "da-mua"></c:set>
 				</c:if>
 				<c:if test="${listType == 5}">
-					<c:set var = "cancelLink" value = "../da-chuyen"></c:set>
+					<c:set var = "cancelLink" value = "da-chuyen"></c:set>
 				</c:if>
 				<c:if test="${listType == 6}">
-					<c:set var = "cancelLink" value = "../da-chuyen-vn"></c:set>
+					<c:set var = "cancelLink" value = "da-chuyen-vn"></c:set>
 				</c:if>
 				<c:if test="${listType == 7}">
-					<c:set var = "cancelLink" value = "../da-nhap-kho"></c:set>
+					<c:set var = "cancelLink" value = "da-nhap-kho"></c:set>
 				</c:if>
 				<c:if test="${listType == 8}">
-					<c:set var = "cancelLink" value = "../da-xuat-hd"></c:set>
+					<c:set var = "cancelLink" value = "da-xuat-hd"></c:set>
 				</c:if>
 				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
 				</div>

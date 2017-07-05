@@ -1,6 +1,7 @@
 package vn.com.nsmv.controller;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -137,7 +138,7 @@ public class StorageController extends AbstractController {
 			try
 			{
 				// set file as attached data and copy file data to response output stream
-				String mimeType = "application/octet-stream";
+				String mimeType = "application/octet-stream; charset=UTF-8";
 
 				response.setContentType(mimeType);
 
@@ -151,7 +152,7 @@ public class StorageController extends AbstractController {
 				ServletOutputStream outStream = response.getOutputStream();
 				try
 				{
-					outStream.write(billContent.getBytes());
+					outStream.write(billContent.getBytes(Charset.forName("UTF-8")));
 				}
 				catch (Exception ex)
 				{

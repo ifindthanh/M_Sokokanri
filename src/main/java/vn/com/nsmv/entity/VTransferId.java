@@ -6,7 +6,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "TRANSFER_ID")
+@Table(name = "transfer_id")
 public class VTransferId implements java.io.Serializable
 {
 
