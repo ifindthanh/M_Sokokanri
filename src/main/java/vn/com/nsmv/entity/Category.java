@@ -2,6 +2,7 @@ package vn.com.nsmv.entity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +16,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.i18n.SokokanriMessage;
 
 
 @Entity
@@ -203,21 +207,21 @@ public class Category implements java.io.Serializable {
 	
 	
 	public void validate() throws SokokanriException{
-		
+	    Locale locale = LocaleContextHolder.getLocale();
 		if (Utils.isEmpty(this.fullName)) {
-			throw new SokokanriException("Họ và tên không được để trống");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorFullNameCannotBeEmpty(locale));
 		}
 		
 		if (Utils.isEmpty(this.email)) {
-			throw new SokokanriException("Địa chỉ email không được để trống");
+			throw new SokokanriException(SokokanriMessage.getMessageErrorEmailCannotBeEmpty(locale));
 		}
 		
 		if (Utils.isEmpty(this.phone)) {
-			throw new SokokanriException("Số điện thoại không được để trống");
+			throw new SokokanriException(SokokanriMessage.getMessageErrorPhoneCannotBeEmpty(locale));
 		}
 		
 		if (Utils.isEmpty(this.address)) {
-			throw new SokokanriException("Địa chỉ không được để trống");
+			throw new SokokanriException(SokokanriMessage.getMessageErrorAddressCannotBeEmpty(locale));
 		}
 	}
 	
