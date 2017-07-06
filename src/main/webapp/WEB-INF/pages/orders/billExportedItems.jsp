@@ -65,53 +65,45 @@
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
 							<th>Tổng tiền thực tế</th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${allBills}" varStatus="status">
+						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
 								<td>
-									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}"/>
+									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action=""/>
 								</td>
-								<td rowspan="${item.categories.size()+1}">${item.getFormattedId()}</td>
+								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
-									<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
-										<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
-									</button>
+									<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+										<button type="button" class="btn btn-primary" onclick="approval(${bill.id})">
+											<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
+										</button>
+									</sec:authorize>
 								</td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
 							</tr>
-							<c:forEach var="cart" items="${item.categories}" varStatus="cartstatus">
+							<c:forEach var="item" items="${bill.items}" varStatus="itemstatus">
 								<tr>
 									<td style="display:none"></td>
 									<td></td>
 									<td>
-										${cart.formattedId}
-									</td>
-									<td>${cart.transferId}</td>
-									<td>
-										${cart.user.fullname}
-									</td>
-									<td>
-										<order:status status="${cart.status }"/>
-									</td>
-									<td>
-										${cart.getOrderRealPrice() }
-									</td>
-									<td>
-										<a href="${cart.id }"><i class="fa fa-info"
-											aria-hidden="true"></i> View</a>
+										<c:set var="url" scope="page" value="xem-don-hang/${item.id}"></c:set>
 										<sec:authorize access="hasRole('ROLE_A')">
-											/ <a href="admin/${item.id }"><i class="fa"
-											aria-hidden="true"></i> Detail </a>
+											<c:set var="url" scope="page" value="admin/${item.id }"></c:set>
 										</sec:authorize>
+										<a href="${url }">${item.getFormattedId() }</a>
+									</td>
+									<td>${item.transferId}</td>
+									<td>
+										${item.user.fullname}
+									</td>
+									<td>
+										${item.getComputePrice() }
 									</td>
 									
 								</tr>
@@ -181,18 +173,6 @@
     var table;
     $(document).ready(function(){
 		//init datatables
-          table = $('#tableList').DataTable({
-     		destroy: true,
-     		"paging":   false,
-     		"searching":   false,
- 	   		"aLengthMenu" : [
- 	   			[25, 50, 100, 200, -1],
- 	   			[25, 50, 100, 200, "All"]],
- 	   		"order": [[ 1, 'asc' ]],
- 	   		"iDisplayLength" : 100,
-	 	   	"ordering": false,
-	        "info":     false
- 	   	});
 		
     });
     

@@ -60,7 +60,7 @@
 					  <span class="caret"></span></button>
 						<ul class="dropdown-menu">
 							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
-								<li><a onclick="approval()">Duyệt đơn hàng</a></li>
+								<li><a onclick="approval()">Đã mua hàng</a></li>
 								<li><a onclick="noteAnOrder()">Ghi chú đơn hàng</a></li>
 							</sec:authorize>
 							<li><a onclick="cancelOrders('cho-mua/huy-don-hang')">Hủy đơn hàng</a></li>
@@ -73,7 +73,7 @@
 				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-duyet')" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'cho-mua')" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>

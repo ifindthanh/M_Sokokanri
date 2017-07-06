@@ -30,6 +30,10 @@ public abstract class AbstractController {
     
     protected void listAllOrdersInPage(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
         this.resetParams(offset, maxResults);
+        String message = request.getParameter("message");
+        if (!Utils.isEmpty(message)) {
+            model.addAttribute("message", message);
+        }
         this.doBusiness(model);
        
     }

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -104,6 +105,19 @@ public class StorageController extends AbstractController {
 			model.addAttribute("message", ex.getErrorMessage());
 		}
 	}
+	
+	@RequestMapping(value = "/donhang/bo-khoi-hd/{itemId}", method=RequestMethod.GET)
+    public ModelAndView removeFromBill(Model model, @PathVariable Long itemId) {
+        try {
+            Long billId = this.ordersService.removeFromBill(itemId);
+            this.getSelectedItems().remove(billId);
+            
+        } catch (SokokanriException e) {
+            model.addAttribute("message", e.getErrorMessage());
+        }
+        return new ModelAndView("redirect:../da-nhap-kho");
+        
+    }
 	
 	@RequestMapping(value = "/donhang/xuat-hoa-don", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> exportBill(Model model, @RequestParam Long id) {

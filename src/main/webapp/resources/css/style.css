@@ -161,6 +161,10 @@ tr:hover > td.myLabel {
 	background-color: #a2adbf;
 }
 
+td.myLabel {
+	background-color: #d2d5da;
+}
+
 .table_container {
 	width: 99%;
 	margin: 0 auto;
@@ -168,3 +172,8 @@ tr:hover > td.myLabel {
 	padding-top: 0px;
 }
 
+.footer {
+	margin-top: 15px;
+	margin-top: 0px;
+	height: 50px;
+}

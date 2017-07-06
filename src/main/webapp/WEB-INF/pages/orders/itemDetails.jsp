@@ -41,34 +41,35 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
+			<div class="col-sm-12"><h2>Thông tin đơn hàng</h2></div>
 			<div class="col-sm-12">
 				<div style="position: absolute; float: left; left: 650px; margin-top: 20px">
 					<c:set var = "cancelLink" scope = "session" value = ""></c:set>
 				<c:if test="${listType == 1}">
-					<c:set var = "cancelLink" value = "tat-ca"></c:set>
+					<c:set var = "cancelLink" value = "../tat-ca"></c:set>
 				</c:if>
 				<c:if test="${listType == 2}">
-					<c:set var = "cancelLink" value = "cho-duyet"></c:set>
+					<c:set var = "cancelLink" value = "../cho-duyet"></c:set>
 				</c:if>
 				<c:if test="${listType == 3}">
-					<c:set var = "cancelLink" value = "cho-mua"></c:set>
+					<c:set var = "cancelLink" value = "../cho-mua"></c:set>
 				</c:if>
 				<c:if test="${listType == 4}">
-					<c:set var = "cancelLink" value = "da-mua"></c:set>
+					<c:set var = "cancelLink" value = "../da-mua"></c:set>
 				</c:if>
 				<c:if test="${listType == 5}">
-					<c:set var = "cancelLink" value = "da-chuyen"></c:set>
+					<c:set var = "cancelLink" value = "../da-chuyen"></c:set>
 				</c:if>
 				<c:if test="${listType == 6}">
-					<c:set var = "cancelLink" value = "da-chuyen-vn"></c:set>
+					<c:set var = "cancelLink" value = "../da-chuyen-vn"></c:set>
 				</c:if>
 				<c:if test="${listType == 7}">
-					<c:set var = "cancelLink" value = "da-nhap-kho"></c:set>
+					<c:set var = "cancelLink" value = "../da-nhap-kho"></c:set>
 				</c:if>
 				<c:if test="${listType == 8}">
-					<c:set var = "cancelLink" value = "da-xuat-hd"></c:set>
+					<c:set var = "cancelLink" value = "../da-xuat-hd"></c:set>
 				</c:if>
-				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
+				
 				</div>
 				<table id="tableList" class="listBusCard table" width="600px">
 					<thead>
@@ -93,74 +94,58 @@
 						<tr class="headings" role="row">
 							<td class="myLabel">Tên sản phẩm</td>
 							<td>
-								<c:if test="${read_only eq true }">
 									${item.name }
-								</c:if>
-								<c:if test="${read_only ne true }">
-									<input type="text" class="form-control" name="name" value="${item.name }"/> 
-								</c:if>
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Nhà phân phối</td>
 							<td>
-								<c:if test="${read_only eq true }">
 									${item.brand }
-								</c:if>
-								<c:if test="${read_only ne true }">
-									<input type="text" class="form-control" name="brand" value="${item.brand }"/> 
-								</c:if>
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Link</td>
 							<td>
-								<c:if test="${read_only eq true }">
 									${item.link }
-								</c:if>
-								<c:if test="${read_only ne true }">
-									<input type="text" class="form-control" name="link" value="${item.link }"/> 
-								</c:if>
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Mô tả thêm</td>
 							<td>
-								<c:if test="${read_only eq true }">
 									${item.description }
-								</c:if>
-								<c:if test="${read_only ne true }">
-									<textarea class="form-control description" name="description" >
-										${item.description}
-									</textarea> 
-								</c:if>
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Đơn giá</td>
 							<td>
-								<c:if test="${read_only eq true }">
 									${item.cost }
-								</c:if>
-								<c:if test="${read_only ne true }">
-									<input type="number" class="form-control txtCost" name="cost" value="${item.cost }"/> 
-								</c:if>
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Số lượng</td>
 							<td>
-								<c:if test="${read_only eq true }">
 									${item.quantity }
-								</c:if>
-								<c:if test="${read_only ne true }">
-									<input type="number" class="form-control txtCost" name="quantity" value="${item.quantity }"/> 
-								</c:if>
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Tổng tiền</td>
 							<td>${item.getTotal() }</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td class="myLabel">Đơn giá mua</td>
+							<td>
+									${item.computeCost }
+							</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td class="myLabel">Số lượng mua</td>
+							<td>
+									${item.realQuantity }
+							</td>
+						</tr>
+						<tr class="headings" role="row">
+							<td class="myLabel">Tổng tiền thực tế</td>
+							<td>${item.getComputePrice() }</td>
 						</tr>
 					</tbody>
 				</table>
@@ -168,7 +153,7 @@
 			</div>
 		</form>
 	</div>
-
+	<div class="col-sm-12 footer"><a class="btn btn-default" href="${ cancelLink}">Close</a></div>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
 	<script src="<c:url value="/resources/js/jquery.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>

@@ -118,8 +118,7 @@ public class WaitingToBuyController extends AbstractController{
 		} catch (SokokanriException e) {
 			model.addAttribute("message", e.getErrorMessage());
 		}
-		this.doBusiness(model);
-		return new ModelAndView("/orders/buyingOrders");
+		return new ModelAndView("redirect:/donhang/cho-mua");
 	}
 	
 	@RequestMapping(value = "/donhang/mua-hang", method=RequestMethod.POST)
@@ -194,4 +193,5 @@ public class WaitingToBuyController extends AbstractController{
         }
         return "redirect:/donhang/cho-duyet";
     }
+    
 }

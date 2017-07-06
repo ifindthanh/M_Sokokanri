@@ -151,5 +151,17 @@ public class BillDAOImpl implements BillDAO{
 			throw new SokokanriException(ex);
 		}
 	}
+
+    public void deleteBill(Long id) throws SokokanriException {
+        try {
+            Session session = this.sessionFactory.getCurrentSession();
+            String hql = "delete Bill where id = :id";
+            Query query = session.createQuery(hql).setParameter("id", id);
+            query.executeUpdate();
+        } catch (Exception ex) {
+            logger.debug(ex);
+            throw new SokokanriException(ex);
+        }
+    }
 	
 }

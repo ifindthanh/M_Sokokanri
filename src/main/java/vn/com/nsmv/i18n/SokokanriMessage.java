@@ -39,6 +39,13 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("label.is.shipping", args, locale);
 }
 
+	//Tất cả
+	public static String getLabelAll( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("label.all", args, locale);
+}
+
 	//正確な名を入力してください。
 	public static String getSPECIAL_CHARACTERS_FIRSTNAME( Locale locale){
 

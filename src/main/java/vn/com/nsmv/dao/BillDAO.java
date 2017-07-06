@@ -12,4 +12,5 @@ public interface BillDAO {
 			Integer maxResults) throws SokokanriException;
 	public int countAllBills(SearchCondition searchCondition) throws SokokanriException;
 	public Bill getById (Long id) throws SokokanriException;
+	public void deleteBill (Long id) throws SokokanriException;
 }

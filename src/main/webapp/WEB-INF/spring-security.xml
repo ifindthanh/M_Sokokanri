@@ -83,6 +83,7 @@
         <intercept-url pattern="/donhang/xuat-hoa-don" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_BG')" />
         <intercept-url pattern="/donhang/xuat-hoa-don-file" access="hasAnyRole('ROLE_U','ROLE_A', 'ROLE_BG')" />
         <intercept-url pattern="/donhang/da-xuat-hoa-don" access="hasAnyRole('ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/bo-khoi-hd/{itemId}" access="hasAnyRole('ROLE_A', 'ROLE_BG')" />
         
         <intercept-url pattern="/donhang/da-xuat-hd" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/da-xuat-hd/**" access="hasAnyRole('ROLE_U', 'ROLE_A')" />

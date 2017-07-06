@@ -46,4 +46,5 @@ public interface OrdersService {
     public void cancelItems(Set<Long> selectedItems) throws SokokanriException;
     public void removeNote(Long id) throws SokokanriException;
     public void buyOrders(Set<Long> selectedItems) throws SokokanriException;
+    public Long removeFromBill(Long itemId) throws SokokanriException;
 }

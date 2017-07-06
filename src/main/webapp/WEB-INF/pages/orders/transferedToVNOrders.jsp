@@ -253,6 +253,10 @@
     });
     
 	function approval(){
+		if ($('.order_id:checkbox:checked').length == 0) {
+			alert("Vui lòng chọn đơn hàng.");
+			return;
+		}
 		var check = confirm("Thao tác này không thể hoàn lại, bạn có muốn tiến hành nhập kho cho tất cả các đơn hàng?");
     	if (check) {
     		window.location.href = "nhap-kho";

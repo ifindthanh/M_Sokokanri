@@ -39,25 +39,52 @@ public class ItemsController {
 	@Autowired
 	private OrdersService ordersService;
 	
+	@RequestMapping(value = "/donhang/xem-don-hang/{orderId}", method=RequestMethod.GET)
+    public ModelAndView viewOrderInformation(HttpServletRequest request, Model model, @PathVariable Long orderId) {
+        try {
+            Item item = this.ordersService.getItem(orderId);
+            if (item == null) {
+                throw new SokokanriException("Đơn hàng không tồn tại");
+            }
+            if (Utils.isUser()) {
+                if (!item.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+                    throw new SokokanriException("Bạn không được phép thao tác với đơn hàng này");
+                }
+            }
+            
+            boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_U) 
+                || (Utils.isUser() && item.getStatus() != null && item.getStatus() == 0 ));
+            
+            model.addAttribute("read_only", Boolean.valueOf(readOnly));
+            model.addAttribute("item", item);
+            return new ModelAndView("/orders/itemDetails");
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+            model.addAttribute("category",  new Category());
+            return new ModelAndView("/orders/error");
+        }
+        
+    }
+	
 	@RequestMapping(value = "/donhang/{orderId}", method=RequestMethod.GET)
 	public ModelAndView viewAnOrder(HttpServletRequest request, Model model, @PathVariable Long orderId) {
 		try {
-			Item item = this.ordersService.getItem(orderId);
-			if (item == null) {
+			Category category = this.ordersService.getCategory(orderId);
+			if (category == null) {
 				throw new SokokanriException("Đơn hàng không tồn tại");
 			}
 			if (Utils.isUser()) {
-				if (!item.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+				if (!category.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
 					throw new SokokanriException("Bạn không được phép thao tác với đơn hàng này");
 				}
 			}
 			
 			boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_U) 
-			    || (Utils.isUser() && item.getStatus() != null && item.getStatus() == 0 ));
+			    || (Utils.isUser() && category.getStatus() != null && category.getStatus() == 0 ));
 			
 			model.addAttribute("read_only", Boolean.valueOf(readOnly));
-			model.addAttribute("item", item);
-			return new ModelAndView("/orders/itemDetails");
+			model.addAttribute("category", category);
+			return new ModelAndView("/orders/orderDetail");
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 			model.addAttribute("category",  new Category());
@@ -65,6 +92,7 @@ public class ItemsController {
 		}
 		
 	}
+	
 	
 	@RequestMapping(value = "/donhang/xoa-item", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deleteItem(HttpServletRequest request, Model model, @RequestParam Long id) {

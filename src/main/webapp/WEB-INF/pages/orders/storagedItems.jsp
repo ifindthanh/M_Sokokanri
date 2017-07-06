@@ -7,7 +7,6 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
-<%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
 <%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
 
 <html>
@@ -65,7 +64,6 @@
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
 							<th>Tổng tiền thực tế</th>
 							<th></th>
 						</tr>
@@ -95,24 +93,23 @@
 									<td style="display:none"></td>
 									<td></td>
 									<td>
-										${item.getFormattedId() }
+										<c:set var="url" scope="page" value="xem-don-hang/${item.id}"></c:set>
+										<sec:authorize access="hasRole('ROLE_A')">
+											<c:set var="url" scope="page" value="admin/${item.id }"></c:set>
+										</sec:authorize>
+										<a href="${url }">${item.getFormattedId() }</a>
 									</td>
 									<td>${item.transferId}</td>
 									<td>
 										${item.user.fullname}
 									</td>
 									<td>
-										<order:status status="${item.status }"/>
+										${item.getComputePrice() }
 									</td>
 									<td>
-										${item.getRealPrice() }
-									</td>
-									<td>
-										<a href="${item.id }"><i class="fa fa-info"
-											aria-hidden="true"></i> View</a>
-										<sec:authorize access="hasRole('ROLE_A')">
-											/ <a href="admin/${item.id }"><i class="fa"
-											aria-hidden="true"></i> Detail </a>
+										<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+											<a onclick="removeFromBill(${item.id})" class="myBtn"><i class="fa fa-times" title="Xóa đơn hàng khỏi hóa đơn"
+												aria-hidden="true"></i> </a>
 										</sec:authorize>
 									</td>
 									
@@ -303,6 +300,13 @@
     		window.location.href = "da-xuat-hoa-don"; 
     	}
 		
+	}
+	
+	function removeFromBill(id){
+		var check = confirm("Bạn có thật sự muốn bỏ đơn hàng này khỏi hóa đơn?");
+    	if (check) {
+    		window.location.href = "bo-khoi-hd/"+id; 
+    	}
 	}
 	
 </script>

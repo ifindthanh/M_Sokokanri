@@ -147,7 +147,7 @@
 							<td>${category.getInformer() }</td>
 						</tr>
 						<tr class="headings" role="row">
-							<td>Ngày kiểm hàng</td>
+							<td>Ngày báo giá</td>
 							<td><fmt:formatDate value="${category.getInformedDate()}" />
 							</td>
 						</tr>

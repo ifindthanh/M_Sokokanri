@@ -79,6 +79,7 @@ public class OrdersServiceImpl implements OrdersService {
             hasRecord = true;
             item.setCategory(category);
             item.setUser(user);
+            item.setStatus(0);
             this.itemDAO.add(item);
         }
         if (hasRecord) {
@@ -116,10 +117,11 @@ public class OrdersServiceImpl implements OrdersService {
                 continue;
             }
             item.setCategory(category);
+            item.setUser(user);
             if (item.getId() == null) {
                 this.itemDAO.add(item);
             } else {
-                this.itemDAO.saveOrUpdate(item);
+                this.saveItem(item);
             }
         }
     }
@@ -668,6 +670,27 @@ public class OrdersServiceImpl implements OrdersService {
 
         }
 
+    }
+
+    @Transactional
+    public Long removeFromBill(Long itemId) throws SokokanriException {
+        Item item = this.itemDAO.findById(itemId);
+        if (item == null) {
+            throw new SokokanriException("Đơn hàng không tồn tại");
+        }
+        Bill bill = item.getBill();
+        Long billId = null;
+        if (bill.getItems().size() == 1) {
+            billId = bill.getId();
+            this.billDAO.deleteBill(bill.getId());
+        }
+        //roll back the status of item to transferred to VN
+        item.setBill(null);
+        item.setStatus(4);
+        item.setCheckedDate(null);
+        item.setChecker(null);
+        this.itemDAO.saveOrUpdate(item);
+        return billId;
     }
 
 
