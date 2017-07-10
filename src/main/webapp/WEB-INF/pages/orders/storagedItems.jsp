@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
+<%@ taglib prefix="id" uri="/WEB-INF/taglibs/idFormatterTaglib.tld" %>
 
 <html>
 <head>
@@ -49,7 +50,9 @@
 						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
 						<c:forEach var="billId" items="${billIDs}" varStatus="status">
 							<option value="${billId }"
-								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>${billId }</option>
+								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>
+								<id:formatter id="${billId }" />
+							</option>
 						</c:forEach>
 					</select>
 				</div>

@@ -42,7 +42,7 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
-			<div class="col-sm-12">
+			<div class="col-sm-12 action_container">
 				<div class="col-sm-2">
 					<div class="dropdown">
 					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action

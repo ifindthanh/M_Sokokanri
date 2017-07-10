@@ -9,10 +9,12 @@
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
 <%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
+<%@ taglib prefix="id" uri="/WEB-INF/taglibs/idFormatterTaglib.tld" %>
+
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Sẵn sàng để giao</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -41,18 +43,35 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-nhap-kho" method="POST">
-			<div class="row" style="height: 150px">
-				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
-					<div class="col-xs-4">
-						<input type="hidden" name="status" value="${ searchCondition.status}" />
-						<input type="text" name= "billId" value="${ searchCondition.billId}" class="form-control">
-					</div>
-					<div>
-						<button type="submit" class="btn btn-primary">
-							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
-						</button>
+		<form action="giao-hang" method="POST" id="shippingOrders">
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5">Mã hóa đơn: </label>
+				<div class="col-xs-4">
+					<select name="bills" multiple="multiple"
+						class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
+						<c:forEach var="billId" items="${billIDs}" varStatus="status">
+							<option value="${billId }"
+								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>
+								<id:formatter id="${billId }" />
+							</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<input type="hidden" name="status" value = "${searchCondition.status }" />
+			<div class="col-sm-12 action_container">
+				<div class="col-sm-2">
+					<div class="dropdown">
+					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+					  <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<sec:authorize access="hasRole('ROLE_A')">
+								<li><a onclick="sendToUser()">Giao hàng</a></li>
+							</sec:authorize>
+							<li><a onclick="cancelOrders('da-chuyen/huy-don-hang')">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders('da-chuyen/xoa-don-hang')">Xóa đơn hàng</a></li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -117,14 +136,6 @@
 					steps="${maxResult}"
 					uri="${pageContext.request.contextPath}/donhang/giao-hang"
 					next="&raquo;" previous="&laquo;" />
-			</div>
-			
-			<div class="col-sm-12" style="margin-bottom: 20px;">
-				<sec:authorize access="hasAnyRole('ROLE_A')">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="sendToUser()">
-						<i class="fa" aria-hidden="true" ></i> Giao hàng
-					</button>
-				</sec:authorize>
 			</div>
 		</form>
 	</div>
@@ -241,6 +252,10 @@
     		window.location.href = "da-giao-hang"; 
     	}
 		
+	}
+	
+	function search() {
+		$("#shippingOrders").submit();
 	}
 	
 </script>
