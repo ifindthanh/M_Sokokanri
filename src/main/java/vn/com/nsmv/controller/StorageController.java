@@ -46,14 +46,14 @@ public class StorageController extends AbstractController {
 	public String init()
 	{
 		this.searchCondition =  new SearchCondition(5);
-		super.initController();
+		this.initController();
 		return "redirect:/donhang/da-nhap-kho";
 	}
 	
 	@RequestMapping(value = "/donhang/da-nhap-kho", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
 	    request.getSession().setAttribute("listType", 7);
-		super.listAllOrdersInPage(request, model, offset, maxResults);
+		this.listAllOrdersInPage(request, model, offset, maxResults);
 		return new ModelAndView("/orders/storagedItems");
 	}
 	
@@ -98,6 +98,9 @@ public class StorageController extends AbstractController {
 			model.addAttribute("allBills", allBills);
 			model.addAttribute("offset", this.getOffset());
 			model.addAttribute("maxResult", this.getMaxResults());
+			List<Long> allBillIDs = this.ordersService.getAllBillIDs(searchCondition);
+			this.checkSearchingBills(this.searchCondition.getBills(), allBillIDs);
+            model.addAttribute("billIDs", allBillIDs);
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("count", count);
 			model.addAttribute("selectedItems", this.getSelectedItems());

@@ -41,26 +41,26 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-xuat-hd" method="POST">
-			<div class="row" style="height: 150px">
-				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
-					<div class="col-xs-4">
-						<input type="hidden" name="status" value="${ searchCondition.status}" />
-						<input type="text" name= "billId" value="${ searchCondition.billId}" class="form-control">
-					</div>
-					<div>
-						<button type="submit" class="btn btn-primary">
-							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
-						</button>
-					</div>
+		<form action="da-xuat-hd" method="POST" id="billExportedForm">
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5">Mã hóa đơn: </label>
+				<div class="col-xs-4">
+					<select name="bills" multiple="multiple"
+						class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
+						<c:forEach var="billId" items="${billIDs}" varStatus="status">
+							<option value="${billId }"
+								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>${billId }</option>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
+			<input type="hidden" name="status" value = "${searchCondition.status }" />
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'da-xuat-hd')" /></th>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
@@ -72,7 +72,7 @@
 						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
 								<td>
-									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action=""/>
+									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action="da-xuat-hd"/>
 								</td>
 								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
@@ -165,6 +165,7 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
@@ -176,59 +177,6 @@
 		
     });
     
-    function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-xuat-hd/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-xuat-hd/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-    function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-xuat-hd/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-xuat-hd/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
     
 	function approval(id){
 		$.ajax({
@@ -282,6 +230,10 @@
     		window.location.href = "san-sang-de-giao"; 
     	}
 		
+	}
+	
+	function search() {
+		$("#billExportedForm").submit();
 	}
 	
 </script>

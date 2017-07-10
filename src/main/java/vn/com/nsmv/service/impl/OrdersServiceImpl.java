@@ -699,5 +699,10 @@ public class OrdersServiceImpl implements OrdersService {
         return billId;
     }
 
+    @Transactional
+    public List<Long> getAllBillIDs(SearchCondition searchCondition) throws SokokanriException {
+        return this.billDAO.getAllBillIDs(searchCondition);
+    }
+
 
 }

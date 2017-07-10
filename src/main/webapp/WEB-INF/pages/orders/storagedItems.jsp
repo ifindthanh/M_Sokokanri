@@ -11,7 +11,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Đơn hàng đã nhập kho</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -40,18 +40,33 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-nhap-kho" method="POST">
-			<div class="row" style="height: 150px">
-				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
-					<div class="col-xs-4">
-						<input type="hidden" name="status" value="${ searchCondition.status}" />
-						<input type="text" name= "billId" value="${ searchCondition.billId}" class="form-control">
-					</div>
-					<div>
-						<button type="submit" class="btn btn-primary">
-							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
-						</button>
+		<form action="da-nhap-kho" method="POST" id="storagedForm">
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5">Mã hóa đơn: </label>
+				<div class="col-xs-4">
+					<select name="bills" multiple="multiple"
+						class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
+						<c:forEach var="billId" items="${billIDs}" varStatus="status">
+							<option value="${billId }"
+								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>${billId }</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<input type="hidden" name="status" value = "${searchCondition.status }" />
+			<div class="col-sm-12 action_container">
+				<div class="col-sm-2">
+					<div class="dropdown">
+					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+					  <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+								<li><a onclick="approvalExportBill()">Đã xuất hóa đơn</a></li>
+							</sec:authorize>
+							<li><a onclick="cancelOrders('da-chuyen/huy-don-hang')">Hủy đơn hàng</a></li>
+							<li><a onclick="deleteOrders('da-chuyen/xoa-don-hang')">Xóa đơn hàng</a></li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -59,7 +74,7 @@
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'nhap-kho')" /></th>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
@@ -72,7 +87,7 @@
 						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
 								<td>
-									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action=""/>
+									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action="nhap-kho"/>
 								</td>
 								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
@@ -82,7 +97,6 @@
 										</button>
 									</sec:authorize>
 								</td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -126,13 +140,6 @@
 					uri="${pageContext.request.contextPath}/donhang/da-nhap-kho"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approvalExportBill()">
-						<i class="fa" aria-hidden="true" ></i> Đã xuất hóa đơn
-					</button>
-				</div>
-			</sec:authorize>
 		</form>
 	</div>
 	
@@ -171,6 +178,7 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
@@ -193,60 +201,6 @@
  	   	});
 		
     });
-    
-    function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-    function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
     
 	function approval(id){
 		$.ajax({
@@ -307,6 +261,10 @@
     	if (check) {
     		window.location.href = "bo-khoi-hd/"+id; 
     	}
+	}
+	
+	function search() {
+		$("#storagedForm").submit();
 	}
 	
 </script>

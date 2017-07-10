@@ -19,7 +19,7 @@ import vn.com.nsmv.dao.BillDAO;
 import vn.com.nsmv.entity.Bill;
 import vn.com.nsmv.javabean.SearchCondition;
 
-public class BillDAOImpl implements BillDAO{
+public class BillDAOImpl implements BillDAO {
 
 	private static final Logger logger = Logger.getLogger(BillDAOImpl.class);
 	private SessionFactory sessionFactory;
@@ -60,15 +60,20 @@ public class BillDAOImpl implements BillDAO{
 				sql.append(" and c.status = :status ");
 				params.put("status", searchCondition.getStatus());
 			}
-			if (searchCondition.getBillId() != null) {
-				sql.append(" and b.id = :billId ");
-				params.put("billId", searchCondition.getBillId());
+			if (searchCondition.getBills() != null && !searchCondition.getBills().isEmpty()) {
+				sql.append(" and b.id in :bills ");
+				params.put("bills", searchCondition.getBills());
 			}
 			Query query = session.createQuery(sql.toString());
 			Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
 			while (iterator.hasNext()) {
 				Entry<String, Object> element = iterator.next();
-				query.setParameter(element.getKey(), element.getValue());
+				if (List.class.isInstance(element.getValue())) {
+                    query.setParameterList(element.getKey(), (List) element.getValue());
+                } else {
+                    query.setParameter(element.getKey(), element.getValue());
+                }
+				
 			}
 			if (offset != null)
 			{
@@ -102,6 +107,38 @@ public class BillDAOImpl implements BillDAO{
 			throw new SokokanriException(ex);
 		}
 	}
+	
+	public List<Long> getAllBillIDs(SearchCondition searchCondition)
+        throws SokokanriException {
+    try
+    {
+        Session session = this.sessionFactory.getCurrentSession();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT distinct b.id from Item c JOIN c.bill b where b.id > 0");
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (searchCondition.getUserId() != null) {
+            sql.append(" and c.user.id = :userId");
+            params.put("userId", searchCondition.getUserId());
+        }
+        
+        if (searchCondition.getStatus() != null) {
+            sql.append(" and c.status = :status ");
+            params.put("status", searchCondition.getStatus());
+        }
+        Query query = session.createQuery(sql.toString());
+        Iterator<Entry<String, Object>> iterator = params.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<String, Object> element = iterator.next();
+            query.setParameter(element.getKey(), element.getValue());
+        }
+        return query.list();
+    }
+    catch (Exception ex)
+    {
+        logger.debug(ex);
+        throw new SokokanriException(ex);
+    }
+}
 
 	public int countAllBills(SearchCondition searchCondition) throws SokokanriException {
 		try

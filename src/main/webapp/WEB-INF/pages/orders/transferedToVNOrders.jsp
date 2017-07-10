@@ -98,7 +98,7 @@
 				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-duyet')" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'da-chuyen-vn')" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -124,7 +124,7 @@
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td class="fixed"><chkbox2:chbox item="${item.id }"
-										selectedItems="${selectedItems}" action="cho-mua" /></td>
+										selectedItems="${selectedItems}" action="da-chuyen-vn" /></td>
 								<td class="fixed">
 									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
 									${item.formattedId} </div>
@@ -263,60 +263,6 @@
     	}
 	}
 	
-	function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-    function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
-    
     function search(){
     	$("#allOrdersForm").submit();
     }

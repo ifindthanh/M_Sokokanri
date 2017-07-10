@@ -20,6 +20,7 @@ public interface OrdersService {
 	public void deleteItemById(Long id) throws SokokanriException;
 	public List<Item> getAllOrders(SearchCondition searchCondition, SortCondition sortCondition, Integer offset, Integer maxResults) throws SokokanriException;
 	public List<Bill> getAllBills(SearchCondition searchCondition, Integer offset, Integer maxResults) throws SokokanriException;
+	public List<Long> getAllBillIDs(SearchCondition searchCondition) throws SokokanriException;
 	public int countAllItems(SearchCondition searchCondition) throws SokokanriException;
 	public int countAllBills(SearchCondition searchCondition) throws SokokanriException;
 	public void approve(Long id) throws SokokanriException;

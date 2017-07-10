@@ -60,58 +60,49 @@
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'giao-hang')" /></th>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
 							<th>Tổng tiền thực tế</th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${allBills}" varStatus="status">
+						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
 								<td>
-									<chkbox2:chbox item="${item.id }" selectedItems="${selectedItems}"/>
+									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action="giao-hang"/>
 								</td>
-								<td rowspan="${item.categories.size()+1}">${item.getFormattedId()}</td>
+								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
-									<button type="button" class="btn btn-primary" onclick="approval(${item.id})">
-										<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
-									</button>
+									<sec:authorize access="hasAnyRole('ROLE_A')">
+										<button type="button" class="btn btn-primary" onclick="approval(${bill.id})">
+											<i class="fa" aria-hidden="true" ></i> Xem hóa đơn
+										</button>
+									</sec:authorize>
 								</td>
-								<td></td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
 							</tr>
-							<c:forEach var="cart" items="${item.categories}" varStatus="cartstatus">
+							<c:forEach var="item" items="${bill.items}" varStatus="itemstatus">
 								<tr>
 									<td style="display:none"></td>
 									<td></td>
 									<td>
-										${cart.formattedId}
-									</td>
-									<td>${cart.transferId}</td>
-									<td>
-										${cart.user.fullname}
-									</td>
-									<td>
-										<order:status status="${cart.status }"/>
-									</td>
-									<td>
-										${cart.getOrderRealPrice() }
-									</td>
-									<td>
-										<a href="${cart.id }"><i class="fa fa-info"
-											aria-hidden="true"></i> View</a>
+										<c:set var="url" scope="page" value="xem-don-hang/${item.id}"></c:set>
 										<sec:authorize access="hasRole('ROLE_A')">
-											/ <a href="admin/${item.id }"><i class="fa"
-											aria-hidden="true"></i> Detail </a>
+											<c:set var="url" scope="page" value="admin/${item.id }"></c:set>
 										</sec:authorize>
+										<a href="${url }">${item.getFormattedId() }</a>
+									</td>
+									<td>${item.transferId}</td>
+									<td>
+										${item.user.fullname}
+									</td>
+									<td>
+										${item.getComputePrice() }
 									</td>
 									
 								</tr>
@@ -173,6 +164,7 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
@@ -196,59 +188,6 @@
 		
     });
     
-    function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "giao-hang/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "giao-hang/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-    function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "giao-hang/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "giao-hang/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
     
 	function approval(id){
 		$.ajax({

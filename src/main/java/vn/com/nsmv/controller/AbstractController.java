@@ -147,4 +147,14 @@ public abstract class AbstractController {
         }
     }
     
+protected void checkSearchingBills(List<Long> searchedItems, List<Long> allItems){
+        
+        for (Long item:searchedItems) {
+            if (allItems.contains(item)) {
+                continue;
+            }
+            allItems.add(item);
+        }
+    }
+    
 }
