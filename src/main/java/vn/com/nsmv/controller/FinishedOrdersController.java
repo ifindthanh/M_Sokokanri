@@ -89,6 +89,9 @@ public class FinishedOrdersController extends AbstractController {
 			List<Bill> allBills = this.ordersService.getAllBills(this.searchCondition, this.getOffset(),
 					this.getMaxResults());
 			int count = this.ordersService.countAllBills(this.searchCondition);
+			List<Long> allBillIDs = this.ordersService.getAllBillIDs(searchCondition);
+            this.checkSearchingBills(this.searchCondition.getBills(), allBillIDs);
+            model.addAttribute("billIDs", allBillIDs);
 			model.addAttribute("allBills", allBills);
 			model.addAttribute("offset", this.getOffset());
 			model.addAttribute("maxResult", this.getMaxResults());

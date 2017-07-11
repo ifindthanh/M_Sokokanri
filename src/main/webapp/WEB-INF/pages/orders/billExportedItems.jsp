@@ -68,8 +68,6 @@
 							<sec:authorize access="hasRole('ROLE_A')">
 								<li><a onclick="alreadyToSend()">Sẵn sàng để giao</a></li>
 							</sec:authorize>
-							<li><a onclick="cancelOrders('da-chuyen/huy-don-hang')">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders('da-chuyen/xoa-don-hang')">Xóa đơn hàng</a></li>
 						</ul>
 					</div>
 				</div>

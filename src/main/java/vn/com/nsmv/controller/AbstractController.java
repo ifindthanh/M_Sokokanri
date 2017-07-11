@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
+import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.service.OrdersService;
 
 public abstract class AbstractController {
     private Integer offset;
@@ -147,13 +149,31 @@ public abstract class AbstractController {
         }
     }
     
-protected void checkSearchingBills(List<Long> searchedItems, List<Long> allItems){
+    protected void checkSearchingBills(List<Long> searchedItems, List<Long> allItems){
         
         for (Long item:searchedItems) {
             if (allItems.contains(item)) {
                 continue;
             }
             allItems.add(item);
+        }
+    }
+    
+    protected void delete(Model model, OrdersService ordersService) {
+        try {
+            ordersService.deleteItems(this.getSelectedItems());
+            this.getSelectedItems().clear();
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+        }
+    }
+    
+    protected void cancel(Model model, OrdersService ordersService) {
+        try {
+            ordersService.cancelItems(this.getSelectedItems());
+            this.getSelectedItems().clear();
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
         }
     }
     

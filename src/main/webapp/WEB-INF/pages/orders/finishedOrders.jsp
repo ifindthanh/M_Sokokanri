@@ -9,6 +9,7 @@
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
 <%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
 <%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
+<%@ taglib prefix="id" uri="/WEB-INF/taglibs/idFormatterTaglib.tld" %>
 
 <html>
 <head>
@@ -41,19 +42,20 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-nhap-kho" method="POST">
-			<div class="row" style="height: 150px">
-				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
-					<div class="col-xs-4">
-						<input type="hidden" name="status" value="${ searchCondition.status}" />
-						<input type="text" name= "billId" value="${ searchCondition.billId}" class="form-control">
-					</div>
-					<div>
-						<button type="submit" class="btn btn-primary">
-							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
-						</button>
-					</div>
+		<form action="da-hoan-thanh" method="POST" id="finishedOrders">
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5">Mã hóa đơn: </label>
+				<div class="col-xs-4">
+					<select name="bills" multiple="multiple"
+						class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
+						<c:forEach var="billId" items="${billIDs}" varStatus="status">
+							<option value="${billId }"
+								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>
+								<id:formatter id="${billId }" />
+							</option>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
 			<div class="col-sm-12">
@@ -294,6 +296,10 @@
     		window.location.href = "xoa-don-hang"; 
     	}
 		
+	}
+	
+	function search() {
+		$("#finishedOrders").submit();
 	}
 	
 </script>

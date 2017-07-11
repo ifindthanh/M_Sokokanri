@@ -159,7 +159,7 @@ public class CheckingOrdersController extends AbstractController{
         } catch (SokokanriException ex) {
             model.addAttribute("message", ex.getErrorMessage());
         }
-        return "redirect:/donhang/cho-duyet";
+        return "redirect:/donhang/da-chuyen-vn";
     }
     
     @RequestMapping(value = "/donhang/da-chuyen-vn/huy-don-hang", method=RequestMethod.GET)
@@ -170,7 +170,7 @@ public class CheckingOrdersController extends AbstractController{
         } catch (SokokanriException ex) {
             model.addAttribute("message", ex.getErrorMessage());
         }
-        return "redirect:/donhang/cho-duyet";
+        return "redirect:/donhang/da-chuyen-vn";
     }
 	
 }

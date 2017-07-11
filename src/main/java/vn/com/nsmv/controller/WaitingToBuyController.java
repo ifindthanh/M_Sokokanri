@@ -174,24 +174,15 @@ public class WaitingToBuyController extends AbstractController{
     
     @RequestMapping(value = "/donhang/cho-mua/xoa-don-hang", method=RequestMethod.GET)
     public String deleteOrders(Model model){
-        try {
-            this.ordersService.deleteItems(this.getSelectedItems());
-            this.getSelectedItems().clear();
-        } catch (SokokanriException ex) {
-            model.addAttribute("message", ex.getErrorMessage());
-        }
-        return "redirect:/donhang/cho-duyet";
+        this.delete(model, this.ordersService);
+        return "redirect:/donhang/cho-mua";
     }
-    
+
     @RequestMapping(value = "/donhang/cho-mua/huy-don-hang", method=RequestMethod.GET)
     public String cancelOrders(Model model){
-        try {
-            this.ordersService.cancelItems(this.getSelectedItems());
-            this.getSelectedItems().clear();
-        } catch (SokokanriException ex) {
-            model.addAttribute("message", ex.getErrorMessage());
-        }
-        return "redirect:/donhang/cho-duyet";
+        this.cancel(model, this.ordersService);
+        return "redirect:/donhang/cho-mua";
     }
+    
     
 }
