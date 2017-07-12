@@ -108,6 +108,9 @@
 						</tr>
 					</thead>
 					<tbody>
+						<c:set var="sum" value="0" scope="page"></c:set>
+						<c:set var="realSum" value="0" scope="page"></c:set>
+						<c:set var="computeSum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td class="fixed"><chkbox2:chbox item="${item.id }"
@@ -146,6 +149,7 @@
 									<div class="lblTotal">${item.total }</div> <input type="text"
 									value="${item.total }"
 									class="form-control hiddenAction txtTotal" disabled="disabled" />
+									<c:set var="sum" value="${sum + item.total}" scope="page"></c:set>
 								</td>
 								<td>
 									<div class="lblComputeCost">${item.computeCost }</div> <input
@@ -164,6 +168,7 @@
 									type="text" value="${item.computePrice}"
 									class="form-control hiddenAction txtComputePrice"
 									disabled="disabled" />
+									<c:set var="computeSum" value="${computeSum + item.computePrice}" scope="page"></c:set>
 								</td>
 								<sec:authorize access="hasRole('ROLE_A')">
 									<td>
@@ -176,6 +181,7 @@
 										<input type="text" value="${item.realPrice }"
 										class="form-control hiddenAction txtRealPrice"
 										disabled="disabled" />
+										<c:set var="realSum" value="${realSum + item.realPrice}" scope="page"></c:set>
 									</td>
 								</sec:authorize>
 								<td class="fixed">
@@ -203,6 +209,22 @@
 					</tbody>
 				</table>
 				
+			</div>
+			<div class="col-sm-12">
+			 	<div class="total_container">
+				<label>Tổng tiền : <span id="total_price"><fmt:formatNumber value="${sum}" minFractionDigits="0" maxFractionDigits="4"/>
+				</span></label>
+				<br/>
+				<label>Tổng tiền mua: <span id="compute_price">
+					<fmt:formatNumber value="${computeSum}" minFractionDigits="0" maxFractionDigits="4"/>
+				</span></label>
+				
+				<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+					<br/>
+					<label>Tổng tiền thực tế mua: <span id="real_price">
+					<fmt:formatNumber value="${realSum}" minFractionDigits="0" maxFractionDigits="4"/></span></label>	
+				</sec:authorize>
+				</div>
 			</div>
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"

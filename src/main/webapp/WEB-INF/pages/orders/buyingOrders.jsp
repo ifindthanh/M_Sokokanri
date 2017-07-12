@@ -42,7 +42,7 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="cho-mua" method="POST" id="approvedOrders">
-			<div class="col-sm-12 row" style="height: 100px">
+			<div class="col-sm-12 row">
 				<label class="col-xs-2 right_align top_margin_5" >Nhãn hàng: </label>
 				<div class="col-xs-4">
 					<select name="brands" multiple="multiple" class="selectpicker form-control inputstl" onchange="search()">
@@ -95,6 +95,9 @@
 						</tr>
 					</thead>
 					<tbody>
+						<c:set var="sum" value="0" scope="page"></c:set>
+						<c:set var="realSum" value="0" scope="page"></c:set>
+						<c:set var="computeSum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td class="fixed"><chkbox2:chbox item="${item.id }"
@@ -133,24 +136,28 @@
 									<div class="lblTotal">${item.total }</div> <input type="text"
 									value="${item.total }"
 									class="form-control hiddenAction txtTotal" disabled="disabled" />
+									<c:set var="sum" value="${sum + item.total}" scope="page"></c:set>
+								</td>
+								<td>
+									<div class="lblComputeCost">${item.computeCost }</div> <input
+									type="number" value="${item.computeCost }"
+									onchange="computeMoneyFromRealCost(this)"
+									class="small_width form-control hiddenAction txtComputeCost" />
+								</td>
+								<td>
+									<div class="lblRealQuantity">${item.realQuantity }</div> <input
+									type="number" value="${item.realQuantity}"
+									onchange="computeMoneyFromRealQuantity(this)"
+									class="small_width form-control hiddenAction txtRealQuantity" />
+								</td>
+								<td>
+									<div class="lblComputePrice">${item.computePrice }</div> <input
+									type="text" value="${item.computePrice}"
+									class="form-control hiddenAction txtComputePrice"
+									disabled="disabled" /> 
+									<c:set var="computeSum" value="${computeSum + item.computePrice}" scope="page"></c:set>
 								</td>
 								<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
-									<td>
-										<div class="lblComputeCost">${item.computeCost }</div> 
-										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
-										class="small_width form-control hiddenAction txtComputeCost" />
-									</td>
-									<td>
-										<div class="lblRealQuantity">${item.realQuantity }</div> <input
-										type="number" value="${item.realQuantity}" onchange="computeMoneyFromRealQuantity(this)"
-										class="small_width form-control hiddenAction txtRealQuantity" />
-									</td>
-									<td>
-										<div class="lblComputePrice">${item.computePrice }</div> 
-										<input type="text" value="${item.computePrice}"
-											class="form-control hiddenAction txtComputePrice"
-											disabled="disabled" />
-									</td>
 									<td>
 										<div class="lblRealCost">${item.realCost }</div> <input
 										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
@@ -161,6 +168,7 @@
 										<input type="text" value="${item.realPrice }"
 										class="form-control hiddenAction txtRealPrice"
 										disabled="disabled" />
+										<c:set var="realSum" value="${realSum + item.realPrice}" scope="page"></c:set>
 									</td>
 								</sec:authorize>
 								<td>
@@ -188,6 +196,22 @@
 					</tbody>
 				</table>
 				
+			</div>
+			<div class="col-sm-12">
+			 	<div class="total_container">
+					<label>Tổng tiền : <span id="total_price"><fmt:formatNumber value="${sum}" minFractionDigits="0" maxFractionDigits="4"/>
+					</span></label>
+					<br/>
+					<label>Tổng tiền mua: <span id="compute_price">
+						<fmt:formatNumber value="${computeSum}" minFractionDigits="0" maxFractionDigits="4"/>
+					</span></label>
+					
+					<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+						<br/>
+						<label>Tổng tiền thực tế mua: <span id="real_price">
+						<fmt:formatNumber value="${realSum}" minFractionDigits="0" maxFractionDigits="4"/></span></label>	
+					</sec:authorize>
+				</div>
 			</div>
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"

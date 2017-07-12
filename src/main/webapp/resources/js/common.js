@@ -64,6 +64,9 @@
 			success : function(response) {
 				if (response.status == 0) {
 					alert(response.message);
+					action.hide();
+					displayBack(currentElement);
+					revertPrice();
 					return;
 				}
 				currentElement.closest('tr').find(".origin").show();
@@ -82,12 +85,13 @@
 		    	currentElement.closest('tr').find(".lblBuyingCode").html(currentElement.closest('tr').find(".txtBuyingCode").val());
 				action.hide();
 				displayBack(currentElement);
-				
+				revertPrice();
 			},
 			error : function() {
 				currentElement.closest('tr').find(".origin").show();
 				action.hide();
 				displayBack(currentElement);
+				revertPrice();
 			}
 
 		});
@@ -101,6 +105,7 @@
     	currentElement.closest('tr').find(".origin").show();
     	action.hide();
     	displayBack(currentElement);
+    	revertPrice();
 	}
 	
 	function computeMoney(element) {
@@ -111,10 +116,60 @@
     	if (txtCost.val() && txtCost.val() != "" 
     			&& txtQuantity.val() && txtQuantity.val() != "") {
     		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
+    		totalPrice();
     	} else {
-    		txtTotal.val("");
+    		txtTotal.val();
     	}
+    	
     }
+	
+	function totalPrice(){
+		var sum = 0;
+		$(".txtTotal").each(function(){
+			if ($(this).val() != "")
+				sum += parseFloat($(this).val());
+		});
+		$("#total_price").html(sum.toFixed(4));
+		
+		var realSum = 0;
+		$(".txtRealPrice").each(function(){
+			if ($(this).val() != "")
+				realSum += parseFloat($(this).val());
+		});
+		$("#real_price").html(realSum.toFixed(4));
+		
+		var computeSum = 0;
+		$(".txtComputePrice").each(function(){
+			if ($(this).val() != "")
+				computeSum += parseFloat($(this).val());
+		});
+		$("#compute_price").html(computeSum.toFixed(4));
+	}
+	
+	function revertPrice(){
+		var sum = 0;
+		$(".lblTotal").each(function(){
+			if($(this).html() != "")
+				sum += parseFloat($(this).html());
+		});
+		$("#total_price").html(sum.toFixed(4));
+		
+		var realSum = 0;
+		$(".lblRealPrice").each(function(){
+			console.log($(this).html());
+			if($(this).html() != "")
+				realSum += parseFloat($(this).html());
+		});
+		$("#real_price").html(realSum.toFixed(4));
+		
+		var computeSum = 0;
+		$(".lblComputePrice").each(function(){
+			console.log($(this).html());
+			if($(this).html() != "")
+				computeSum += parseFloat($(this).html());
+		});
+		$("#compute_price").html(computeSum.toFixed(4));
+	}
 	
 	function displayBack(currentElement){
 		currentElement.closest('tr').find(".lblName").show();
@@ -211,6 +266,7 @@
     	if (txtCost.val() && txtCost.val() != "" 
     			&& txtQuantity.val() && txtQuantity.val() != "") {
     		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
+    		totalPrice();
     	} else {
     		txtTotal.val("");
     	}
@@ -225,6 +281,7 @@
     	if (txtCost.val() && txtCost.val() != "" 
     			&& currentElement.val() && currentElement.val() != "") {
     		txtTotal.val((parseInt(currentElement.val())* parseFloat(txtCost.val())).toFixed(4));
+    		totalPrice();
     	} else {
     		txtTotal.val("");
     	}
@@ -232,6 +289,7 @@
     	if (txtComputeCost.val() && txtComputeCost.val() != "" 
 			&& currentElement.val() && currentElement.val() != "") {
     		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtComputeCost.val())).toFixed(4));
+    		totalPrice();
 		} else {
 			txtComputePrice.val("");
 		}
@@ -245,6 +303,7 @@
     	if (txtRealQuantity.val() && txtRealQuantity.val() != "" 
 			&& currentElement.val() && currentElement.val() != "") {
     		txtComputePrice.val((parseFloat(currentElement.val())* parseInt(txtRealQuantity.val())).toFixed(4));
+    		totalPrice();
 		} else {
 			txtComputePrice.val("");
 		}

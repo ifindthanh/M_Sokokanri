@@ -77,6 +77,7 @@
 						</tr>
 					</thead>
 					<tbody>
+						<c:set var="sum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td class="fixed">
@@ -125,6 +126,7 @@
 									<div class="lblTotal">${item.total }
 									</div>
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
+									<c:set var="sum" value="${sum + item.total}" scope="page"></c:set>
 								</td>
 								<td>
 									<div>${item.approvalNote}
@@ -158,7 +160,10 @@
 						</c:forEach>
 					</tbody>
 				</table>
-				
+			</div>
+			<div class="total_container">
+				<label>Tổng tiền : <span id="total_price"><fmt:formatNumber value="${sum}" minFractionDigits="0" maxFractionDigits="4"/>
+				</span></label>
 			</div>
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
@@ -166,16 +171,8 @@
 					uri="${pageContext.request.contextPath}/donhang/cho-duyet"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-						<i class="fa" aria-hidden="true" ></i> Duyệt đơn hàng
-					</button>
-				</div>
-			</sec:authorize>
 		</form>
 	</div>
-	
 	<!-- Modal -->
 	<div id="addNoteModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
