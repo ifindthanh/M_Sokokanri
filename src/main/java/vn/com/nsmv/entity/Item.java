@@ -426,6 +426,9 @@ public class Item implements java.io.Serializable {
 	        return false;
 	    }
 	    
+	    if (Utils.hasRole(Constants.ROLE_B)  && this.status == 1) {
+            return false;
+        }
 	    
 	    return true;
 	}

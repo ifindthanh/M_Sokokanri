@@ -59,24 +59,26 @@
 				</div>
 			</div>
 			<input type="hidden" name="status" value = "${searchCondition.status }" />
-			<div class="col-sm-12 action_container">
-				<div class="col-sm-2">
-					<div class="dropdown">
-					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
-					  <span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<sec:authorize access="hasRole('ROLE_A')">
-								<li><a onclick="alreadyToSend()">Sẵn sàng để giao</a></li>
-							</sec:authorize>
-						</ul>
+			<sec:authorize access="hasRole('ROLE_A')">
+				<div class="col-sm-12 action_container">
+					<div class="col-sm-2">
+						<div class="dropdown">
+						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+						  <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+									<li><a onclick="alreadyToSend()">Sẵn sàng để giao</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
-			</div>
+			</sec:authorize>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-xuat-hd')" /></th>
+							<sec:authorize access="hasRole('ROLE_A')">
+								<th><input type="checkbox" onchange="selectAllItems(this, 'da-xuat-hd')" /></th>
+							</sec:authorize>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
@@ -87,9 +89,11 @@
 					<tbody>
 						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
-								<td>
-									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action="da-xuat-hd"/>
-								</td>
+								<sec:authorize access="hasRole('ROLE_A')">
+									<td>
+										<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action="da-xuat-hd"/>
+									</td>
+								</sec:authorize>
 								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
 									<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
@@ -106,7 +110,9 @@
 							<c:forEach var="item" items="${bill.items}" varStatus="itemstatus">
 								<tr>
 									<td style="display:none"></td>
-									<td></td>
+									<sec:authorize access="hasRole('ROLE_A')">
+										<td></td>
+									</sec:authorize>
 									<td>
 										<c:set var="url" scope="page" value="xem-don-hang/${item.id}"></c:set>
 										<sec:authorize access="hasRole('ROLE_A')">

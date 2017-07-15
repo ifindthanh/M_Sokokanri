@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +30,7 @@ import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Bill;
+import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -135,14 +137,17 @@ public class StorageController extends AbstractController {
 	
 	@RequestMapping(value = "/donhang/da-xuat-hoa-don", method=RequestMethod.GET)
 	public String exportBillAction(Model model) {
-		if (!Utils.hasRole(Constants.ROLE_BG) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
-		}
+		
 		try {
+		    if (!Utils.hasRole(Constants.ROLE_BG) && !Utils.hasRole(Constants.ROLE_A)) {
+	            model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
+	            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(LocaleContextHolder.getLocale()));
+	        }
 			this.ordersService.exportBill(this.getSelectedItems(), true);
 			this.getSelectedItems().clear();
 			return "redirect:da-nhap-kho";
 		} catch (SokokanriException e) {
+		    model.addAttribute("message", e.getErrorMessage());
 			return "redirect:da-nhap-kho";
 		}
 		

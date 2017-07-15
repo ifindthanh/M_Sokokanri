@@ -157,7 +157,8 @@
 									disabled="disabled" /> 
 									<c:set var="computeSum" value="${computeSum + item.computePrice}" scope="page"></c:set>
 								</td>
-								<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+								
+								<sec:authorize access="hasAnyRole('ROLE_B','ROLE_A')">
 									<td>
 										<div class="lblRealCost">${item.realCost }</div> <input
 										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"

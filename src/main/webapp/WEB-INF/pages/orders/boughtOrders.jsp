@@ -75,13 +75,16 @@
 						  <span class="caret"></span></button>
 							<ul class="dropdown-menu">
 								<li><a onclick="approval()">Đã nhận hàng tại nước ngoài</a></li>
-								<li><a onclick="cancelOrders('da-mua/huy-don-hang')">Hủy đơn hàng</a></li>
-								<li><a onclick="deleteOrders('da-mua/xoa-don-hang')">Xóa đơn hàng</a></li>
+								<sec:authorize access="hasRole('ROLE_A')">
+									<li><a onclick="cancelOrders('da-mua/huy-don-hang')">Hủy đơn hàng</a></li>
+									<li><a onclick="deleteOrders('da-mua/xoa-don-hang')">Xóa đơn hàng</a></li>
+								</sec:authorize>
 							</ul>
 						</div>
 					</div>
 				</div>
 			</sec:authorize>
+			
 			<div class="table_container">
 				<c:set var="tableWidth" scope="page" value=""></c:set>
 				<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
@@ -179,7 +182,7 @@
 									disabled="disabled" />
 									<c:set var="computeSum" value="${computeSum + item.computePrice}" scope="page"></c:set>
 								</td>
-								<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+								<sec:authorize access="hasRole('ROLE_A')">
 									<td>
 										<div class="lblRealCost">${item.realCost }</div> <input
 										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"

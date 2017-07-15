@@ -67,26 +67,30 @@
 				</div>
 			</div>
 			<input type="hidden" name="status" value = "${searchCondition.status }" />
-			<div class="col-sm-12 action_container">
-				<div class="col-sm-2">
-					<div class="dropdown">
-					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
-					  <span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
-								<li><a onclick="approval()">Chuyển về Việt Nam</a></li>
-							</sec:authorize>
-							<li><a onclick="cancelOrders('da-chuyen/huy-don-hang')">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders('da-chuyen/xoa-don-hang')">Xóa đơn hàng</a></li>
-						</ul>
+			<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
+				<div class="col-sm-12 action_container">
+					<div class="col-sm-2">
+						<div class="dropdown">
+						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+						  <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+									<li><a onclick="approval()">Chuyển về Việt Nam</a></li>
+									<sec:authorize access="hasRole('ROLE_A')">
+										<li><a onclick="cancelOrders('da-chuyen/huy-don-hang')">Hủy đơn hàng</a></li>
+										<li><a onclick="deleteOrders('da-chuyen/xoa-don-hang')">Xóa đơn hàng</a></li>
+									</sec:authorize>	
+							</ul>
+						</div>
 					</div>
 				</div>
-			</div>
+			</sec:authorize>
 			<div class="table_container">
 				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-chuyen')" /></th>
+							<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
+								<th><input type="checkbox" onchange="selectAllItems(this, 'da-chuyen')" /></th>
+							</sec:authorize>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -113,8 +117,10 @@
 						<c:set var="computeSum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
-								<td class="fixed"><chkbox2:chbox item="${item.id }"
-										selectedItems="${selectedItems}" action="da-chuyen" /></td>
+								<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
+									<td class="fixed"><chkbox2:chbox item="${item.id }"
+											selectedItems="${selectedItems}" action="da-chuyen" /></td>
+								</sec:authorize>
 								<td class="fixed">
 									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
 									${item.formattedId} </div>

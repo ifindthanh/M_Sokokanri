@@ -135,15 +135,16 @@
 								
 								<td class="fixed">
 									<c:if test="${item.isReadonly() ne true}">
-										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
+										<a onclick="edit(this)" class = "myBtn origin btnEdit" title="Chỉnh sửa thông tin"><i class="fa fa-edit icon-resize-small"
 										aria-hidden="true"></i></a>
 										<div class= "action">
-											<a onclick="save(this)" class="myBtn" item = "${item.id }"><i
-												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
+											<a onclick="save(this)" class="myBtn" item = "${item.id }" title="Lưu lại"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> 
+												<a onclick="cancel(this)" class="myBtn"><i
 												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
 										</div>
 										<c:if test="${item.status eq -1 }">
-											<a onclick="removeNote(this)" class = "myBtn origin" item = "${item.id }"><i class="fa fa-wrench icon-resize-small"
+											<a onclick="removeNote(this)" title="Bỏ ghi chú đơn hàng" class="myBtn origin" item = "${item.id }"><i class="fa fa-wrench icon-resize-small"
 												aria-hidden="true"></i></a>
 										</c:if>
 									</c:if>
@@ -152,7 +153,7 @@
 									</div>
 									
 									<sec:authorize access="hasRole('ROLE_A')">
-										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
+										<a class="myBtn origin" href="admin/${item.id }" title="Xem chi tiết"><i class="fa fa-cogs"
 										aria-hidden="true"></i> </a>
 									</sec:authorize>
 								</td>
