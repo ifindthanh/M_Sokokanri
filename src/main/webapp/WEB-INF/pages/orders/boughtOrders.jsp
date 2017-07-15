@@ -12,7 +12,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Đơn hàng đã mua</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -67,26 +67,32 @@
 				</div>
 			</div>
 			<input type="hidden" name="status" value = "${searchCondition.status }" />
-			<div class="col-sm-12 action_container">
-				<div class="col-sm-2">
-					<div class="dropdown">
-					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
-					  <span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+			<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+				<div class="col-sm-12 action_container">
+					<div class="col-sm-2">
+						<div class="dropdown">
+						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+						  <span class="caret"></span></button>
+							<ul class="dropdown-menu">
 								<li><a onclick="approval()">Đã nhận hàng tại nước ngoài</a></li>
-							</sec:authorize>
-							<li><a onclick="cancelOrders('da-mua/huy-don-hang')">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders('da-mua/xoa-don-hang')">Xóa đơn hàng</a></li>
-						</ul>
+								<li><a onclick="cancelOrders('da-mua/huy-don-hang')">Hủy đơn hàng</a></li>
+								<li><a onclick="deleteOrders('da-mua/xoa-don-hang')">Xóa đơn hàng</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
-			</div>
+			</sec:authorize>
 			<div class="table_container">
-				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
+				<c:set var="tableWidth" scope="page" value=""></c:set>
+				<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+					<c:set var="tableWidth" scope="page" value="width: 2000px !important;"></c:set>
+				</sec:authorize>
+				<table id="tableList" class="listBusCard table" style="${tableWidth}">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-mua')" /></th>
+							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+								<th><input type="checkbox" onchange="selectAllItems(this, 'da-mua')" /></th>
+							</sec:authorize>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -105,6 +111,7 @@
 							</sec:authorize>
 							<th style="width: 100px">Mã mua hàng</th>
 							<th></th>
+							
 						</tr>
 					</thead>
 					<tbody>
@@ -113,8 +120,10 @@
 						<c:set var="computeSum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
-								<td class="fixed"><chkbox2:chbox item="${item.id }"
+								<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
+									<td class="fixed"><chkbox2:chbox item="${item.id }"
 										selectedItems="${selectedItems}" action="da-mua" /></td>
+								</sec:authorize>
 								<td class="fixed">
 									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
 									${item.formattedId} </div>
