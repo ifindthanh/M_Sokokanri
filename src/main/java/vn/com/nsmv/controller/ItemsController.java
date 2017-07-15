@@ -53,11 +53,6 @@ public class ItemsController {
                     throw new SokokanriException(SokokanriMessage.getMessageErrorNoPermissionInOrder(LocaleContextHolder.getLocale()));
                 }
             }
-            
-            boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_U) 
-                || (Utils.isUser() && item.getStatus() != null && item.getStatus() == 0 ));
-            
-            model.addAttribute("read_only", Boolean.valueOf(readOnly));
             model.addAttribute("item", item);
             return new ModelAndView("/orders/itemDetails");
         } catch (SokokanriException ex) {

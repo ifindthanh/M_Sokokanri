@@ -29,7 +29,6 @@
     <http use-expressions="true">
         <csrf disabled="true"/>
         <session-management invalid-session-url="/session-timed-out" />
-        <!-- Do not understand why we need to set by value 'session-timed-out', maybe just we have to set it to an 404 value-->
 		<custom-filter ref="ajaxTimeoutRedirectFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
         <intercept-url pattern="/" access="permitAll" />
         <intercept-url pattern="/welcome" access="permitAll" />

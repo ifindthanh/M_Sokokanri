@@ -14,4 +14,16 @@ public class LoginController
 	{
 		return "home";
 	}
+	
+	@RequestMapping(value = "/session-timed-out", method = RequestMethod.GET)
+    public String error(Model model)
+    {
+        return "/refresh";
+    }
+	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String errorLogin(Model model)
+    {
+	    return "redirect:/";
+    }
 }
