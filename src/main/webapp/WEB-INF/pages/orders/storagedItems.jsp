@@ -115,11 +115,11 @@
 										<td></td>
 									</sec:authorize>
 									<td>
-										<c:set var="url" scope="page" value="xem-don-hang/${item.id}"></c:set>
+										<c:set var="link_action" scope="page" value="onclick = 'viewOrder(${item.id })' style='cursor: pointer'"></c:set>
 										<sec:authorize access="hasRole('ROLE_A')">
-											<c:set var="url" scope="page" value="admin/${item.id }"></c:set>
+											<c:set var="link_action" scope="page" value="href = 'admin/${item.id }'"></c:set>
 										</sec:authorize>
-										<a href="${url }">${item.getFormattedId() }</a>
+										<a ${link_action }>${item.getFormattedId() }</a>
 									</td>
 									<td>${item.transferId}</td>
 									<td>
@@ -161,7 +161,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Thông tin hóa đơn</h4>
+					<h4 class="modal-title">Thông tin đơn hàng</h4>
 				</div>
 				<div class="modal-body">
 					<div id="content" ></div>
@@ -170,6 +170,28 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" onclick="exportBill()">Xuất ra file</button>
 					<button type="button" class="btn btn-default" onclick="printBill()">In hóa đơn</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Thông tin đơn hàng</h4>
+				</div>
+				<div class="modal-body">
+					<div id="order_detail"></div>
+				</div>
+				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>

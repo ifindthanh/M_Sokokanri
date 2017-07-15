@@ -331,3 +331,17 @@
     	}
         
     }
+    
+
+    function viewOrder(id) {
+		$.ajax({
+			type : "GET",
+			url : "xem-don-hang/"+ id,
+			success : function(result) {
+				$("#orderDetailModal").modal('show');
+				$('#order_detail').html(result);
+			},
+			error : function() {
+			}
+		});
+}

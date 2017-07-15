@@ -409,6 +409,7 @@ public class OrdersServiceImpl implements OrdersService {
             category.setCity(uploadBean.getCity());
             category.validate();
             Long result = categoryDAO.add(category);
+            boolean hasResult = false;
             while (iterator.hasNext()) {
 
                 Row nextRow = iterator.next();
@@ -495,10 +496,14 @@ public class OrdersServiceImpl implements OrdersService {
                 item.setTotal(item.getQuantity() * item.getCost());
                 item.setUser(user);
                 item.setStatus(0);
+                hasResult = true;
                 this.itemDAO.add(item);
             }
 
             workbook.close();
+            if (!hasResult) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorNoOrderInFile(locale));
+            }
             return result;
         } catch (IOException ex) {
             throw new SokokanriException(ex);
