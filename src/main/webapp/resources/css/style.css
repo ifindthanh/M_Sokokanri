@@ -191,3 +191,12 @@ td.myLabel {
 	margin-right: 20px;
 	text-align: right;
 }
+
+.modal-content {
+	border-radius: 1px;
+}
+
+.modal-header {
+	background-color: #afaf8f;
+}
+

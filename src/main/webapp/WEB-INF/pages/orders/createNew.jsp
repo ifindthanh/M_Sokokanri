@@ -235,7 +235,7 @@
     		if ($(this).val() && $(this).val() != "")
     			total_price += parseFloat($(this).val());
     	});
-    	$("#total_price").html(total_price.toFixed(4));
+    	$("#total_price").html(total_price.toFixed(0));
     }
     
     function validateForm() {

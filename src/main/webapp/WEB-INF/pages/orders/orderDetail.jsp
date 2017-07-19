@@ -216,7 +216,7 @@
     	if (!$(this).val() || $(this).val() == "") {
     		return;
     	}
-    	$("#total_real_price").html(parseFloat(parseFloat($("#total_real_price").html()) + parseFloat($(this).val())).toFixed(4));
+    	$("#total_real_price").html(parseFloat(parseFloat($("#total_real_price").html()) + parseFloat($(this).val())).toFixed(0));
     })
     $(document).ready(function(){
 		//init datatables
@@ -318,7 +318,7 @@
     		if ($(this).val() && $(this).val() != "")
     			total_price += parseFloat($(this).val());
     	});
-    	$("#total_price").html(total_price.toFixed(4));
+    	$("#total_price").html(total_price.toFixed(0));
     }
     
     function approve() {

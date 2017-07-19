@@ -113,9 +113,11 @@
     	var txtTotal = currentElement.closest('tr').find(".txtTotal");
     	var txtCost = currentElement.closest('tr').find(".txtCost");
     	var txtQuantity = currentElement.closest('tr').find(".txtQuantity");
+    	var rate = $("#moneyRate").html();
     	if (txtCost.val() && txtCost.val() != "" 
-    			&& txtQuantity.val() && txtQuantity.val() != "") {
-    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
+    			&& txtQuantity.val() && txtQuantity.val() != "" 
+    				&& rate && rate != "") {
+    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val()) * parseFloat(rate)).toFixed(0));
     		totalPrice();
     	} else {
     		txtTotal.val();
@@ -129,21 +131,21 @@
 			if ($(this).val() != "")
 				sum += parseFloat($(this).val());
 		});
-		$("#total_price").html(sum.toFixed(4));
+		$("#total_price").html(sum.toFixed(0));
 		
 		var realSum = 0;
 		$(".txtRealPrice").each(function(){
 			if ($(this).val() != "")
 				realSum += parseFloat($(this).val());
 		});
-		$("#real_price").html(realSum.toFixed(4));
+		$("#real_price").html(realSum.toFixed(0));
 		
 		var computeSum = 0;
 		$(".txtComputePrice").each(function(){
 			if ($(this).val() != "")
 				computeSum += parseFloat($(this).val());
 		});
-		$("#compute_price").html(computeSum.toFixed(4));
+		$("#compute_price").html(computeSum.toFixed(0));
 	}
 	
 	function revertPrice(){
@@ -152,7 +154,7 @@
 			if($(this).html() != "")
 				sum += parseFloat($(this).html());
 		});
-		$("#total_price").html(sum.toFixed(4));
+		$("#total_price").html(sum.toFixed(0));
 		
 		var realSum = 0;
 		$(".lblRealPrice").each(function(){
@@ -160,7 +162,7 @@
 			if($(this).html() != "")
 				realSum += parseFloat($(this).html());
 		});
-		$("#real_price").html(realSum.toFixed(4));
+		$("#real_price").html(realSum.toFixed(0));
 		
 		var computeSum = 0;
 		$(".lblComputePrice").each(function(){
@@ -168,7 +170,7 @@
 			if($(this).html() != "")
 				computeSum += parseFloat($(this).html());
 		});
-		$("#compute_price").html(computeSum.toFixed(4));
+		$("#compute_price").html(computeSum.toFixed(0));
 	}
 	
 	function displayBack(currentElement){
@@ -263,9 +265,11 @@
     	var txtTotal = currentElement.closest('tr').find(".txtRealPrice");
     	var txtCost = currentElement.closest('tr').find(".txtRealCost");
     	var txtQuantity = currentElement.closest('tr').find(".txtRealQuantity");
+    	var rate = $("#moneyRate").html();
     	if (txtCost.val() && txtCost.val() != "" 
-    			&& txtQuantity.val() && txtQuantity.val() != "") {
-    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val())).toFixed(4));
+    			&& txtQuantity.val() && txtQuantity.val() != ""
+    				&& rate && rate != "") {
+    		txtTotal.val((parseInt(txtQuantity.val())* parseFloat(txtCost.val()) * parseFloat(rate)).toFixed(0));
     		totalPrice();
     	} else {
     		txtTotal.val("");
@@ -279,16 +283,18 @@
     	var txtComputeCost = currentElement.closest('tr').find(".txtComputeCost");
     	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
     	if (txtCost.val() && txtCost.val() != "" 
-    			&& currentElement.val() && currentElement.val() != "") {
-    		txtTotal.val((parseInt(currentElement.val())* parseFloat(txtCost.val())).toFixed(4));
+    			&& currentElement.val() && currentElement.val() != ""
+    				&& rate && rate != "") {
+    		txtTotal.val((parseInt(currentElement.val())* parseFloat(txtCost.val())* parseFloat(rate)).toFixed(0));
     		totalPrice();
     	} else {
     		txtTotal.val("");
     	}
     	
     	if (txtComputeCost.val() && txtComputeCost.val() != "" 
-			&& currentElement.val() && currentElement.val() != "") {
-    		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtComputeCost.val())).toFixed(4));
+			&& currentElement.val() && currentElement.val() != ""
+				&& rate && rate != "") {
+    		txtComputePrice.val((parseInt(currentElement.val())* parseFloat(txtComputeCost.val())* parseFloat(rate)).toFixed(0));
     		totalPrice();
 		} else {
 			txtComputePrice.val("");
@@ -302,7 +308,7 @@
     	
     	if (txtRealQuantity.val() && txtRealQuantity.val() != "" 
 			&& currentElement.val() && currentElement.val() != "") {
-    		txtComputePrice.val((parseFloat(currentElement.val())* parseInt(txtRealQuantity.val())).toFixed(4));
+    		txtComputePrice.val((parseFloat(currentElement.val())* parseInt(txtRealQuantity.val())).toFixed(0));
     		totalPrice();
 		} else {
 			txtComputePrice.val("");

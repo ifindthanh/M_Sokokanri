@@ -1,4 +1,3 @@
-<%@page import="vn.com.nsmv.bean.LiveMoneyExchange"%>
 <%@page import="vn.com.nsmv.common.Utils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -13,10 +12,15 @@
 
 <div>
 	<div class="top-block"
-		style="height: 50px; width: 100%; background-color: #9e9595">
-		<div class="block"
-			style="float: left; padding-top: 15px; padding-left: 20px;">Tỷ
-			giá <rate:money ></rate:money></div>
+		style="height: 50px; width0: 100%; background-color: #9e9595">
+		<sec:authorize access="isAuthenticated()">
+			<div class="block"
+				style="float: left; padding-top: 15px; padding-left: 20px;">
+				Tỷ giá
+				<rate:money></rate:money>
+			</div>
+		</sec:authorize>
+		<a href="resources/images.jpg" download>aaaaaaaaa</a>
 		<div class="menu-header block">
 			<ul>
 				<sec:authorize access="!isAuthenticated()">

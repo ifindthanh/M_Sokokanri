@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.com.nsmv.bean.CustomUser;
+import vn.com.nsmv.bean.SettingMoneyRate;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
@@ -493,7 +494,7 @@ public class OrdersServiceImpl implements OrdersService {
                     continue;
                 }
                 item.validate();
-                item.setTotal(item.getQuantity() * item.getCost());
+                item.setTotal(item.getQuantity() * item.getCost()  * SettingMoneyRate.VALUE);
                 item.setUser(user);
                 item.setStatus(0);
                 hasResult = true;
@@ -584,15 +585,15 @@ public class OrdersServiceImpl implements OrdersService {
         destinationItem.setDescription(item.getDescription());
         destinationItem.setQuantity(item.getQuantity());
         destinationItem.setCost(item.getCost());
-        destinationItem.setTotal(item.getQuantity() * item.getCost());
+        destinationItem.setTotal(item.getQuantity() * item.getCost() * SettingMoneyRate.VALUE);
         destinationItem.setRealCost(item.getRealCost());
         destinationItem.setRealQuantity(item.getRealQuantity());
         if (item.getRealCost() != null && item.getRealQuantity() != null) {
-            destinationItem.setRealPrice(item.getRealCost() * item.getRealQuantity());
+            destinationItem.setRealPrice(item.getRealCost() * item.getRealQuantity() * SettingMoneyRate.VALUE);
         }
         destinationItem.setComputeCost(item.getComputeCost());
         if (item.getComputeCost() != null && item.getRealQuantity() != null) {
-            destinationItem.setComputePrice(item.getComputeCost() * item.getRealQuantity());
+            destinationItem.setComputePrice(item.getComputeCost() * item.getRealQuantity() * SettingMoneyRate.VALUE);
         }
         destinationItem.setBuyingCode(item.getBuyingCode());
         this.itemDAO.saveOrUpdate(destinationItem);
