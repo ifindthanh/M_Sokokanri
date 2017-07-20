@@ -162,7 +162,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="total_container">
+			<div class="col-sm-12 total_container">
 				<label>Tổng tiền : <span id="total_price"><fmt:formatNumber value="${sum}" minFractionDigits="0" maxFractionDigits="4"/>
 				</span></label>
 			</div>
