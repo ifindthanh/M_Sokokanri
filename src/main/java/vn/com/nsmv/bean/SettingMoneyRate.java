@@ -45,10 +45,13 @@ public class SettingMoneyRate {
             moneyExchange.setValue(currentRate);
             try {
                 this.moneyExchangeDAO.add(moneyExchange);
+                SettingMoneyRate.VALUE = Math.round(currentRate);
+                return;
             } catch (SokokanriException e) {
+                SettingMoneyRate.VALUE = 0;
+                return;
             }
-            SettingMoneyRate.VALUE = Math.round(currentRate);
-            return;
+            
         }
         SettingMoneyRate.VALUE = Math.round(moneyExchange.getValue());
     }
