@@ -17,10 +17,15 @@
 			<div class="block"
 				style="float: left; padding-top: 15px; padding-left: 20px;">
 				Tỷ giá
-				<rate:money></rate:money>
+				<sec:authorize access="hasRole('ROLE_A')">
+					<a id='moneyRate' onclick="updateMoneyRate()"><rate:money/></a>
+				</sec:authorize>
+				<sec:authorize access="!hasRole('ROLE_A')">
+					<span id='moneyRate'><rate:money/></span>
+					
+				</sec:authorize>
 			</div>
 		</sec:authorize>
-		<a href="resources/images.jpg" download>aaaaaaaaa</a>
 		<div class="menu-header block">
 			<ul>
 				<sec:authorize access="!isAuthenticated()">
@@ -112,6 +117,27 @@
 		</div>
 	</div>
 	
+	<div class="modal fade" id="money-rate-modal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Nhập thông tin tỉ giá</h4>
+			</div>
+			<div class="modal-body">
+				<input type="number" id="money_rate" class="form-control" value='<rate:money/>'/>
+				<input type="hidden" id="money_rate_hidden" class="form-control" value='<rate:money/>'/>
+			</div>
+			<p id="saveError" class="error"></p>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="saveMoneyRate('${pageContext.request.contextPath}/ti-gia/luu-ti-gia')">Lưu</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+	
 	<script>
 		function login(){
 			$("#errorMessage").html("");
@@ -132,5 +158,32 @@
 		    if(event.keyCode == 13){
 		        $("#loginBtn").click();
 		    }
+		}
+		
+		function updateMoneyRate() {
+			$("#saveError").html("");
+			$("#money-rate-modal").modal("show");
+			$("#money_rate").val($("#moneyRate").html());
+		}
+		
+		function saveMoneyRate(url) {
+			$.ajax({
+				type : "GET",
+				url : url+'?value='+$('#money_rate').val(),
+				success : function(response) {
+					if (response.status == 0) {
+						$("#saveError").html(response.message);
+						$('#money_rate').forcus();
+						return;
+					}
+					$("#moneyRate").html($('#money_rate').val());
+					$("#money-rate-modal").modal("hide");
+				},
+				error : function(response) {
+					$("#saveError").html(response);
+					$('#money_rate').forcus();
+				}
+			
+			});
 		}
 	</script>

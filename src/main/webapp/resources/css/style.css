@@ -198,5 +198,6 @@ td.myLabel {
 
 .modal-header {
 	background-color: #afaf8f;
+	border-radius: 1px;
 }
 

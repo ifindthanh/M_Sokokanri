@@ -9,4 +9,6 @@ public interface MoneyExchangeDAO {
 	public MoneyExchange getMoneyExchange() throws SokokanriException;
 
 	public void add(MoneyExchange moneyExchange) throws SokokanriException;
+	
+	public void save(MoneyExchange moneyExchange) throws SokokanriException;
 }

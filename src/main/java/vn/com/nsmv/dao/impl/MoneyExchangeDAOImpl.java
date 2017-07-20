@@ -56,4 +56,14 @@ public class MoneyExchangeDAOImpl implements MoneyExchangeDAO {
 		
 	}
 
+    public void save(MoneyExchange moneyExchange) throws SokokanriException {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            moneyExchange.setCreateDate(new Date());
+            session.saveOrUpdate(moneyExchange);
+        } catch (Exception ex) {
+            throw new SokokanriException(ex);
+        }
+    }
+
 }
