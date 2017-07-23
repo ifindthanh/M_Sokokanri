@@ -34,7 +34,7 @@
 											<h3>Tạo đơn  hàng từ file</h3>
 											<span>Bạn có thể soạn thảo đơn hàng ra file excel sau đó tải file lên để tạo đơn hàng tương ứng</span>
 											<br/>
-											<span>File bạn chọn phải đúng cấu trúc và định dạng như <a href="../../resources/template/template.xlsx" download >file mẫu</a></span>
+											<span>File bạn chọn phải đúng cấu trúc và định dạng như <a href="../resources/template/template.xlsx" download >file mẫu</a></span>
 										</div>
 												<div class="form-group">
 													<!-- MyUploadForm -->

@@ -17,7 +17,6 @@
 
 	<mvc:annotation-driven />
 	<task:annotation-driven />
-	<bean id="liveMoneyExchanging" class="vn.com.nsmv.bean.LiveMoneyExchange"></bean>
 <!-- 	<bean id="registerValidator" class="vn.com.nsmv.validator.RegisterValidator" /> -->
 	<mvc:interceptors>
 		<bean id="localeChangeInterceptor"

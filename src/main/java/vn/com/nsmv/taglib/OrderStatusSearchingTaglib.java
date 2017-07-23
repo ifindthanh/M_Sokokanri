@@ -7,8 +7,6 @@ import javax.servlet.jsp.JspWriter;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import vn.com.nsmv.common.Constants;
-import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.i18n.SokokanriMessage;
 
 public class OrderStatusSearchingTaglib extends AbstractTaglib {
@@ -16,14 +14,15 @@ public class OrderStatusSearchingTaglib extends AbstractTaglib {
 
     @Override
     protected void printUI(JspWriter writer) throws IOException {
+        Locale locale = LocaleContextHolder.getLocale();
         writer.write("<select class=\"selectpicker form-control inputstl\" style=\"width:auto;\" name=\"status\">");
-        writer.write("<option value= \"999\">Tất cả</option>");
+        writer.write("<option value= \"999\">"+SokokanriMessage.getLabelAll(locale)+"</option>");
         
         writer.write("<option value = \"0\"");
         if (this.status == 0) {
             writer.write("selected");   
         }
-        Locale locale = LocaleContextHolder.getLocale();
+        
         writer.write(" >" + SokokanriMessage.getLabelWaitingToApproval(locale) + "</option>");
         
         writer.write("<option value = \"1\"");

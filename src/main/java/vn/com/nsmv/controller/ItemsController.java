@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +30,7 @@ import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
+import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.UploadBean;
 import vn.com.nsmv.service.OrdersService;
 
@@ -39,25 +41,46 @@ public class ItemsController {
 	@Autowired
 	private OrdersService ordersService;
 	
+	@RequestMapping(value = "/donhang/xem-don-hang/{orderId}", method=RequestMethod.GET)
+    public ModelAndView viewOrderInformation(HttpServletRequest request, Model model, @PathVariable Long orderId) {
+        try {
+            Item item = this.ordersService.getItem(orderId);
+            if (item == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(LocaleContextHolder.getLocale()));
+            }
+            if (Utils.isUser()) {
+                if (!item.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+                    throw new SokokanriException(SokokanriMessage.getMessageErrorNoPermissionInOrder(LocaleContextHolder.getLocale()));
+                }
+            }
+            model.addAttribute("item", item);
+            return new ModelAndView("/orders/itemDetails");
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+            return new ModelAndView("/orders/errorInAjax");
+        }
+        
+    }
+	
 	@RequestMapping(value = "/donhang/{orderId}", method=RequestMethod.GET)
 	public ModelAndView viewAnOrder(HttpServletRequest request, Model model, @PathVariable Long orderId) {
 		try {
-			Item item = this.ordersService.getItem(orderId);
-			if (item == null) {
-				throw new SokokanriException("Đơn hàng không tồn tại");
+			Category category = this.ordersService.getCategory(orderId);
+			if (category == null) {
+				throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(LocaleContextHolder.getLocale()));
 			}
 			if (Utils.isUser()) {
-				if (!item.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
-					throw new SokokanriException("Bạn không được phép thao tác với đơn hàng này");
+				if (!category.getUser().getId().equals(((CustomUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+				    throw new SokokanriException(SokokanriMessage.getMessageErrorNoPermissionInOrder(LocaleContextHolder.getLocale()));
 				}
 			}
 			
 			boolean readOnly = !(Utils.hasRole(Constants.ROLE_A) || Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_U) 
-			    || (Utils.isUser() && item.getStatus() != null && item.getStatus() == 0 ));
+			    || (Utils.isUser() && category.getStatus() != null && category.getStatus() == 0 ));
 			
 			model.addAttribute("read_only", Boolean.valueOf(readOnly));
-			model.addAttribute("item", item);
-			return new ModelAndView("/orders/itemDetails");
+			model.addAttribute("category", category);
+			return new ModelAndView("/orders/orderDetail");
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 			model.addAttribute("category",  new Category());
@@ -65,6 +88,7 @@ public class ItemsController {
 		}
 		
 	}
+	
 	
 	@RequestMapping(value = "/donhang/xoa-item", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> deleteItem(HttpServletRequest request, Model model, @RequestParam Long id) {

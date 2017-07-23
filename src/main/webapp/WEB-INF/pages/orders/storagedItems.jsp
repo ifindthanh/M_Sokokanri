@@ -7,12 +7,12 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="chkbox" uri="/WEB-INF/taglibs/commonCheckbox.tld" %>
-<%@ taglib prefix="order" uri="/WEB-INF/taglibs/orderStatusTaglib.tld" %>
 <%@ taglib prefix="chkbox2" uri="/WEB-INF/taglibs/checkboxStatusTaglib.tld" %>
+<%@ taglib prefix="id" uri="/WEB-INF/taglibs/idFormatterTaglib.tld" %>
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Đơn hàng đã nhập kho</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -41,31 +41,47 @@
 	</div>
 	<div id="page_content">
 		<p class="error">${message }</p>
-		<form action="da-nhap-kho" method="POST">
-			<div class="row" style="height: 150px">
-				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Mã hóa đơn: </label>
-					<div class="col-xs-4">
-						<input type="hidden" name="status" value="${ searchCondition.status}" />
-						<input type="text" name= "billId" value="${ searchCondition.billId}" class="form-control">
-					</div>
-					<div>
-						<button type="submit" class="btn btn-primary">
-							<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
-						</button>
-					</div>
+		<form action="da-nhap-kho" method="POST" id="storagedForm">
+			<div class="row">
+				<label class="col-xs-2 right_align top_margin_5">Mã hóa đơn: </label>
+				<div class="col-xs-4">
+					<select name="bills" multiple="multiple"
+						class="selectpicker form-control inputstl" onchange="search()">
+						<option value="" data-hidden = "true">Chọn mã mua hàng</option>
+						<c:forEach var="billId" items="${billIDs}" varStatus="status">
+							<option value="${billId }"
+								<c:if test="${searchCondition.bills.contains(billId)}">selected</c:if>>
+								<id:formatter id="${billId }" />
+							</option>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
+			<input type="hidden" name="status" value = "${searchCondition.status }" />
+			<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+				<div class="col-sm-12 action_container">
+					<div class="col-sm-2">
+						<div class="dropdown">
+						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+						  <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+									<li><a onclick="approvalExportBill()">Đã xuất hóa đơn</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</sec:authorize>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+								<th><input type="checkbox" onchange="selectAllItems(this, 'nhap-kho')" /></th>
+							</sec:authorize>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
 							<th>Tổng tiền thực tế</th>
 							<th></th>
 						</tr>
@@ -73,9 +89,12 @@
 					<tbody>
 						<c:forEach var="bill" items="${allBills}" varStatus="status">
 							<tr>
-								<td>
-									<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action=""/>
-								</td>
+								<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+									<td>
+										<chkbox2:chbox item="${bill.id }" selectedItems="${selectedItems}" action="nhap-kho"/>
+									</td>
+								</sec:authorize>
+								
 								<td rowspan="${bill.items.size()+1}">${bill.getFormattedId()}</td>
 								<td>
 									<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
@@ -88,30 +107,31 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td></td>
 							</tr>
 							<c:forEach var="item" items="${bill.items}" varStatus="itemstatus">
 								<tr>
 									<td style="display:none"></td>
-									<td></td>
+									<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+										<td></td>
+									</sec:authorize>
 									<td>
+										<c:set var="link_action" scope="page" value="onclick = 'viewOrder(${item.id })' style='cursor: pointer'"></c:set>
+										<sec:authorize access="hasRole('ROLE_A')">
+											<c:set var="link_action" scope="page" value="href = 'admin/${item.id }'"></c:set>
+										</sec:authorize>
+										<a ${link_action }>${item.getFormattedId() }</a>
 									</td>
 									<td>${item.transferId}</td>
 									<td>
 										${item.user.fullname}
 									</td>
 									<td>
-										<order:status status="${item.status }"/>
+										${item.getComputePrice() }
 									</td>
 									<td>
-										${item.getRealPrice() }
-									</td>
-									<td>
-										<a href="${item.id }"><i class="fa fa-info"
-											aria-hidden="true"></i> View</a>
-										<sec:authorize access="hasRole('ROLE_A')">
-											/ <a href="admin/${item.id }"><i class="fa"
-											aria-hidden="true"></i> Detail </a>
+										<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
+											<a onclick="removeFromBill(${item.id})" class="myBtn"><i class="fa fa-times" title="Xóa đơn hàng khỏi hóa đơn"
+												aria-hidden="true"></i> </a>
 										</sec:authorize>
 									</td>
 									
@@ -128,13 +148,6 @@
 					uri="${pageContext.request.contextPath}/donhang/da-nhap-kho"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approvalExportBill()">
-						<i class="fa" aria-hidden="true" ></i> Đã xuất hóa đơn
-					</button>
-				</div>
-			</sec:authorize>
 		</form>
 	</div>
 	
@@ -148,7 +161,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Thông tin hóa đơn</h4>
+					<h4 class="modal-title">Thông tin đơn hàng</h4>
 				</div>
 				<div class="modal-body">
 					<div id="content" ></div>
@@ -157,6 +170,28 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" onclick="exportBill()">Xuất ra file</button>
 					<button type="button" class="btn btn-default" onclick="printBill()">In hóa đơn</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Thông tin đơn hàng</h4>
+				</div>
+				<div class="modal-body">
+					<div id="order_detail"></div>
+				</div>
+				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -173,6 +208,7 @@
     <script src="<c:url value="/resources/js/dialogbox.js"/>"></script>
     <script src="<c:url value="/resources/js/jquery.freezeheader.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery.dataTables.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
 	
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
@@ -195,60 +231,6 @@
  	   	});
 		
     });
-    
-    function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-    function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "nhap-kho/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
     
 	function approval(id){
 		$.ajax({
@@ -302,6 +284,17 @@
     		window.location.href = "da-xuat-hoa-don"; 
     	}
 		
+	}
+	
+	function removeFromBill(id){
+		var check = confirm("Bạn có thật sự muốn bỏ đơn hàng này khỏi hóa đơn?");
+    	if (check) {
+    		window.location.href = "bo-khoi-hd/"+id; 
+    	}
+	}
+	
+	function search() {
+		$("#storagedForm").submit();
 	}
 	
 </script>

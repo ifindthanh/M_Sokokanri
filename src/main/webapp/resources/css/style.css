@@ -161,10 +161,43 @@ tr:hover > td.myLabel {
 	background-color: #a2adbf;
 }
 
+td.myLabel {
+	background-color: #d2d5da;
+}
+
 .table_container {
 	width: 99%;
 	margin: 0 auto;
 	padding-left: 0px;
 	padding-top: 0px;
+}
+
+.footer {
+	margin-top: 15px;
+	margin-top: 0px;
+	height: 50px;
+}
+
+.action_container {
+	padding-top: 20px;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	
+}
+
+.total_container {
+	padding: 20px; 
+	float: right; 
+	margin-right: 20px;
+	text-align: right;
+}
+
+.modal-content {
+	border-radius: 1px;
+}
+
+.modal-header {
+	background-color: #afaf8f;
+	border-radius: 1px;
 }
 

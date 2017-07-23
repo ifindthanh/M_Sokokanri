@@ -68,6 +68,9 @@
 				<c:if test="${listType == 8}">
 					<c:set var = "cancelLink" value = "../da-xuat-hd"></c:set>
 				</c:if>
+				<c:if test="${listType == 9}">
+					<c:set var = "cancelLink" value = "../da-hoan-thanh"></c:set>
+				</c:if>
 				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
 				</div>
 				<table id="tableList" class="listBusCard table" width="600px">
@@ -147,7 +150,7 @@
 							<td>${category.getInformer() }</td>
 						</tr>
 						<tr class="headings" role="row">
-							<td>Ngày kiểm hàng</td>
+							<td>Ngày báo giá</td>
 							<td><fmt:formatDate value="${category.getInformedDate()}" />
 							</td>
 						</tr>

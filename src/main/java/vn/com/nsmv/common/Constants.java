@@ -19,6 +19,7 @@ public final class Constants
 	public static final String ROLE_U = "ROLE_U";
 	public static final String ROLE_T1 = "ROLE_T1";
 	public static final String ROLE_T2 = "ROLE_T2";
+	public static final String ROLE_BG = "ROLE_BG";
 	public static String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 	public static String URL_PATTERN = "^(http://|https://)?(www.)?([a-zA-Z0-9-_]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$";
@@ -62,7 +63,6 @@ public final class Constants
 	public static final String SPACE = " ";
 	public static final String SPACE_68 = "                                                                    ";
 	public static final String NON_SET_SUKKAYOTEIBI = "00000000";
-	public static final String ROLE_BG = "BG";
 	
 
 	public static class PHONE_TYPE

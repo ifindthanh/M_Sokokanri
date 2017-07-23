@@ -6,7 +6,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "BRAND")
+@Table(name = "brand")
 public class VBrand implements java.io.Serializable
 {
 

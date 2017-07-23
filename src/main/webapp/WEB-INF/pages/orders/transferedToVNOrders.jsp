@@ -79,26 +79,30 @@
 				</div>
 			</div>
 			<input type="hidden" name="status" value = "${searchCondition.status }" />
-			<div class="col-sm-12">
-				<div class="col-sm-2">
-					<div class="dropdown">
-					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
-					  <span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+			<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+				<div class="col-sm-12 action_container">
+					<div class="col-sm-2">
+						<div class="dropdown">
+						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+						  <span class="caret"></span></button>
+							<ul class="dropdown-menu">
 								<li><a onclick="approval()">Nhập kho</a></li>
-							</sec:authorize>
-							<li><a onclick="cancelOrders('da-chuyen-vn/huy-don-hang')">Hủy đơn hàng</a></li>
-							<li><a onclick="deleteOrders('da-chuyen-vn/xoa-don-hang')">Xóa đơn hàng</a></li>
-						</ul>
+								<sec:authorize access="hasRole('ROLE_A')">
+									<li><a onclick="cancelOrders('da-chuyen-vn/huy-don-hang')">Hủy đơn hàng</a></li>
+									<li><a onclick="deleteOrders('da-chuyen-vn/xoa-don-hang')">Xóa đơn hàng</a></li>
+								</sec:authorize>
+							</ul>
+						</div>
 					</div>
 				</div>
-			</div>
+			</sec:authorize>
 			<div class="table_container">
 				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-duyet')" /></th>
+							<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+								<th><input type="checkbox" onchange="selectAllItems(this, 'da-chuyen-vn')" /></th>
+							</sec:authorize>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -108,12 +112,12 @@
 							<th style="width: 50px">Đơn giá</th>
 							<th style="width: 50px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
-							<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
-								<th style="width: 50px">Giá mua</th>
-								<th style="width: 50px">Số lượng mua</th>
-								<th style="width: 100px">Tiền thực mua</th>
-								<th style="width: 50px">Đơn giá tính tiền</th>
-								<th style="width: 100px">Tiền để tính</th>
+							<th style="width: 50px">Đơn giá mua</th>
+							<th style="width: 50px">Số lượng mua</th>
+							<th style="width: 100px">Thành tiền</th>
+							<sec:authorize access="hasRole('ROLE_A')">
+								<th style="width: 50px">Thực mua</th>
+								<th style="width: 100px">Thành tiền</th>
 							</sec:authorize>
 							<th style="width: 100px">Mã mua hàng</th>
 							<th style="width: 100px">Vận đơn</th>
@@ -123,8 +127,10 @@
 					<tbody>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
-								<td class="fixed"><chkbox2:chbox item="${item.id }"
-										selectedItems="${selectedItems}" action="cho-mua" /></td>
+								<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+									<td class="fixed"><chkbox2:chbox item="${item.id }"
+											selectedItems="${selectedItems}" action="da-chuyen-vn" /></td>
+								</sec:authorize>
 								<td class="fixed">
 									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
 									${item.formattedId} </div>
@@ -160,16 +166,29 @@
 									value="${item.total }"
 									class="form-control hiddenAction txtTotal" disabled="disabled" />
 								</td>
-								<sec:authorize access="hasAnyRole('ROLE_K', 'ROLE_A')">
+								<td>
+									<div class="lblComputeCost">${item.computeCost }</div> <input
+									type="number" value="${item.computeCost }"
+									onchange="computeMoneyFromRealCost(this)"
+									class="small_width form-control hiddenAction txtComputeCost" />
+								</td>
+								<td>
+									<div class="lblRealQuantity">${item.realQuantity }</div> <input
+									type="number" value="${item.realQuantity}"
+									onchange="computeMoneyFromRealQuantity(this)"
+									class="small_width form-control hiddenAction txtRealQuantity" />
+								</td>
+								<td>
+									<div class="lblComputePrice">${item.computePrice }</div> <input
+									type="text" value="${item.computePrice}"
+									class="form-control hiddenAction txtComputePrice"
+									disabled="disabled" />
+								</td>
+								<sec:authorize access="hasRole('ROLE_A')">
 									<td>
 										<div class="lblRealCost">${item.realCost }</div> <input
 										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
 										class="small_width form-control hiddenAction txtRealCost" />
-									</td>
-									<td>
-										<div class="lblRealQuantity">${item.realQuantity }</div> <input
-										type="number" value="${item.realQuantity}" onchange="computeMoneyFromRealQuantity(this)"
-										class="small_width form-control hiddenAction txtRealQuantity" />
 									</td>
 									<td>
 										<div class="lblRealPrice">${item.realPrice }</div> 
@@ -177,17 +196,7 @@
 										class="form-control hiddenAction txtRealPrice"
 										disabled="disabled" />
 									</td>
-									<td>
-										<div class="lblComputeCost">${item.computeCost }</div> 
-										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
-										class="small_width form-control hiddenAction txtComputeCost" />
-									</td>
-									<td>
-										<div class="lblComputePrice">${item.computePrice }</div> 
-										<input type="text" value="${item.computePrice}"
-											class="form-control hiddenAction txtComputePrice"
-											disabled="disabled" />
-									</td>
+									
 								</sec:authorize>
 								<td>
 									<div class="lblBuyingCode">${item.buyingCode }</div> 
@@ -250,66 +259,16 @@
     });
     
 	function approval(){
+		if ($('.order_id:checkbox:checked').length == 0) {
+			alert("Vui lòng chọn đơn hàng.");
+			return;
+		}
 		var check = confirm("Thao tác này không thể hoàn lại, bạn có muốn tiến hành nhập kho cho tất cả các đơn hàng?");
     	if (check) {
     		window.location.href = "nhap-kho";
     	}
 	}
 	
-	function selectItem(id, element) {
-    	var chkbox = $(element);
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/bo-chon-don-hang?id=" + id,
-    			success : function(result) {
-    			},
-    			error : function() {
-    			}
-    		});
-    	}
-    }
-    
-    function selectAllItems(element) {
-		var chkbox = $(element);
-		var ids = "";
-		$(".order_id").each(function (){
-			$(this).prop('checked', chkbox.is(':checked'));
-			ids += $(this).attr("order_id")+",";
-		})
-    	if (chkbox.is(':checked')) {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    			}
-    		});
-    	} else {
-    		$.ajax({
-    			type : "GET",
-    			url : "da-chuyen-vn/bo-chon-tat-ca?ids="+ids,
-    			success : function(result) {
-    				
-    			},
-    			error : function() {
-    				
-    			}
-    		});
-    	}
-    }
-    
     function search(){
     	$("#allOrdersForm").submit();
     }

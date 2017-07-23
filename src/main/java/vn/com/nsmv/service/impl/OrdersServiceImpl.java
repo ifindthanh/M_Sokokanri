@@ -2,10 +2,10 @@ package vn.com.nsmv.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.com.nsmv.bean.CustomUser;
+import vn.com.nsmv.bean.SettingMoneyRate;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
@@ -37,6 +39,7 @@ import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.entity.ItemHistory;
 import vn.com.nsmv.entity.User;
+import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.javabean.SortCondition;
 import vn.com.nsmv.javabean.UploadBean;
@@ -46,6 +49,8 @@ import vn.com.nsmv.service.OrdersService;
 @EnableTransactionManagement
 public class OrdersServiceImpl implements OrdersService {
 
+
+    private Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private ItemDAO itemDAO;
     @Autowired
@@ -80,12 +85,13 @@ public class OrdersServiceImpl implements OrdersService {
             hasRecord = true;
             item.setCategory(category);
             item.setUser(user);
+            item.setStatus(0);
             this.itemDAO.add(item);
         }
         if (hasRecord) {
             return categoryId;
         }
-        throw new SokokanriException("Đơn hàng phải có ít nhất 1 sản phẩm");
+        throw new SokokanriException(SokokanriMessage.getMessageErrorProvideAtLeastOneItem(this.locale));
     }
 
     @Transactional
@@ -117,10 +123,11 @@ public class OrdersServiceImpl implements OrdersService {
                 continue;
             }
             item.setCategory(category);
+            item.setUser(user);
             if (item.getId() == null) {
                 this.itemDAO.add(item);
             } else {
-                this.itemDAO.saveOrUpdate(item);
+                this.saveItem(item);
             }
         }
     }
@@ -129,10 +136,10 @@ public class OrdersServiceImpl implements OrdersService {
     public void deleteItemById(Long id) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Item không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         if (item.getCategory().getStatus() != 0 && item.getCategory().getStatus() != -1) {
-            throw new SokokanriException("Đơn hàng đã được duyệt, không thể xóa đơn hàng.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderIsApprovedCannotDelete(locale));
         }
         this.itemDAO.deleteById(id);
     }
@@ -168,10 +175,10 @@ public class OrdersServiceImpl implements OrdersService {
     private void approveAnOrder(Long id) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Đơn hàng không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         if (item.getStatus() == null || (item.getStatus() != 0 && item.getStatus() != -1)) {
-            throw new SokokanriException("Không thể duyệt đơn hàng đã chọn.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotApproveSelectedOrder(locale));
         }
         item.setApprovalNote("");
         item.setApprover(
@@ -192,10 +199,10 @@ public class OrdersServiceImpl implements OrdersService {
     public void noteAnOrder(Long id, String content) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Đơn hàng không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         if (item.getStatus() == null || (item.getStatus() != 0 && item.getStatus() != -1)) {
-            throw new SokokanriException("Không thể ghi chú đơn hàng đã chọn.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotNoteSelectedOrder(locale));
         }
         item.setApprovalNote(content);
         item.setStatus(-1);
@@ -219,10 +226,10 @@ public class OrdersServiceImpl implements OrdersService {
     public void noteABuyingOrder(Long id, String content) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Đơn hàng không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         if (item.getStatus() == null || (item.getStatus() != 1 && item.getStatus() != -2)) {
-            throw new SokokanriException("Không thể ghi chú đơn hàng đã chọn.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotNoteSelectedOrder(locale));
         }
         item.setApprovalNote(content);
         item.setBuyer(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
@@ -240,10 +247,10 @@ public class OrdersServiceImpl implements OrdersService {
     private void transferAnOrder(Long id) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Đơn hàng không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         if (item.getStatus() == null || (item.getStatus() != 2)) {
-            throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(locale));
         }
         item.setTransported(
             ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
@@ -271,10 +278,10 @@ public class OrdersServiceImpl implements OrdersService {
     private void transferAnOrderToVN(Long id, String tranferID) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Đơn hàng không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         if (item.getStatus() == null || (item.getStatus() != 3)) {
-            throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(locale));
         }
         item.setStatus(4);
         item.setTransporterVn(
@@ -307,42 +314,45 @@ public class OrdersServiceImpl implements OrdersService {
     public String exportBill(Long selectedItem, boolean toWeb) throws SokokanriException {
         Bill bill = this.billDAO.getById(selectedItem);
         if (bill == null || bill.getItems() == null || bill.getItems().isEmpty()) {
-            throw new SokokanriException("Hóa đơn không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorBillNotExist(locale));
         }
-        StringBuilder content = new StringBuilder("Chi tiết hóa đơn :" + Utils.getFormattedId(bill.getId(), 7));
-        String breakLine = System.lineSeparator();
+        StringBuilder content = new StringBuilder(SokokanriMessage.getLabelBillDetail(Utils.getFormattedId(bill.getId(), 7), locale));
+        String breakLine = "\r\n";
         if (toWeb) {
             breakLine = "<br />";
         }
         content.append(breakLine);
-        content.append("Tên khách hàng: " + bill.getItems().get(0).getUser().getFullname());
+        content.append(SokokanriMessage.getLabelNameOfCustomer(bill.getItems().get(0).getUser().getFullname(), locale));
         content.append(breakLine);
-        content.append(String.format("%70s", "").replaceAll(" ", "="));
+        content.append(String.format("%50s", "").replaceAll(" ", "="));
         content.append(breakLine);
         double total = 0;
         for (Item item : bill.getItems()) {
-            content.append("Đơn hàng: " + item.getFormattedId());
-            content.append(breakLine);
             if (toWeb) {
                 content.append(String.format("%-50s", item.getName() + ":").replaceAll(" ", "&nbsp;"));
+                content.append(breakLine);
+                content.append(String.format("%50s", item.getComputePrice()).replaceAll(" ", "&nbsp;"));
             } else {
                 content.append(String.format("%-50s", item.getName() + ":"));
+                content.append(breakLine);
+                content.append(String.format("%50s", item.getComputePrice()));
             }
-            content.append(item.getRealPrice());
+            
             content.append(breakLine);
             total += item.getRealPrice();
         }
         content.append(breakLine);
-        content.append(String.format("%70s", "").replaceAll(" ", "-"));
-        content.append(breakLine);
-        content.append(String.format("%70s", "").replaceAll(" ", "="));
+        content.append(String.format("%50s", "").replaceAll(" ", "="));
         content.append(breakLine);
         if (toWeb) {
-            content.append(String.format("%-50s", "Tổng tiền:").replaceAll(" ", "&nbsp;"));
+            content.append(String.format("%-50s", SokokanriMessage.getLabelTotalPrice(locale)).replaceAll(" ", "&nbsp;"));
+            content.append(breakLine);
+            content.append(String.format("%50s", total).replaceAll(" ", "&nbsp;"));
         } else {
-            content.append(String.format("%-50s", "Tổng tiền:"));
+            content.append(String.format("%-50s", SokokanriMessage.getLabelTotalPrice(locale)));
+            content.append(breakLine);
+            content.append(String.format("%50s", total));
         }
-        content.append(total);
         content.append(breakLine);
         return content.toString();
     }
@@ -352,11 +362,11 @@ public class OrdersServiceImpl implements OrdersService {
         for (Long billId : selectedItems) {
             Bill bill = this.billDAO.getById(billId);
             if (bill == null) {
-                throw new SokokanriException("Hóa đơn không tồn tại");
+                throw new SokokanriException(SokokanriMessage.getMessageErrorBillNotExist(locale));
             }
             for (Item item : bill.getItems()) {
                 if (item.getStatus() == null || (item.getStatus() != 5)) {
-                    throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+                    throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(locale));
                 }
                 item.setStatus(6);
                 item.setInformer(
@@ -381,7 +391,7 @@ public class OrdersServiceImpl implements OrdersService {
             } else if (uploadFile.getOriginalFilename().endsWith("xlsx")) {
                 workbook = new XSSFWorkbook(byteArrayInputStream);
             } else {
-                throw new SokokanriException("File vừa chọn không phải là excel file.");
+                throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidExcel(locale));
             }
             Sheet firstSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = firstSheet.iterator();
@@ -400,6 +410,7 @@ public class OrdersServiceImpl implements OrdersService {
             category.setCity(uploadBean.getCity());
             category.validate();
             Long result = categoryDAO.add(category);
+            boolean hasResult = false;
             while (iterator.hasNext()) {
 
                 Row nextRow = iterator.next();
@@ -419,7 +430,7 @@ public class OrdersServiceImpl implements OrdersService {
                                 break;
                             }
                             if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
-                                throw new SokokanriException("Tên sản phẩm không hợp lệ");
+                                throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidName(locale));
                             }
                             item.setName(cell.getStringCellValue());
                             break;
@@ -429,7 +440,7 @@ public class OrdersServiceImpl implements OrdersService {
                                 break;
                             }
                             if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
-                                throw new SokokanriException("Nhà phân phối sản phẩm không hợp lệ");
+                                throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidBrand(locale));
                             }
                             item.setBrand(cell.getStringCellValue());
                             break;
@@ -438,7 +449,7 @@ public class OrdersServiceImpl implements OrdersService {
                                 break;
                             }
                             if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
-                                throw new SokokanriException("Đường link của sản phẩm không hợp lệ");
+                                throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidLink(locale));
                             }
                             item.setLink(cell.getStringCellValue());
                             break;
@@ -447,7 +458,7 @@ public class OrdersServiceImpl implements OrdersService {
                                 break;
                             }
                             if (!cell.getCellTypeEnum().equals(CellType.STRING)) {
-                                throw new SokokanriException("Ghi chú của sản phẩm không hợp lệ");
+                                throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidNote(locale));
                             }
                             item.setDescription(cell.getStringCellValue());
                             break;
@@ -456,7 +467,7 @@ public class OrdersServiceImpl implements OrdersService {
                                 break;
                             }
                             if (!cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
-                                throw new SokokanriException("Đơn giá của sản phẩm không hợp lệ");
+                                throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidCost(locale));
                             }
                             item.setCost(cell.getNumericCellValue());
                             break;
@@ -470,7 +481,7 @@ public class OrdersServiceImpl implements OrdersService {
                                 int quantity = Integer.parseInt(value);
                                 item.setQuantity(quantity);
                             } catch (Exception ex) {
-                                throw new SokokanriException("Số lượng phải là số nguyên");
+                                throw new SokokanriException(SokokanriMessage.getMessageErrorQuantityMustGtZero(locale));
                             }
                             break;
                         default:
@@ -483,13 +494,17 @@ public class OrdersServiceImpl implements OrdersService {
                     continue;
                 }
                 item.validate();
-                item.setTotal(item.getQuantity() * item.getCost());
+                item.setTotal(item.getQuantity() * item.getCost()  * SettingMoneyRate.VALUE);
                 item.setUser(user);
                 item.setStatus(0);
+                hasResult = true;
                 this.itemDAO.add(item);
             }
 
             workbook.close();
+            if (!hasResult) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorNoOrderInFile(locale));
+            }
             return result;
         } catch (IOException ex) {
             throw new SokokanriException(ex);
@@ -508,11 +523,11 @@ public class OrdersServiceImpl implements OrdersService {
         for (Long billId : selectedItems) {
             Bill bill = this.billDAO.getById(billId);
             if (bill == null) {
-                throw new SokokanriException("Hóa đơn không tồn tại");
+                throw new SokokanriException(SokokanriMessage.getMessageErrorBillNotExist(locale));
             }
             for (Item item : bill.getItems()) {
                 if (item.getStatus() == null || (item.getStatus() != 6)) {
-                    throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+                    throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(locale));
                 }
                 item.setStatus(7);
                 this.itemDAO.saveOrUpdate(item);
@@ -526,12 +541,12 @@ public class OrdersServiceImpl implements OrdersService {
         for (Long billId : selectedItems) {
             Bill bill = this.billDAO.getById(billId);
             if (bill == null) {
-                throw new SokokanriException("Hóa đơn không tồn tại");
+                throw new SokokanriException(SokokanriMessage.getMessageErrorBillNotExist(locale));
             }
 
             for (Item item : bill.getItems()) {
                 if (item.getStatus() == null || (item.getStatus() != 7)) {
-                    throw new SokokanriException("Không thể chuyển trạng thái đơn hàng đã chọn.");
+                    throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(locale));
                 }
                 item.setStatus(8);
                 this.itemDAO.saveOrUpdate(item);
@@ -545,13 +560,6 @@ public class OrdersServiceImpl implements OrdersService {
         for (Long id : selectedItems) {
             this.categoryDAO.deleteOrder(id);
         }
-
-        Comparator<Map<String, Object>> mapComparator = new Comparator<Map<String, Object>>() {
-
-            public int compare(Map<String, Object> m2, Map<String, Object> m1) {
-                return ((String) m1.get("Foo").toString()).compareTo((String) m2.get("Foo").toString());
-            }
-        };
     }
 
     @Transactional
@@ -569,7 +577,7 @@ public class OrdersServiceImpl implements OrdersService {
         Long id = item.getId();
         Item destinationItem = this.itemDAO.findById(id);
         if (destinationItem == null) {
-            throw new SokokanriException("Item không tồn tại");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         destinationItem.setName(item.getName());
         destinationItem.setBrand(item.getBrand());
@@ -577,15 +585,15 @@ public class OrdersServiceImpl implements OrdersService {
         destinationItem.setDescription(item.getDescription());
         destinationItem.setQuantity(item.getQuantity());
         destinationItem.setCost(item.getCost());
-        destinationItem.setTotal(item.getQuantity() * item.getCost());
+        destinationItem.setTotal(item.getQuantity() * item.getCost() * SettingMoneyRate.VALUE);
         destinationItem.setRealCost(item.getRealCost());
         destinationItem.setRealQuantity(item.getRealQuantity());
         if (item.getRealCost() != null && item.getRealQuantity() != null) {
-            destinationItem.setRealPrice(item.getRealCost() * item.getRealQuantity());
+            destinationItem.setRealPrice(item.getRealCost() * item.getRealQuantity() * SettingMoneyRate.VALUE);
         }
         destinationItem.setComputeCost(item.getComputeCost());
         if (item.getComputeCost() != null && item.getRealQuantity() != null) {
-            destinationItem.setComputePrice(item.getComputeCost() * item.getRealQuantity());
+            destinationItem.setComputePrice(item.getComputeCost() * item.getRealQuantity() * SettingMoneyRate.VALUE);
         }
         destinationItem.setBuyingCode(item.getBuyingCode());
         this.itemDAO.saveOrUpdate(destinationItem);
@@ -636,7 +644,7 @@ public class OrdersServiceImpl implements OrdersService {
     public void removeNote(Long id) throws SokokanriException {
         Item item = this.itemDAO.findById(id);
         if (item == null) {
-            throw new SokokanriException("Đơn hàng không tồn tại.");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
         }
         item.setStatus(0);
         item.setApprovalNote("");
@@ -652,18 +660,19 @@ public class OrdersServiceImpl implements OrdersService {
                 continue;
             }
             if (item.getRealCost() == null) {
-                throw new SokokanriException("Đơn giá mua của đơn " + item.getFormattedId() + " không được để trống");
+                throw new SokokanriException(SokokanriMessage.getMessageErrorCostCannotBeEmptyWithParam(item.getFormattedId(), locale));
             }
             if (item.getRealQuantity() == null) {
                 throw new SokokanriException(
-                    "Số lượng thực mua của đơn " + item.getFormattedId() + " không được để trống");
+                    SokokanriMessage.getMessageErrorQuantityCannotBeEmptyWithParam(item.getFormattedId(), locale));
             }
             if (item.getComputeCost() == null) {
                 throw new SokokanriException(
-                    "Đơn giá tính tiền của đơn " + item.getFormattedId() + " không được để trống");
+                    SokokanriMessage.getMessageErrorCostCannotBeEmptyWithParam(item.getFormattedId(), locale));
             }
             if (Utils.isEmpty(item.getBuyingCode())) {
-                throw new SokokanriException("Mũa mua hàng của đơn " + item.getFormattedId() + " không được để trống");
+                throw new SokokanriException(
+                    SokokanriMessage.getMessageErrorBuydingCodeCannotBeEmpty(item.getFormattedId(), locale));
             }
             item.setStatus(2);
             item.setBuyer(
@@ -673,6 +682,32 @@ public class OrdersServiceImpl implements OrdersService {
 
         }
 
+    }
+
+    @Transactional
+    public Long removeFromBill(Long itemId) throws SokokanriException {
+        Item item = this.itemDAO.findById(itemId);
+        if (item == null) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorOrderNotExist(locale));
+        }
+        Bill bill = item.getBill();
+        Long billId = null;
+        if (bill.getItems().size() == 1) {
+            billId = bill.getId();
+            this.billDAO.deleteBill(bill.getId());
+        }
+        //roll back the status of item to transferred to VN
+        item.setBill(null);
+        item.setStatus(4);
+        item.setCheckedDate(null);
+        item.setChecker(null);
+        this.itemDAO.saveOrUpdate(item);
+        return billId;
+    }
+
+    @Transactional
+    public List<Long> getAllBillIDs(SearchCondition searchCondition) throws SokokanriException {
+        return this.billDAO.getAllBillIDs(searchCondition);
     }
 
 

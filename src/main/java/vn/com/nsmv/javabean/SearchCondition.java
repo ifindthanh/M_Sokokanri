@@ -15,7 +15,8 @@ public final class SearchCondition
 	
 	private List<String> brands = new ArrayList<String>();
 	private List<String> buyingCodes = new ArrayList<String>();
-	private List<String> transferIds;
+	private List<String> transferIds = new ArrayList<String>();
+	private List<Long> bills = new ArrayList<Long>();
 	private Integer status = 999;
 	private Long userId;
 	private String customerName; 
@@ -82,6 +83,12 @@ public final class SearchCondition
         {
             searching.append(" and buyingCode in :buyingCodes");
             params.put("buyingCodes", this.buyingCodes);
+        }
+		
+		if (this.bills != null && !this.bills.isEmpty())
+        {
+            searching.append(" and billId in :bills");
+            params.put("bills", this.bills);
         }
 		
 		if (this.userId != null) {
@@ -272,5 +279,16 @@ public final class SearchCondition
     public void setTransferIds(List<String> transferIds) {
         this.transferIds = transferIds;
     }
+
+    
+    public List<Long> getBills() {
+        return bills;
+    }
+
+    
+    public void setBills(List<Long> bills) {
+        this.bills = bills;
+    }
 	
+    
 }

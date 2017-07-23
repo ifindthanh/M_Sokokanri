@@ -42,7 +42,7 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
-			<div class="col-sm-12">
+			<div class="col-sm-12 action_container">
 				<div class="col-sm-2">
 					<div class="dropdown">
 					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
@@ -77,6 +77,7 @@
 						</tr>
 					</thead>
 					<tbody>
+						<c:set var="sum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td class="fixed">
@@ -125,6 +126,7 @@
 									<div class="lblTotal">${item.total }
 									</div>
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
+									<c:set var="sum" value="${sum + item.total}" scope="page"></c:set>
 								</td>
 								<td>
 									<div>${item.approvalNote}
@@ -133,15 +135,16 @@
 								
 								<td class="fixed">
 									<c:if test="${item.isReadonly() ne true}">
-										<a onclick="edit(this)" class = "myBtn origin btnEdit"><i class="fa fa-edit icon-resize-small"
+										<a onclick="edit(this)" class = "myBtn origin btnEdit" title="Chỉnh sửa thông tin"><i class="fa fa-edit icon-resize-small"
 										aria-hidden="true"></i></a>
 										<div class= "action">
-											<a onclick="save(this)" class="myBtn" item = "${item.id }"><i
-												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> <a onclick="cancel(this)" class="myBtn"><i
+											<a onclick="save(this)" class="myBtn" item = "${item.id }" title="Lưu lại"><i
+												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a> 
+												<a onclick="cancel(this)" class="myBtn"><i
 												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
 										</div>
 										<c:if test="${item.status eq -1 }">
-											<a onclick="removeNote(this)" class = "myBtn origin" item = "${item.id }"><i class="fa fa-wrench icon-resize-small"
+											<a onclick="removeNote(this)" title="Bỏ ghi chú đơn hàng" class="myBtn origin" item = "${item.id }"><i class="fa fa-wrench icon-resize-small"
 												aria-hidden="true"></i></a>
 										</c:if>
 									</c:if>
@@ -150,7 +153,7 @@
 									</div>
 									
 									<sec:authorize access="hasRole('ROLE_A')">
-										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
+										<a class="myBtn origin" href="admin/${item.id }" title="Xem chi tiết"><i class="fa fa-cogs"
 										aria-hidden="true"></i> </a>
 									</sec:authorize>
 								</td>
@@ -158,7 +161,10 @@
 						</c:forEach>
 					</tbody>
 				</table>
-				
+			</div>
+			<div class="col-sm-12 total_container">
+				<label>Tổng tiền : <span id="total_price"><fmt:formatNumber value="${sum}" minFractionDigits="0" maxFractionDigits="4"/>
+				</span></label>
 			</div>
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"
@@ -166,16 +172,8 @@
 					uri="${pageContext.request.contextPath}/donhang/cho-duyet"
 					next="&raquo;" previous="&laquo;" />
 			</div>
-			<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
-				<div class="col-sm-12" style="margin-bottom: 20px;">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="approval()">
-						<i class="fa" aria-hidden="true" ></i> Duyệt đơn hàng
-					</button>
-				</div>
-			</sec:authorize>
 		</form>
 	</div>
-	
 	<!-- Modal -->
 	<div id="addNoteModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">

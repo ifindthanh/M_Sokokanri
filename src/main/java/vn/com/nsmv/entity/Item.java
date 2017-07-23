@@ -1,6 +1,7 @@
 package vn.com.nsmv.entity;
 
 import java.util.Date;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.i18n.SokokanriMessage;
 
 @Entity
 @Table(name = "items")
@@ -386,29 +390,29 @@ public class Item implements java.io.Serializable {
 				&& this.quantity == null && this.cost == null) {
 			return;
 		}
-		
+		Locale locale = LocaleContextHolder.getLocale();
 		if (Utils.isEmpty(this.name)) {
-			throw new SokokanriException("Tên mặt hàng không được để trống");
+            throw new SokokanriException(SokokanriMessage.getMessageErrorNameCannotBeEmpty(locale));
 		}
 		
 		if (Utils.isEmpty(this.link)) {
-			throw new SokokanriException("Đường link đến mặt hàng không được để trống");
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorLinkCannotBeEmpty(locale));
 		}
 		
 		if (this.quantity == null) {
-			throw new SokokanriException("Số lượng không được để trống");
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorQuantityCannotBeEmpty(locale));
 		}
 		
 		if (this.quantity < 1) {
-			throw new SokokanriException("Số lượng phải lớn hơn 0");
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorQuantityMustGtZero(locale));
 		}
 		
 		if (this.cost == null) {
-			throw new SokokanriException("Đơn giá không được để trống");
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorCostCannotBeEmpty(locale));
 		}
 		
 		if (this.cost <= 0) {
-			throw new SokokanriException("Đơn giá phải lớn hơn 0");
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorCostMustGtZero(locale));
 		}
 	}
 	
@@ -422,6 +426,9 @@ public class Item implements java.io.Serializable {
 	        return false;
 	    }
 	    
+	    if (Utils.hasRole(Constants.ROLE_B)  && this.status == 1) {
+            return false;
+        }
 	    
 	    return true;
 	}

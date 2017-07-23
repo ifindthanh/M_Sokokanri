@@ -143,24 +143,14 @@ public class TransferdOrdersController extends AbstractController{
 	
 	@RequestMapping(value = "/donhang/da-chuyen/xoa-don-hang", method=RequestMethod.GET)
     public String deleteOrders(Model model){
-        try {
-            this.ordersService.deleteItems(this.getSelectedItems());
-            this.getSelectedItems().clear();
-        } catch (SokokanriException ex) {
-            model.addAttribute("message", ex.getErrorMessage());
-        }
-        return "redirect:/donhang/cho-duyet";
+        this.delete(model, this.ordersService);
+        return "redirect:/donhang/da-chuyen";
     }
     
     @RequestMapping(value = "/donhang/da-chuyen/huy-don-hang", method=RequestMethod.GET)
     public String cancelOrders(Model model){
-        try {
-            this.ordersService.cancelItems(this.getSelectedItems());
-            this.getSelectedItems().clear();
-        } catch (SokokanriException ex) {
-            model.addAttribute("message", ex.getErrorMessage());
-        }
-        return "redirect:/donhang/cho-duyet";
+        this.cancel(model, this.ordersService);
+        return "redirect:/donhang/da-chuyen";
     }
 	
 }

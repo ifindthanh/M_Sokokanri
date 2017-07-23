@@ -42,7 +42,7 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="cho-mua" method="POST" id="approvedOrders">
-			<div class="col-sm-12 row" style="height: 100px">
+			<div class="col-sm-12 row">
 				<label class="col-xs-2 right_align top_margin_5" >Nhãn hàng: </label>
 				<div class="col-xs-4">
 					<select name="brands" multiple="multiple" class="selectpicker form-control inputstl" onchange="search()">
@@ -53,14 +53,14 @@
 				</div>
 			</div>
 			<input type="hidden" name="status" value = "${searchCondition.status }" />
-			<div class="col-sm-12">
+			<div class="col-sm-12 action_container">
 				<div class="col-sm-2">
 					<div class="dropdown">
 					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 					  <span class="caret"></span></button>
 						<ul class="dropdown-menu">
 							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
-								<li><a onclick="approval()">Duyệt đơn hàng</a></li>
+								<li><a onclick="approval()">Đã mua hàng</a></li>
 								<li><a onclick="noteAnOrder()">Ghi chú đơn hàng</a></li>
 							</sec:authorize>
 							<li><a onclick="cancelOrders('cho-mua/huy-don-hang')">Hủy đơn hàng</a></li>
@@ -73,7 +73,7 @@
 				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'da-duyet')" /></th>
+							<th><input type="checkbox" onchange="selectAllItems(this, 'cho-mua')" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -83,18 +83,21 @@
 							<th style="width: 50px">Đơn giá</th>
 							<th style="width: 50px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
+							<th style="width: 50px">Đơn giá mua</th>
+							<th style="width: 50px">Số lượng mua</th>
+							<th style="width: 100px">Thành tiền</th>
 							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
-								<th style="width: 50px">Giá mua</th>
-								<th style="width: 50px">Số lượng mua</th>
-								<th style="width: 100px">Tiền thực mua</th>
-								<th style="width: 50px">Đơn giá tính tiền</th>
-								<th style="width: 100px">Tiền để tính</th>
+								<th style="width: 50px">Thực mua</th>
+								<th style="width: 100px">Thành tiền</th>
 							</sec:authorize>
 							<th style="width: 100px">Mã mua hàng</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
+						<c:set var="sum" value="0" scope="page"></c:set>
+						<c:set var="realSum" value="0" scope="page"></c:set>
+						<c:set var="computeSum" value="0" scope="page"></c:set>
 						<c:forEach var="item" items="${allOrders}" varStatus="status">
 							<tr>
 								<td class="fixed"><chkbox2:chbox item="${item.id }"
@@ -133,34 +136,40 @@
 									<div class="lblTotal">${item.total }</div> <input type="text"
 									value="${item.total }"
 									class="form-control hiddenAction txtTotal" disabled="disabled" />
+									<c:set var="sum" value="${sum + item.total}" scope="page"></c:set>
 								</td>
-								<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+								<td>
+									<div class="lblComputeCost">${item.computeCost }</div> <input
+									type="number" value="${item.computeCost }"
+									onchange="computeMoneyFromRealCost(this)"
+									class="small_width form-control hiddenAction txtComputeCost" />
+								</td>
+								<td>
+									<div class="lblRealQuantity">${item.realQuantity }</div> <input
+									type="number" value="${item.realQuantity}"
+									onchange="computeMoneyFromRealQuantity(this)"
+									class="small_width form-control hiddenAction txtRealQuantity" />
+								</td>
+								<td>
+									<div class="lblComputePrice">${item.computePrice }</div> <input
+									type="text" value="${item.computePrice}"
+									class="form-control hiddenAction txtComputePrice"
+									disabled="disabled" /> 
+									<c:set var="computeSum" value="${computeSum + item.computePrice}" scope="page"></c:set>
+								</td>
+								
+								<sec:authorize access="hasAnyRole('ROLE_B','ROLE_A')">
 									<td>
 										<div class="lblRealCost">${item.realCost }</div> <input
 										type="number" value="${item.realCost }" onchange="computeRealMoney(this)"
 										class="small_width form-control hiddenAction txtRealCost" />
 									</td>
 									<td>
-										<div class="lblRealQuantity">${item.realQuantity }</div> <input
-										type="number" value="${item.realQuantity}" onchange="computeMoneyFromRealQuantity(this)"
-										class="small_width form-control hiddenAction txtRealQuantity" />
-									</td>
-									<td>
 										<div class="lblRealPrice">${item.realPrice }</div> 
 										<input type="text" value="${item.realPrice }"
 										class="form-control hiddenAction txtRealPrice"
 										disabled="disabled" />
-									</td>
-									<td>
-										<div class="lblComputeCost">${item.computeCost }</div> 
-										<input type="number" value="${item.computeCost }" onchange="computeMoneyFromRealCost(this)"
-										class="small_width form-control hiddenAction txtComputeCost" />
-									</td>
-									<td>
-										<div class="lblComputePrice">${item.computePrice }</div> 
-										<input type="text" value="${item.computePrice}"
-											class="form-control hiddenAction txtComputePrice"
-											disabled="disabled" />
+										<c:set var="realSum" value="${realSum + item.realPrice}" scope="page"></c:set>
 									</td>
 								</sec:authorize>
 								<td>
@@ -188,6 +197,22 @@
 					</tbody>
 				</table>
 				
+			</div>
+			<div class="col-sm-12">
+			 	<div class="total_container">
+					<label>Tổng tiền : <span id="total_price"><fmt:formatNumber value="${sum}" minFractionDigits="0" maxFractionDigits="4"/>
+					</span></label>
+					<br/>
+					<label>Tổng tiền mua: <span id="compute_price">
+						<fmt:formatNumber value="${computeSum}" minFractionDigits="0" maxFractionDigits="4"/>
+					</span></label>
+					
+					<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
+						<br/>
+						<label>Tổng tiền thực tế mua: <span id="real_price">
+						<fmt:formatNumber value="${realSum}" minFractionDigits="0" maxFractionDigits="4"/></span></label>	
+					</sec:authorize>
+				</div>
 			</div>
 			<div class="div-bottom">
 				<tag:paginate offset="${offset}" count="${count}"

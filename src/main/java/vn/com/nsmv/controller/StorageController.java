@@ -1,6 +1,7 @@
 package vn.com.nsmv.controller;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -9,11 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +30,7 @@ import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Bill;
+import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
 
@@ -44,14 +48,14 @@ public class StorageController extends AbstractController {
 	public String init()
 	{
 		this.searchCondition =  new SearchCondition(5);
-		super.initController();
+		this.initController();
 		return "redirect:/donhang/da-nhap-kho";
 	}
 	
 	@RequestMapping(value = "/donhang/da-nhap-kho", method=RequestMethod.GET)
 	public ModelAndView listAllOrders(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
 	    request.getSession().setAttribute("listType", 7);
-		super.listAllOrdersInPage(request, model, offset, maxResults);
+		this.listAllOrdersInPage(request, model, offset, maxResults);
 		return new ModelAndView("/orders/storagedItems");
 	}
 	
@@ -96,6 +100,9 @@ public class StorageController extends AbstractController {
 			model.addAttribute("allBills", allBills);
 			model.addAttribute("offset", this.getOffset());
 			model.addAttribute("maxResult", this.getMaxResults());
+			List<Long> allBillIDs = this.ordersService.getAllBillIDs(searchCondition);
+			this.checkSearchingBills(this.searchCondition.getBills(), allBillIDs);
+            model.addAttribute("billIDs", allBillIDs);
 			model.addAttribute("searchCondition", this.searchCondition);
 			model.addAttribute("count", count);
 			model.addAttribute("selectedItems", this.getSelectedItems());
@@ -103,6 +110,19 @@ public class StorageController extends AbstractController {
 			model.addAttribute("message", ex.getErrorMessage());
 		}
 	}
+	
+	@RequestMapping(value = "/donhang/bo-khoi-hd/{itemId}", method=RequestMethod.GET)
+    public ModelAndView removeFromBill(Model model, @PathVariable Long itemId) {
+        try {
+            Long billId = this.ordersService.removeFromBill(itemId);
+            this.getSelectedItems().remove(billId);
+            
+        } catch (SokokanriException e) {
+            model.addAttribute("message", e.getErrorMessage());
+        }
+        return new ModelAndView("redirect:../da-nhap-kho");
+        
+    }
 	
 	@RequestMapping(value = "/donhang/xuat-hoa-don", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ResponseResult<String>> exportBill(Model model, @RequestParam Long id) {
@@ -117,14 +137,17 @@ public class StorageController extends AbstractController {
 	
 	@RequestMapping(value = "/donhang/da-xuat-hoa-don", method=RequestMethod.GET)
 	public String exportBillAction(Model model) {
-		if (!Utils.hasRole(Constants.ROLE_BG) && !Utils.hasRole(Constants.ROLE_A)) {
-			model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
-		}
+		
 		try {
+		    if (!Utils.hasRole(Constants.ROLE_BG) && !Utils.hasRole(Constants.ROLE_A)) {
+	            model.addAttribute("message", "Bạn không có quyền chuyển trạng thái của đơn hàng này");
+	            throw new SokokanriException(SokokanriMessage.getMessageErrorCannotUpdateStatus(LocaleContextHolder.getLocale()));
+	        }
 			this.ordersService.exportBill(this.getSelectedItems(), true);
 			this.getSelectedItems().clear();
 			return "redirect:da-nhap-kho";
 		} catch (SokokanriException e) {
+		    model.addAttribute("message", e.getErrorMessage());
 			return "redirect:da-nhap-kho";
 		}
 		
@@ -137,7 +160,7 @@ public class StorageController extends AbstractController {
 			try
 			{
 				// set file as attached data and copy file data to response output stream
-				String mimeType = "application/octet-stream";
+				String mimeType = "application/octet-stream; charset=UTF-8";
 
 				response.setContentType(mimeType);
 
@@ -151,7 +174,7 @@ public class StorageController extends AbstractController {
 				ServletOutputStream outStream = response.getOutputStream();
 				try
 				{
-					outStream.write(billContent.getBytes());
+					outStream.write(billContent.getBytes(Charset.forName("UTF-8")));
 				}
 				catch (Exception ex)
 				{

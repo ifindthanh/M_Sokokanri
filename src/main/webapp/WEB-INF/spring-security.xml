@@ -28,7 +28,7 @@
     </beans:bean>
     <http use-expressions="true">
         <csrf disabled="true"/>
-        <session-management invalid-session-url="/" />
+        <session-management invalid-session-url="/session-timed-out" />
 		<custom-filter ref="ajaxTimeoutRedirectFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
         <intercept-url pattern="/" access="permitAll" />
         <intercept-url pattern="/welcome" access="permitAll" />
@@ -43,7 +43,6 @@
         <intercept-url pattern="/user/list" access="hasAnyRole('ROLE_A', 'ROLE_S')" />
         <intercept-url pattern="/user/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         
-        <intercept-url pattern="/donhang/{orderId}" access="isAuthenticated()" />
         <intercept-url pattern="/donhang/tao-moi" access="hasRole('ROLE_U')" />
         <intercept-url pattern="/donhang/tat-ca" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/luu-don-hang" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
@@ -83,6 +82,7 @@
         <intercept-url pattern="/donhang/xuat-hoa-don" access="hasAnyRole('ROLE_U', 'ROLE_A', 'ROLE_BG')" />
         <intercept-url pattern="/donhang/xuat-hoa-don-file" access="hasAnyRole('ROLE_U','ROLE_A', 'ROLE_BG')" />
         <intercept-url pattern="/donhang/da-xuat-hoa-don" access="hasAnyRole('ROLE_A', 'ROLE_BG')" />
+        <intercept-url pattern="/donhang/bo-khoi-hd/{itemId}" access="hasAnyRole('ROLE_A', 'ROLE_BG')" />
         
         <intercept-url pattern="/donhang/da-xuat-hd" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/da-xuat-hd/**" access="hasAnyRole('ROLE_U', 'ROLE_A')" />

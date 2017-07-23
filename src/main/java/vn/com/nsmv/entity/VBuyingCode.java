@@ -6,7 +6,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "BUYING_CODE")
+@Table(name = "buying_code")
 public class VBuyingCode implements java.io.Serializable
 {
 

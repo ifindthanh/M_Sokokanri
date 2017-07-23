@@ -101,31 +101,6 @@
 								<i class="fa fa-plus" aria-hidden="true" ></i> Thêm sản phẩm
 							</button>
 						</c:if>
-						
-						<c:if test="${category.status eq 0 or category.status eq -1}">
-							<sec:authorize access="hasAnyRole('ROLE_C', 'ROLE_A')">
-								<input type="button" class="btn btn-primary"
-									value="Duyện đơn hàng" onclick="approve()"/>
-								<input type="button" class="btn btn-default openNote" data-id="-1"
-									value="Ghi chú đơn hàng"/>	
-							</sec:authorize>
-						</c:if>
-						<c:if test="${category.status eq 1 or category.status eq -2}">
-							<sec:authorize access="hasAnyRole('ROLE_B', 'ROLE_A')">
-								<input type="button" class="btn btn-primary" value="Mua hàng xong" onclick="finishBuying()"/>
-								<input type="button" class="btn btn-default openNote" value="Ghi chú đơn hàng" data-id="-2"/>
-							</sec:authorize>
-						</c:if>
-						<c:if test="${category.status eq 2}">
-							<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
-								<input type="button" class="btn btn-primary" value="Đã chuyển hàng ở nước ngoài" data-toggle="modal" data-target="#transferModal"/>
-							</sec:authorize>
-						</c:if>
-						<c:if test="${category.status eq 3}">
-							<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
-								<input type="button" class="btn btn-primary" value="Chuyển về Việt Nam" onclick="transferToVN()"/>
-							</sec:authorize>
-						</c:if>
 					</div>
 					<div style="float:right; position: absolute; right: 30px; top: 0px;">
 						<label>Tổng tiền : <span id="total_price">${category.getOrderPrice() }</span></label>
@@ -167,35 +142,10 @@
 				<br/>
 				<c:if test="${read_only ne true}">
 					<input type="submit" class="btn btn-primary" value="Lưu thông tin" onclick="return validateForm()"/>
+					<a href="tat-ca" class="btn btn-default">Xem tất cả đơn hàng</a>
 				</c:if>
-				<c:set var = "cancelLink" scope = "session" value = ""></c:set>
-				<c:if test="${listType == 1}">
-					<c:set var = "cancelLink" value = "tat-ca"></c:set>
-				</c:if>
-				<c:if test="${listType == 2}">
-					<c:set var = "cancelLink" value = "cho-duyet"></c:set>
-				</c:if>
-				<c:if test="${listType == 3}">
-					<c:set var = "cancelLink" value = "cho-mua"></c:set>
-				</c:if>
-				<c:if test="${listType == 4}">
-					<c:set var = "cancelLink" value = "da-mua"></c:set>
-				</c:if>
-				<c:if test="${listType == 5}">
-					<c:set var = "cancelLink" value = "da-chuyen"></c:set>
-				</c:if>
-				<c:if test="${listType == 6}">
-					<c:set var = "cancelLink" value = "da-chuyen-vn"></c:set>
-				</c:if>
-				<c:if test="${listType == 7}">
-					<c:set var = "cancelLink" value = "da-nhap-kho"></c:set>
-				</c:if>
-				<c:if test="${listType == 8}">
-					<c:set var = "cancelLink" value = "da-xuat-hd"></c:set>
-				</c:if>
-				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
 				<input type="hidden" value="${category.items.size()}" id="item_size"/>
-				<form:input type="hidden" path = "userId" value="${category.userId}"/>
+				<form:input type="hidden" path = "userId" value="${category.user.id}"/>
 				<form:input type="hidden" path = "id" value="${order.id}" id="orderId"/>
 				<form:input type="hidden" path = "status" value="${order.status}"/>
 			</form:form>
@@ -266,7 +216,7 @@
     	if (!$(this).val() || $(this).val() == "") {
     		return;
     	}
-    	$("#total_real_price").html(parseFloat(parseFloat($("#total_real_price").html()) + parseFloat($(this).val())).toFixed(4));
+    	$("#total_real_price").html(parseFloat(parseFloat($("#total_real_price").html()) + parseFloat($(this).val())).toFixed(0));
     })
     $(document).ready(function(){
 		//init datatables
@@ -326,7 +276,7 @@
         		"<input class=\"txtQuantity form-control\" type=\"number\" min =\"1\" max=\"999\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
         		"<input class=\"txtTotal form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].total\"/>",
         		"<input class=\"real_price form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].realPrice\" />",
-        		"<a class= \"myAction\" href=\"#\"><i class=\"fa fa-save\" aria-hidden=\"true\"></i></a>/<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
+        		"<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
             ] ).draw( false );
             table.column(0, {}).nodes().each( function (cell, i) {
     			cell.innerHTML = i+1;
@@ -368,7 +318,7 @@
     		if ($(this).val() && $(this).val() != "")
     			total_price += parseFloat($(this).val());
     	});
-    	$("#total_price").html(total_price.toFixed(4));
+    	$("#total_price").html(total_price.toFixed(0));
     }
     
     function approve() {
