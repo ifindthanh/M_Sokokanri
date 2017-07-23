@@ -20,12 +20,8 @@
 		<div class="menu-header block">
 			<ul>
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="#news"><i class="fa fa-lock"
-							aria-hidden="true"></i> Quên mật khẩu</a></li>
-					<li><a href="#" data-toggle="modal" data-target="#login-modal"><i class="fa fa-sign-in"
+					<li><a href="#" data-toggle="modal" data-target="#user-modal"><i class="fa fa-sign-in"
 							aria-hidden="true"></i> Đăng nhập</a></li>
-					<li><a href="#about"><i class="fa fa-user-plus"
-							aria-hidden="true"></i> Đăng ký</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 					<li>
@@ -86,11 +82,29 @@
 		</ul>
 			</nav>
 </div>
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="loginmodal-container">
-				<h1>Login to Your Account</h1>
+
+	
+<div class="modal fade bs-modal-sm" id="user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="loginmodal-container">
+        <br>
+        <div class="bs-example bs-example-tabs">
+            <ul id="myTab" class="nav nav-tabs">
+              <li class="active"><a href="#login" data-toggle="tab">Login</a></li>
+              <li class=""><a href="#register" data-toggle="tab">Register</a></li>
+              <li class=""><a href="#forgotPassword" data-toggle="tab">Forgot Password</a></li>
+            </ul>
+        </div>
+      <div class="modal-body">
+        <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in" id="forgotPassword">
+        		<br><br>
+				<form onkeyup="onEnter(event)" name='f' class ="forgot_password_form" id ="forgot_password_form" action="${pageContext.request.contextPath}/user/forgot_password" method='POST'>
+					<input type="text" name="email" onkeyup="onEnter(event)" placeholder="Email"> 
+					<input type="button" id="loginBtn" onclick="login()" class="login loginmodal-submit" value="Forgot Password">
+				</form>
+        </div>
+        <div class="tab-pane fade active in" id="login">
 				<p id= "errorMessage" class="error"></p>
 				
 				<br>
@@ -99,14 +113,25 @@
 					<input type="password" name="password" onkeyup="onEnter(event)" placeholder="Password"> 
 					<input type="button" id="loginBtn" onclick="login()" class="login loginmodal-submit" value="Login">
 				</form>
-
-				<div class="login-help">
-					<a href="#" onclick="login()">Register</a> - <a href="#">Forgot Password</a>
-				</div>
-				
-			</div>
-		</div>
-	</div>
+        </div>
+        <div class="tab-pane fade" id="register">
+            <form class="form-horizontal">
+            <fieldset>
+                <input id="Email" name="Email" class="form-control" type="text" placeholder="JoeSixpack@sixpacksrus.com" class="input-large" required="">
+                <input id="name" name="name" class="form-control" type="text" placeholder="JoeSixpack" class="input-large" required="">
+                <input id="password" name="password" class="form-control" type="password" placeholder="password" class="input-large" required="">
+                <input id="reenterpassword" class="form-control" name="reenterpassword" type="password" placeholder="Re-Enter password" class="input-large" required="">
+                <input type="radio" name="gender"  value="male" >&nbsp;&nbsp;Male&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="gender" value="female">&nbsp;&nbsp;Female
+				<input type="button" id="loginBtn" class="login loginmodal-submit" value="Register">
+            </fieldset>
+            </form>
+      </div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>	
 	
 	<script>
 		function login(){
