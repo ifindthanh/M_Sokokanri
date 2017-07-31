@@ -201,3 +201,10 @@ td.myLabel {
 	border-radius: 1px;
 }
 
+.lblTotal, .txtTotal, .lblComputePrice, .txtComputePrice, .lblRealPrice, .txtRealPrice {
+	text-align: right;
+}
+
+.gender {
+	font-weight: normal;
+}

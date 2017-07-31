@@ -1,23 +1,37 @@
 package vn.com.nsmv.service.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.*;
-import org.springframework.context.i18n.*;
-import org.springframework.context.support.*;
-import org.springframework.security.crypto.bcrypt.*;
-import org.springframework.security.crypto.password.*;
-import org.springframework.stereotype.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
-import vn.com.nsmv.common.*;
-import vn.com.nsmv.dao.*;
-import vn.com.nsmv.entity.*;
-import vn.com.nsmv.i18n.*;
-import vn.com.nsmv.javabean.*;
-import vn.com.nsmv.service.*;
+import vn.com.nsmv.common.Constants;
+import vn.com.nsmv.common.Mail;
+import vn.com.nsmv.common.MailForm;
+import vn.com.nsmv.common.SokokanriException;
+import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.dao.PriShainBasDAO;
+import vn.com.nsmv.dao.UserDAO;
+import vn.com.nsmv.entity.PriShainBas;
+import vn.com.nsmv.entity.User;
+import vn.com.nsmv.entity.UserRole;
+import vn.com.nsmv.entity.UserRoleID;
+import vn.com.nsmv.i18n.SokokanriMessage;
+import vn.com.nsmv.javabean.UserBean;
+import vn.com.nsmv.javabean.UserRegistration;
+import vn.com.nsmv.service.UserService;
 
 @Service("userService")
+@EnableTransactionManagement
 public class UserServiceImpl implements UserService
 {
 	@Autowired
@@ -29,36 +43,6 @@ public class UserServiceImpl implements UserService
 	{
 		List<User> list = userDAO.listAll(offset, maxResults);
 		return list;
-	}
-
-	/******************************************
-	 * Validate userCd
-	 *
-	 * @param userBean
-	 * @return
-	 * @throws SokokanriException
-	 ******************************************/
-	public void validate(UserBean userBean) throws SokokanriException
-	{
-		String userCd = userBean.getUserCd();
-		if (Utils.isEmpty(userCd))
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getUserCdRequired(LocaleContextHolder.getLocale()));
-		}
-		userCd = userCd.trim();
-		if (userDAO.isExists(userBean.getUserCd().trim()))
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getUserCdExists(LocaleContextHolder.getLocale()));
-		}
-
-		PriShainBas shainBas = priShainBasDAO.getPriShainBas(userCd);
-		if (shainBas == null)
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getStfNoNotExists(LocaleContextHolder.getLocale()));
-		}
 	}
 
 	/******************************************
@@ -143,54 +127,17 @@ public class UserServiceImpl implements UserService
 	
 
 	// check OldPassword nhap vao voi OldPassword trong DB
-	public void checkOldPassword(String oldPassword, String inputPassword) throws SokokanriException
-	{
-
-		if (!Utils.isValidPassword(oldPassword, inputPassword))
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getMSG06_006(LocaleContextHolder.getLocale()));
-		}
-	}
 
 	// check 2 password moi
-	public void checkNewPassword(String newPassword, String confirmNewPassword)
-		throws SokokanriException
-	{
-		if (newPassword.length() > 7 && newPassword.length() < 21)
-		{
-			if (newPassword.compareTo(confirmNewPassword) != 0)
-			{
-				throw new SokokanriException(
-					SokokanriMessage.getMSG06_007(LocaleContextHolder.getLocale()));
-			}
-		}
-		else
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getMSG06_008(LocaleContextHolder.getLocale()));
-		}
-	}
+	
 
-	// check pass moi khong duoc trung voi pass dang co trong DB
-	public void checkComparePasswordDB(String inputPassword, String oldPassword, String password)
-		throws SokokanriException
-	{
-
-		if (Utils.isValidPassword(password, inputPassword)
-			|| Utils.isValidPassword(oldPassword, inputPassword))
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getMSG06_010(LocaleContextHolder.getLocale()));
-		}
-	}
 
 	public User getUserByUserCd(String userCd)
 	{
 		User userEntity;
 		try
 		{
-			userEntity = userDAO.getUserByCd(userCd);
+			userEntity = userDAO.getUserByEmail(userCd);
 		}
 		catch (Exception e)
 		{
@@ -382,82 +329,49 @@ public class UserServiceImpl implements UserService
 	 ******************************************/
 	public void validateUserInfo(UserBean userBean) throws SokokanriException
 	{
-		SokokanriException sokokanriException = new SokokanriException();
-		boolean hasError = false;
-		// validate Email
-		if (!Utils.isEmpty(userBean.getEmail()))
-		{
-			Utils.checkEmail(userBean.getEmail());
-			User userEntity = userDAO.getUserByCd(userBean.getUserCd());
-			if (!userBean.getEmail().equals(userEntity.getEmail()))
-			{
-				Long count = this.countUserByEmail(userBean.getEmail());
-				if (count >= 1)
-				{
-					hasError = true;
-					sokokanriException.addErrorMessage(
-						SokokanriMessage.getMSG13_002(LocaleContextHolder.getLocale()));
-				}
-			}
-		}
-		// validate Phone
-		if (!Utils.isEmpty(userBean.getPhone()))
-		{
-			try
-			{
-				Utils.checkPhone(userBean.getPhone());
-			}
-			catch (SokokanriException ex)
-			{
-				sokokanriException.addErrorMessage(ex.getErrorMessage());
-				hasError = true;
-			}
-		}
-
-		// validate Name
-		if (!Utils.isEmpty(userBean.getFirstName()))
-		{
-			try
-			{
-				Utils.checkSpecialCharacters(userBean.getFirstName());
-			}
-			catch (SokokanriException ex)
-			{
-				sokokanriException.addErrorMessage(
-					SokokanriMessage
-						.getSPECIAL_CHARACTERS_FIRSTNAME(LocaleContextHolder.getLocale()));
-				hasError = true;
-			}
-		}
-
-		if (!Utils.isEmpty(userBean.getLastName()))
-		{
-			try
-			{
-				Utils.checkSpecialCharacters(userBean.getLastName());
-			}
-			catch (SokokanriException ex)
-			{
-				sokokanriException.addErrorMessage(
-					SokokanriMessage
-						.getSPECIAL_CHARACTERS_LASTNAME(LocaleContextHolder.getLocale()));
-				hasError = true;
-			}
-		}
-		if (hasError)
-		{
-			throw sokokanriException;
-		}
 	}
 
-	public void register(UserBean userBean) throws SokokanriException {
-		// TODO Auto-generated method stub
-		
+	@Transactional
+	public void register(UserRegistration userBean) throws SokokanriException {
+	    userBean.validateUser();
+	    if (!Utils.stringCompare(userBean.getPassword(), userBean.getConfirmPassword())) {
+	        throw new SokokanriException(SokokanriMessage.getMessageErrorEmailExisted(LocaleContextHolder.getLocale()));
+	    } 
+	    User user = this.userDAO.getUserByEmail(userBean.getEmail());
+	    if (user != null) {
+	        throw new SokokanriException(SokokanriMessage.getMessageErrorEmailExisted(LocaleContextHolder.getLocale()));
+	    }
+	    user = new User();
+	    user.setEmail(userBean.getEmail());
+	    user.setFullname(userBean.getFullName());
+//	    user.setPassword(Utils.encode(userBean.getPassword()));
+	    user.setPassword(userBean.getPassword());
+	    user.setGender(userBean.getSex());
+	    long userId = this.userDAO.add(user);
+	    UserRole role = new UserRole();
+	    UserRoleID roleId = new UserRoleID(userId, "U");
+	    role.setId(roleId);
+	    this.userDAO.addUserRole(role);
 	}
 
-	public void changePassword(UserBean userBean) throws SokokanriException {
-		// TODO Auto-generated method stub
+	@Transactional
+	public void changePassword(User user) throws SokokanriException {
+	    this.checkPassword(user, LocaleContextHolder.getLocale());
+	    if (!Utils.stringCompare(user.getConfirmPassword(), user.getPassword())) {
+	        throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidConfirmPassword(LocaleContextHolder.getLocale()));
+	    }
+		User currentUser = this.userDAO.getUserByEmail(user.getEmail());
+		if (currentUser == null) {
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorEmailNotExists(LocaleContextHolder.getLocale()));
+		}
 		
+		if (!Utils.stringCompare(currentUser.getResetPwTimestamp(), user.getResetPwTimestamp())) {
+		    throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidRequest(LocaleContextHolder.getLocale()));
+		}
+		currentUser.setPassword(user.getPassword());
+		//generante a random value
+		currentUser.setResetPwTimestamp(Utils.genPassword());
+		this.userDAO.saveUser(currentUser);
 	}
 
 	public boolean login(String username, String password) {
@@ -469,4 +383,87 @@ public class UserServiceImpl implements UserService
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Transactional
+    public void resetPassword(String email) throws SokokanriException {
+        User user = this.userDAO.getUserByEmail(email);
+        if (user == null) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorEmailNotExists(LocaleContextHolder.getLocale()));
+        }
+        
+        String timestamp = String.valueOf(new Date().getTime());
+        user.setResetPwTimestamp(timestamp);
+        this.userDAO.saveUser(user);
+        try
+        {
+            ApplicationContext context = new ClassPathXmlApplicationContext("spring-mail.xml");
+            String linkActive = Constants.LINK_ACTIVE_ACCOUNT + "email=" + email+"&timestamp=" + timestamp;
+
+            Mail mail = (Mail) context.getBean("sendMail");
+            MailForm form = new MailForm();
+            // form.setFrom(Constants.EMAIL_FROM);
+            form.setTo(user.getEmail());
+            form.setUserName(user.getFullname());
+            form.setUrl(linkActive);
+            form.setSubject(Constants.EMAIL_SUBJECT);
+
+            mail.sendMail(form, 1);
+            ((ConfigurableApplicationContext) context).close();
+
+        }
+        catch (Exception e)
+        {
+            throw new SokokanriException(e);
+        }
+        
+    }
+
+	@Transactional
+    public void resetPassword(String email, String timestamp) throws SokokanriException {
+	   
+        User user = this.userDAO.getUserByEmail(email);
+        if (user == null) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorEmailNotExists(LocaleContextHolder.getLocale()));
+        }
+        
+        if (!Utils.stringCompare(timestamp, user.getResetPwTimestamp())) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidRequest(LocaleContextHolder.getLocale()));
+        }
+        
+    }
+	
+	
+	@Transactional
+    public void updatePassword(User user) throws SokokanriException {
+	    this.checkPassword(user, LocaleContextHolder.getLocale());
+        if (!Utils.stringCompare(user.getConfirmPassword(), user.getPassword())) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidConfirmPassword(LocaleContextHolder.getLocale()));
+        }
+        User currentUser = this.userDAO.getUserByEmail(user.getEmail());
+        if (currentUser == null) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorEmailNotExists(LocaleContextHolder.getLocale()));
+        }
+        
+        if (!Utils.stringCompare(currentUser.getPassword(), user.getOldPassword())) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidPassword(LocaleContextHolder.getLocale()));
+        }
+        currentUser.setPassword(user.getPassword());
+        this.userDAO.saveUser(currentUser);
+    }
+    
+    private void checkPassword(User user, Locale locale) throws SokokanriException
+    {
+        if (Utils.isEmpty(user.getPassword()) || user.getPassword().length() < 6)
+        {
+            throw new SokokanriException(
+                SokokanriMessage.getMessageErrorInvalidPasswordLength(locale));
+        }
+        
+        if (user.getPassword().compareTo(user.getConfirmPassword()) != 0)
+        {
+            throw new SokokanriException(
+                SokokanriMessage.getMessageErrorInvalidConfirmPassword(locale));
+        }
+    }
+    
 }

@@ -133,8 +133,7 @@ public class ExportingController
 			String sokoCd = Utils.getSokoCd(this._searchCondition.getSokoCd());
 			if (Utils.isEmpty(sokoCd))
 			{
-				throw new SokokanriException(
-					SokokanriMessage.getErrorSelectSokoCd(LocaleContextHolder.getLocale()));
+				throw new SokokanriException();
 			}
 			this.exportingService.doUpload(myUpload.getUploadFile(), Utils.getSokoCd(sokoCd));
 		}
@@ -144,8 +143,7 @@ public class ExportingController
 			return new RedirectView("uploadResult");
 		}
 		redirectAttributes.addFlashAttribute(
-			"message",
-			SokokanriMessage.getMSG05_001(LocaleContextHolder.getLocale()));
+			"message", null);
 		return new RedirectView("uploadResult");
 	}
 

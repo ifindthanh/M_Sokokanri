@@ -11,12 +11,11 @@ public interface UserService
 
 	public List<User> listUser(Integer offset, Integer maxResults);
 
-	public void register(UserBean userBean) throws SokokanriException;
+	public void register(UserRegistration userRegistration) throws SokokanriException;
 
-	public void changePassword(UserBean userBean) throws SokokanriException;
+	public void changePassword(User user) throws SokokanriException;
 	public String getUserName(String userCd);
 	public String getEmail(String userCd);
-	public void validate(UserBean userBean) throws SokokanriException;
 	public boolean login(String username, String password);
 	public User getUserByUserCd(String userCd);
 	public User getUser(String userCd, String password);
@@ -90,5 +89,11 @@ public interface UserService
 	 * @throws SokokanriException
 	 ******************************************/
 	public void validateUserInfo(UserBean userBean) throws SokokanriException;
+
+    public void resetPassword(String email) throws SokokanriException;
+
+    public void resetPassword(String email, String timestamp) throws SokokanriException;
+
+    public void updatePassword(User user) throws SokokanriException;
 
 }

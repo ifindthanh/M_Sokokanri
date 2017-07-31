@@ -4,7 +4,10 @@ import java.io.*;
 
 import javax.servlet.jsp.*;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import vn.com.nsmv.common.*;
+import vn.com.nsmv.i18n.SokokanriMessage;
 
 public final class PaginationTaglib extends AbstractTaglib
 {
@@ -35,7 +38,9 @@ public final class PaginationTaglib extends AbstractTaglib
 		out.write("<nav>");
 		out.write("<ul class=\"pagination\">");
 		out.write(
-			"<li style=\"margin-top: 8px;margin-right: 10px;\">&#x5404;&#x30DA;&#x30FC;&#x30B8;</li>");
+			"<li style=\"margin-top: 8px;margin-right: 10px;\">");
+		out.write(SokokanriMessage.getLabelMaxOfDisplay(LocaleContextHolder.getLocale()));
+		out.write("</li>");
 
 		// write max results picker
 		out.write("<li>");
@@ -50,8 +55,6 @@ public final class PaginationTaglib extends AbstractTaglib
 
 		out.write("</select>");
 		out.write("</li>");
-		out.write(
-			"<li style=\"margin-top: 8px; margin-left: 10px;\">&#x4EF6;&#x3092;&#x8868;&#x793A;</li>"); // ä»¶ã‚’è¡¨ç¤º
 		out.write("</ul>");
 		out.write("</nav>");
 		out.write("</div>");
@@ -60,35 +63,37 @@ public final class PaginationTaglib extends AbstractTaglib
 		out.write("<nav>");
 		out.write("<ul class=\"pagination\">");
 		out.write("<li style=\"margin-top: 8px; margin-right: 20px;\">");
-		out.write("&#x5168;" + count + "&#x4EF6;  "); //out.write("å…¨" + count + "ä»¶  ");
+		out.write(SokokanriMessage.getLabelTotalRecords(LocaleContextHolder.getLocale()));
+		out.write(":");
+		out.write(String.valueOf(this.count)); 
 
-		String toAppendText = "&#x4EF6;&#x76EE;&#x3092;&#x8868;&#x793A;"; // ä»¶ç›®ã‚’è¡¨ç¤º
+		String toAppendText = SokokanriMessage.getLabelNumberOfDisplay(LocaleContextHolder.getLocale()) + " ";
 		if (this.count > this.steps)
 		{
 			if (this.offset == 0)
 			{
 				out.write(
-					"&#65288;" + 1 + "~" + (this.offset + this.steps) + toAppendText + "&#65289;");
+					"&#65288; " + toAppendText  + 1 + "~" + (this.offset + this.steps) + "&#65289;");
 			}
 			else if (this.offset + this.steps >= this.count)
 			{
 				out.write(
-					"&#65288;" + (this.offset + 1) + "~" + this.count + toAppendText + "&#65289;");
+					"&#65288; " + toAppendText + (this.offset + 1) + "~" + this.count + "&#65289;");
 			}
 			else
 			{
 				out.write(
-					"&#65288;" + (this.offset + 1) + "~" + (this.offset + this.steps) + toAppendText
-						+ "&#65289;");
+					"&#65288; " + toAppendText
+                    + (this.offset + 1) + "~" + (this.offset + this.steps) + "&#65289;");
 			}
 		}
 		else if (count == 0)
 		{
-			out.write("&#65288;0" + toAppendText + "&#65289;");
+			out.write("&#65288;0"  + toAppendText + "&#65289;");
 		}
 		else
 		{
-			out.write("&#65288;" + (this.offset + 1) + "~" + count + toAppendText + "&#65289;");
+			out.write("&#65288; " + toAppendText + (this.offset + 1) + "~" + count + "&#65289;");
 		}
 		out.write("</li>");
 

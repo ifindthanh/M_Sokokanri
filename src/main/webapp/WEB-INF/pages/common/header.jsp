@@ -29,10 +29,17 @@
 		<div class="menu-header block">
 			<ul>
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="#" data-toggle="modal" data-target="#user-modal"><i class="fa fa-sign-in"
+					<li><a href="#forgotPassword" data-toggle="modal" data-target="#user-modal" ><i class="fa fa-lock" 
+							aria-hidden="true"></i> Quên mật khẩu</a></li>
+					<li><a href="#login" data-toggle="modal" data-target="#user-modal"><i class="fa fa-sign-in" 
 							aria-hidden="true"></i> Đăng nhập</a></li>
+					<li><a href="#register" data-toggle="modal" data-target="#user-modal"><i class="fa fa-user-plus"
+							aria-hidden="true"></i> Đăng ký</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
+					<li><a href="<c:url value= "/thay-doi-mat-khau"/>">Đổi mật khẩu <i class="fa fa-key"
+							aria-hidden="true"></i></a>
+					</li>
 					<li>
 						<a href="<c:url value= "/logout"/>"><sec:authentication property="principal.displayName"/> <i class="fa fa-sign-out"
 						aria-hidden="true"></i>
@@ -100,41 +107,49 @@
         <div class="bs-example bs-example-tabs">
             <ul id="myTab" class="nav nav-tabs">
               <li class="active"><a href="#login" data-toggle="tab">Login</a></li>
-              <li class=""><a href="#register" data-toggle="tab">Register</a></li>
-              <li class=""><a href="#forgotPassword" data-toggle="tab">Forgot Password</a></li>
+              <li> <a href="#register" data-toggle="tab">Đăng ký</a></li>
+              <li> <a href="#forgotPassword" data-toggle="tab">Quên mật khẩu</a></li>
             </ul>
         </div>
       <div class="modal-body">
         <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade in" id="forgotPassword">
-        		<br><br>
-				<form onkeyup="onEnter(event)" name='f' class ="forgot_password_form" id ="forgot_password_form" action="${pageContext.request.contextPath}/user/forgot_password" method='POST'>
-					<input type="text" name="email" onkeyup="onEnter(event)" placeholder="Email"> 
-					<input type="button" id="loginBtn" onclick="login()" class="login loginmodal-submit" value="Forgot Password">
+        	<p id= "reset_errorMessage" class="error"></p>
+        		<h1>Nhập địa chỉ email</h1>
+        		<br>
+        		<form name='f' class ="" id ="reset_form">
+					<input type="text" id="reset_email" name="email" placeholder="Email"> 
+					<input type="button" id="resetPwd" onclick="resetPw()" class="login loginmodal-submit" value="Forgot Password">
 				</form>
         </div>
         <div class="tab-pane fade active in" id="login">
 				<p id= "errorMessage" class="error"></p>
 				
+				<h1>Nhập email và mật khẩu</h1>
 				<br>
-				<form onkeyup="onEnter(event)" name='f' class ="login_form" id ="login_form" action="${pageContext.request.contextPath}/j_spring_security_check" method='POST'>
-					<input type="text" name="email" onkeyup="onEnter(event)" placeholder="Email"> 
-					<input type="password" name="password" onkeyup="onEnter(event)" placeholder="Password"> 
+				<form name='f' class ="login_form" id ="login_form">
+					<input type="text" id="email" name="email" onkeyup="onEnter(event)" placeholder="Email"> 
+					<input type="password" id="password" name="password" onkeyup="onEnter(event)" placeholder="Password"> 
 					<input type="button" id="loginBtn" onclick="login()" class="login loginmodal-submit" value="Login">
 				</form>
         </div>
         <div class="tab-pane fade" id="register">
-            <form class="form-horizontal">
+        	<p id= "reg_errorMessage" class="error"></p>
+            <h1>Điền thông tin tài khoản</h1>
+            <br/>
             <fieldset>
-                <input id="Email" name="Email" class="form-control" type="text" placeholder="JoeSixpack@sixpacksrus.com" class="input-large" required="">
-                <input id="name" name="name" class="form-control" type="text" placeholder="JoeSixpack" class="input-large" required="">
-                <input id="password" name="password" class="form-control" type="password" placeholder="password" class="input-large" required="">
-                <input id="reenterpassword" class="form-control" name="reenterpassword" type="password" placeholder="Re-Enter password" class="input-large" required="">
-                <input type="radio" name="gender"  value="male" >&nbsp;&nbsp;Male&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="gender" value="female">&nbsp;&nbsp;Female
-				<input type="button" id="loginBtn" class="login loginmodal-submit" value="Register">
+            	<form name='f' id ="reg_form">
+                <input id="reg_email" name="Email" class="form-control" type="text" placeholder="Email" class="input-large" required="">
+                <input id="reg_name" name="name" class="form-control" type="text" placeholder="Full name" class="input-large" required="">
+                <input id="reg_password" name="password" class="form-control" type="password" placeholder="Mật khẩu" class="input-large" required="">
+                <input id="reg_reenterpassword" class="form-control" placeholder="Nhập lại mật khẩu" type="password" class="input-large" required="">
+                <input id="reg_phone" class="form-control" name="phone" placeholder="Số điện thoại" class="input-large" required="">
+                <input id="reg_male" type="radio" name="gender"  value="M" ><label class="gender" for="reg_male">Nam</label>
+                <input id="reg_female"type="radio" name="gender" value="F"><label class="gender" for="reg_female">Nữ</label>
+				<input type="button" id="reg_button" class="login loginmodal-submit" value="Đăng ký" onclick="register()">
+				</form>
             </fieldset>
-            </form>
+            <br/>
       </div>
     </div>
       </div>
@@ -164,8 +179,27 @@
 </div>
 	
 	<script>
+		var mode = 1;
+		$(document).ready(function() {
+			$('#user-modal').on('shown.bs.modal', function(e) {
+			    var tab = e.relatedTarget.hash;
+			    $('.nav-tabs a[href="'+tab+'"]').tab('show')
+			})    
+		});
+		
 		function login(){
 			$("#errorMessage").html("");
+			if ($("#email").val() =="") {
+				alert("Email không được để trống");
+				$("#email").focus();
+				return;
+			}
+			if ($("#password").val() =="") {
+				alert("Mật khẩu không được để trống");
+				$("#password").focus();
+				return;
+			}
+			
 			$.ajax({
 				type : "POST",
 				url : "${pageContext.request.contextPath}/j_spring_security_check",
@@ -179,6 +213,86 @@
 			
 			});
 		}
+		
+		function register(){
+			$("#errorMessage").html("");
+			if ($("#reg_email").val() =="") {
+				alert("Email không được để trống");
+				$("#reg_email").focus();
+				return;
+			}
+			
+			if ($("#reg_password").val() =="") {
+				alert("Mật khẩu không được để trống");
+				$("#reg_password").focus();
+				return;
+			}
+			
+			if ($("#reg_password").val().length < 6) {
+				alert("Mật khẩu phải có ít nhất 6 ký tự");
+				$("#reg_password").focus();
+				return;
+			}
+			
+			if ($("#reg_reenterpassword").val() =="") {
+				alert("Mật khẩu xác nhận không được để trống");
+				$("#reg_reenterpassword").focus();
+				return;
+			}
+			
+			if ($("#reg_password").val() != $("#reg_reenterpassword").val()) {
+				alert("Mật khẩu xác nhận không khớp");
+				$("#reg_reenterpassword").focus();
+				return;
+			}
+			
+			if ($("#reg_name").val() =="") {
+				alert("Tên người dùng không được để trống");
+				$("#reg_name").focus();
+				return;
+			}
+			
+			if ($("#reg_phone").val() =="") {
+				alert("Số điện thoại không được để trống");
+				$("#reg_phone").focus();
+				return;
+			}
+			
+			if (!$('input:radio[name=gender]:checked').val()) {
+				alert("Vui lòng nhập giới tính");
+				return;
+			}
+			
+			var data = {
+				"email": $("#reg_email").val(),
+				"password": $("#reg_password").val(),
+				"confirmPassword": $("#reg_reenterpassword").val(),
+				"fullName": $("#reg_name").val(),
+				"phone": $("#reg_phone").val(),
+				"sex": $('input:radio[name=gender]:checked').val()
+			};
+
+			$.ajax({
+				type : "POST",
+				contentType : "application/json",
+				url : "${pageContext.request.contextPath}/dang-ky",
+				data : JSON.stringify(data),
+				dataType : 'json',
+				success : function(result) {
+					if (result.status == 0) {
+						$("#reg_errorMessage").html(result.message);
+						return;
+					}
+					alert("Đăng ký thành công");
+					window.location.href = window.location.href.split("#")[0];
+				},
+				error : function() {
+					$("#reg_errorMessage").html("Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
+				}
+			
+			});
+		}
+		
 		function onEnter(event) {
 		    if(event.keyCode == 13){
 		        $("#loginBtn").click();
@@ -207,6 +321,36 @@
 				error : function(response) {
 					$("#saveError").html(response);
 					$('#money_rate').forcus();
+				}
+			
+			});
+		}
+		
+		function resetPw() {
+			$("#reset_errorMessage").html("");
+			if ($("#reset_email").val() =="") {
+				alert("Email không được để trống");
+				$("#reg_email").focus();
+				return;
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "${pageContext.request.contextPath}/quen-mat-khau",
+				data: $("#reset_form").serialize(),
+				success : function(result) {
+					console.log(result);
+					if (result.code == 0) {
+						alert (result.message);
+						$("#reset_email").val("");
+						$("#reset_email").focus();
+						return;
+					}
+					alert("Yêu cầu đã được gửi đến địa chỉ email của bạn, vui lòng kiểm tra lại hòm thư.");
+					window.location.href = window.location.href.split("#")[0];
+				},
+				error : function() {
+					$("#reset_errorMessage").html("Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
 				}
 			
 			});

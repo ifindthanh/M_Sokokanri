@@ -97,7 +97,7 @@ public class ImportingAPIController
 				1,
 				Utils.getSokoCdFromJwt()));
 		return new ResponseEntity<String>(
-			SokokanriMessage.getItemImportSuccessfully(id, LocaleContextHolder.getLocale()),
+			"",
 			HttpStatus.OK);
 
 	}

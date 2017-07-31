@@ -90,7 +90,7 @@ public class ImportingServiceImpl implements ImportingService
 		Locale locale = LocaleContextHolder.getLocale();
 		if (byteArray.length == 0)
 		{
-			throw new SokokanriException(SokokanriMessage.getErrorSelectFileToUpload(locale));
+			throw new SokokanriException();
 		}
 		List<Nyuko> updates = new ArrayList<Nyuko>();
 		List<Nyuko> adds = new ArrayList<Nyuko>();
@@ -107,8 +107,7 @@ public class ImportingServiceImpl implements ImportingService
 				if (line.length() != 240)
 				{
 					logger.debug("All lines must length 240 characters");
-					throw new SokokanriException(
-						SokokanriMessage.getErrorUnexpectedUploadError(locale));
+					throw new SokokanriException();
 				}
 				Nyuko nyuko = new Nyuko();
 				NyukoId id = new NyukoId();
@@ -141,8 +140,7 @@ public class ImportingServiceImpl implements ImportingService
 				catch (Exception ex)
 				{
 					logger.debug(ex);
-					throw new SokokanriException(
-						SokokanriMessage.getErrorUnexpectedUploadError(locale));
+					throw new SokokanriException();
 				}
 				Nyuko item = this.nyukoDAO.getItemById(szNo, sokoCd);
 				if (UPLOAD_ORDER.INSERT.equals(uploadOrder))
@@ -225,7 +223,7 @@ public class ImportingServiceImpl implements ImportingService
 		}
 		catch (IOException ex)
 		{
-			throw new SokokanriException(SokokanriMessage.getErrorUnexpectedUploadError(locale));
+			throw new SokokanriException();
 		}
 
 		// process update data (insert, update, delete)
@@ -236,7 +234,7 @@ public class ImportingServiceImpl implements ImportingService
 		catch (Exception ex)
 		{
 			logger.debug(ex);
-			throw new SokokanriException(SokokanriMessage.getErrorUnexpectedUploadError(locale));
+			throw new SokokanriException();
 		}
 		//we store the items successfully, but still show the errors if exist
 		this.handleError(locale, existed, nonExisted, notFoundOrder);
@@ -278,20 +276,20 @@ public class ImportingServiceImpl implements ImportingService
 		if (!existed.isEmpty())
 		{
 			hasError = true;
-			errorMesssages.append(SokokanriMessage.getItemAlreadyExist(existed, locale));
+			errorMesssages.append("");
 		}
 		if (!nonExisted.isEmpty())
 		{
 			hasError = true;
 			errorMesssages.append("<br/>");
-			errorMesssages.append(SokokanriMessage.getItemNotExist(nonExisted, locale));
+			errorMesssages.append("");
 		}
 		if (!notFoundOrder.isEmpty())
 		{
 			hasError = true;
 			errorMesssages.append("<br/>");
 			errorMesssages
-				.append(SokokanriMessage.getErrorNotFoundUploadOrder(notFoundOrder, locale));
+				.append("");
 		}
 		if (hasError)
 		{
@@ -312,9 +310,7 @@ public class ImportingServiceImpl implements ImportingService
 			catch (ParseException ex)
 			{
 				logger.debug(ex.getMessage());
-				throw new SokokanriException(
-					SokokanriMessage
-						.getErrorUnexpectedUploadError(LocaleContextHolder.getLocale()));
+				throw new SokokanriException();
 			}
 		}
 		return date;
@@ -396,16 +392,14 @@ public class ImportingServiceImpl implements ImportingService
 			{
 				logger.debug("Cannot import the item");
 				logger.debug(ex);
-				throw new SokokanriException(
-					SokokanriMessage.getItemImportedBefore(id, LocaleContextHolder.getLocale()));
+				throw new SokokanriException();
 			}
 			return;
 		}
 		// this item is already imported or exported
 		if (item.getStatus() == 1 || item.getStatus() == 2)
 		{
-			throw new SokokanriException(
-				SokokanriMessage.getItemImportedBefore(id, LocaleContextHolder.getLocale()));
+			throw new SokokanriException();
 		}
 		item.setNykoDate(new Date());
 		item.setStatus(1);

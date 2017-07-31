@@ -109,6 +109,8 @@
 	}
 	
 	function computeMoney(element) {
+		var start = new Date().getTime();
+		console.log(start);
     	var currentElement = $(element);
     	var txtTotal = currentElement.closest('tr').find(".txtTotal");
     	var txtCost = currentElement.closest('tr').find(".txtCost");
@@ -282,6 +284,7 @@
     	var txtCost = currentElement.closest('tr').find(".txtRealCost");
     	var txtComputeCost = currentElement.closest('tr').find(".txtComputeCost");
     	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
+    	var rate = $("#moneyRate").html();
     	if (txtCost.val() && txtCost.val() != "" 
     			&& currentElement.val() && currentElement.val() != ""
     				&& rate && rate != "") {
@@ -305,10 +308,11 @@
     	var currentElement = $(element);
     	var txtRealQuantity = currentElement.closest('tr').find(".txtRealQuantity");
     	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
-    	
+    	var rate = $("#moneyRate").html();
     	if (txtRealQuantity.val() && txtRealQuantity.val() != "" 
-			&& currentElement.val() && currentElement.val() != "") {
-    		txtComputePrice.val((parseFloat(currentElement.val())* parseInt(txtRealQuantity.val())).toFixed(0));
+			&& currentElement.val() && currentElement.val() != ""
+				&& rate && rate != "") {
+    		txtComputePrice.val((parseFloat(currentElement.val())* parseInt(txtRealQuantity.val())* parseFloat(rate)).toFixed(0));
     		totalPrice();
 		} else {
 			txtComputePrice.val("");
@@ -351,3 +355,4 @@
 			}
 		});
 }
+    

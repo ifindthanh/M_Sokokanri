@@ -1,15 +1,21 @@
 package vn.com.nsmv.dao.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.hibernate.*;
-import org.springframework.transaction.annotation.*;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
-import vn.com.nsmv.common.*;
-import vn.com.nsmv.dao.*;
-import vn.com.nsmv.entity.*;
+import vn.com.nsmv.common.Constants;
+import vn.com.nsmv.common.SokokanriException;
+import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.dao.UserDAO;
+import vn.com.nsmv.entity.User;
+import vn.com.nsmv.entity.UserRole;
 
-@Transactional
 public class UserDAOImpl implements UserDAO
 {
 
@@ -57,19 +63,18 @@ public class UserDAOImpl implements UserDAO
 			.uniqueResult()).longValue();
 	}
 
-	public boolean add(User user)
+	public long add(User user) throws SokokanriException
 	{
 		try
 		{
 			Session session = this.sessionFactory.getCurrentSession();
 			session.persist(user);
+			return user.getId();
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			return false;
+			throw new SokokanriException(e);
 		}
-		return true;
 	}
 
 	public boolean update(User user)
@@ -88,7 +93,7 @@ public class UserDAOImpl implements UserDAO
 		return true;
 	}
 
-	public User getUserByCd(String email)
+	public User getUserByEmail(String email)
 	{
 		//lay thong tin user tu DB dua vao userCd
 		Session session = this.sessionFactory.openSession();
@@ -286,5 +291,30 @@ public class UserDAOImpl implements UserDAO
 		query.setLong("user_id", userID);
 		return new HashSet(query.list());
 	}
+
+    public void addUserRole(UserRole userRole) throws SokokanriException {
+        try
+        {
+            Session session = this.sessionFactory.getCurrentSession();
+            session.persist(userRole);
+        }
+        catch (Exception e)
+        {
+            throw new SokokanriException(e);
+        }
+        
+    }
+    
+    public void saveUser(User user) throws SokokanriException {
+        try
+        {
+            Session session = this.sessionFactory.getCurrentSession();
+            session.saveOrUpdate(user);
+        }
+        catch (Exception ex)
+        {
+            throw new SokokanriException(ex);
+        }
+    }
 
 }

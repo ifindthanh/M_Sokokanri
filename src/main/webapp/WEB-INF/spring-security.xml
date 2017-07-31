@@ -36,6 +36,9 @@
         <intercept-url pattern="/register/*" access="permitAll" />
         <intercept-url pattern="/api/*" access="permitAll" />
  
+ 		<intercept-url pattern="/dang-ky" access="permitAll" />
+ 		<intercept-url pattern="/quen-mat-khau" access="permitAll" />
+ 		<intercept-url pattern="/doi-mat-khau" access="permitAll" />
         <intercept-url pattern="/imported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/export/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         <intercept-url pattern="/exported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
@@ -98,7 +101,7 @@
  
         <access-denied-handler error-page="/403" />
         
-        <form-login login-page='/login' login-processing-url="/j_spring_security_check"
+        <form-login login-page='/' login-processing-url="/j_spring_security_check"
             default-target-url="/" always-use-default-target="false"
             authentication-failure-url="/login?error=true" username-parameter="email"
             password-parameter="password" />

@@ -2,6 +2,7 @@ package vn.com.nsmv.dao;
 
 import java.util.*;
 
+import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.entity.*;
 
 public interface UserDAO
@@ -9,13 +10,13 @@ public interface UserDAO
 
 	public List<User> listAll(Integer offset, Integer maxResults);
 
-	public boolean add(User user);
+	public long add(User user) throws SokokanriException;
 
 	public boolean isExists(String userCd);
 
 	public boolean update(User user);
 
-	public User getUserByCd(String userCd);
+	public User getUserByEmail(String userCd);
 
 	public User getUser(String userCd, String password);
 
@@ -66,5 +67,9 @@ public interface UserDAO
 	public Long countUserBySearchCondition(String searchCondition);
 	
 	public Set<UserRole> getRoles(Long userID);
+	
+	public void addUserRole(UserRole userRole) throws SokokanriException;
+	
+	public void saveUser(User user) throws SokokanriException;
 }
 

@@ -40,12 +40,12 @@ public final class Constants
 	public static String ACTION_EMPTY = "EMPTY";
 
 	//viettel
-	public static String LINK_ACTIVE_ACCOUNT = "http://103.1.210.79:8080/sokokanri/register/active/";
+	public static String LINK_ACTIVE_ACCOUNT = "http://localhost:8080/M_Sokokanri/quen-mat-khau?";
 
 	//amazon
 	//public static String LINK_ACTIVE_ACCOUNT = "http://52.77.6.193/sokokanri/register/active/";
 
-	public static String EMAIL_SUBJECT = "ã‚¢ã‚«ã‚¦ãƒ³ãƒˆç™»éŒ²ã�—ã�¾ã�—ã�Ÿ";
+	public static String EMAIL_SUBJECT = "Yêu cầu thay đổi mật khẩu";
 
 	public static class REQUEST_PARAMETER
 	{

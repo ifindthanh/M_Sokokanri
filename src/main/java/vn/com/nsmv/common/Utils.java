@@ -19,6 +19,28 @@ import vn.com.nsmv.javabean.*;
 
 public class Utils
 {
+    public static void validateUser(UserRegistration userRegistration) throws SokokanriException{
+        Utils.checkEmail(userRegistration.getEmail());
+        Utils.checkNewPassword(userRegistration.getPassword(), userRegistration.getConfirmPassword());
+    }
+    
+    private static void checkNewPassword(String newPassword, String confirmNewPassword)
+        throws SokokanriException
+    {
+        if (newPassword == null || newPassword.length() < 6)
+        {
+            throw new SokokanriException(
+                SokokanriMessage.getMessageErrorInvalidPasswordLength(LocaleContextHolder.getLocale()));
+            
+        }
+        
+        if (newPassword.compareTo(confirmNewPassword) != 0)
+        {
+            throw new SokokanriException(
+                SokokanriMessage.getMessageErrorInvalidConfirmPassword(LocaleContextHolder.getLocale()));
+        }
+    }
+    
 	public static boolean isEmpty(String str)
 	{
 		if (null == str)
@@ -50,22 +72,22 @@ public class Utils
 
 		return date;
 	}
+	
 	// check email
-	public static void checkEmail(String str) throws SokokanriException
+	public static void checkEmail(String email) throws SokokanriException
 	{
-		if (Utils.isEmpty(str.trim()))
-		{
-			return;
-		}
+	    if (Utils.isEmpty(email)) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorEmailCannotBeEmpty(LocaleContextHolder.getLocale()));
+        }
 
 		Pattern mail = Pattern
-			.compile("^\\w+\\.?\\w*\\.?\\w*\\@\\w*\\-?\\w*\\.\\w+\\.?\\w+\\.?\\w*\\.?\\w*$");
-		Matcher m = mail.matcher(str);
+			.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+		Matcher m = mail.matcher(email);
 
 		if (!m.find())
 		{
 			throw new SokokanriException(
-				SokokanriMessage.getMSG07_002(LocaleContextHolder.getLocale()));
+				SokokanriMessage.getMessageErrorInvalidEmail(LocaleContextHolder.getLocale()));
 		}
 
 	}
@@ -108,139 +130,8 @@ public class Utils
 		}
 	}
 
-	/**
-	 * split fullName to firstName and lastName
-	 *
-	 * @param fullName
-	 * @return
-	 */
-	public static List<String> splitFullName(String fullName)
-	{
-		List<String> list = new LinkedList<String>();
-		if (!isEmpty(fullName))
-		{
-			String[] names;
-			fullName = fullName.trim();
-			if (fullName.contains(" "))
-			{
-				names = fullName.split(" ");
-				list.add(names[0].trim());
-				list.add(names[1].trim());
-			}
-			else if (fullName.contains("ã€€"))
-			{
-				names = fullName.split("ã€€");
-				list.add(names[0].trim());
-				list.add(names[1].trim());
-			}
-			else
-			{
-				list.add(fullName);
-			}
-		}
-		return list;
-	}
-	// check phone
-	public static void checkPhone(String str) throws SokokanriException
-	{
-		if (Utils.isEmpty(str.trim()))
-		{
-			return;
-		}
 
-		Matcher m1 = null;
-		Matcher m2 = null;
-		Pattern phone1 = Pattern.compile(
-			"^\\(?\\+?\\d{0,2}[\\-\\.\\s]?\\d{0,2}\\)?[\\-\\.\\s]?\\d{0,4}[\\-\\.\\s]\\d{0,4}[\\-\\.\\s]\\d{1,4}[\\-\\.\\s]?\\(?\\w*[\\-\\.\\s\\/\\:]*\\d{0,4}\\)?$");
-		Pattern phone2 = Pattern.compile(
-			"^\\(?\\+?\\d{0,2}[\\-\\.\\s]?\\d?\\)?[\\-\\.\\s]?\\d*\\-?\\d{8,11}[\\-\\.\\s]?\\(?\\w*[\\-\\.\\s\\/\\:]*\\d{0,4}\\)?$");
-
-		if (str.length() > 9 && str.length() <= 30)
-		{
-
-			m1 = phone1.matcher(str);
-			m2 = phone2.matcher(str);
-
-			if (!m1.find() && !m2.find())
-			{
-				throw new SokokanriException(
-					SokokanriMessage.getMSG13_006(LocaleContextHolder.getLocale()));
-			}
-			else
-			{
-				m1 = phone1.matcher(str);
-				m2 = phone2.matcher(str);
-			}
-
-			if (m1.find() || m2.find())
-			{
-				return;
-			}
-			else
-			{
-				throw new SokokanriException(
-					SokokanriMessage.getMSG13_006(LocaleContextHolder.getLocale()));
-			}
-		}
-		else
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getMSG13_006(LocaleContextHolder.getLocale()));
-		}
-
-	}
-
-	// check web
-	public static void checkWeb(String str) throws SokokanriException
-	{
-
-		if (Utils.isEmpty(str.trim()))
-		{
-			return;
-		}
-		else if (str.startsWith("http://") || str.startsWith("www.") || str.startsWith("https://"))
-		{
-			Pattern web1 = Pattern.compile(
-				"\\w{0,5}\\:?\\/?\\/?\\www\\.?\\w+\\-?\\w*\\.\\w*\\-?\\w*\\.?\\w{0,4}\\/?\\w*");
-			Pattern web2 = Pattern
-				.compile("^\\w{4,5}\\:\\/\\/\\w+\\.?\\w+\\-?\\w+\\.\\w{0,4}\\.?\\w{0,4}\\/?\\w*$");
-
-			Matcher m1 = web1.matcher(str);
-			Matcher m2 = web2.matcher(str);
-
-			if (!m1.find() && !m2.find())
-			{
-				throw new SokokanriException(
-					SokokanriMessage.getMSG04_014(LocaleContextHolder.getLocale()));
-			}
-			else
-			{
-				return;
-			}
-		}
-		else
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getMSG04_014(LocaleContextHolder.getLocale()));
-		}
-	}
 	//check characters
-	public static void checkSpecialCharacters(String str) throws SokokanriException
-	{
-
-		if (Utils.isEmpty(str.trim()))
-		{
-			return;
-		}
-		Pattern p = Pattern.compile("[^0-9a-zA-Zä¸€-é¾ ã��-ã‚”ã‚¡-ãƒ´ãƒ¼ã€…ã€†ã€¤ï½�-ï½šï¼¡-ï¼ºï¼�-ï¼™\\s]+");
-		Matcher m = p.matcher(str.trim());
-
-		if (m.find())
-		{
-			throw new SokokanriException(
-				SokokanriMessage.getSPECIAL_CHARACTERS(LocaleContextHolder.getLocale()));
-		}
-	}
 
 	public static StringBuilder getOrdering(SortCondition sortCondition)
 	{

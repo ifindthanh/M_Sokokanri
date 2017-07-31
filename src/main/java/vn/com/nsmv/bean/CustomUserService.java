@@ -22,7 +22,7 @@ public class CustomUserService implements UserDetailsService
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
-		User user = this.userDAO.getUserByCd(username);
+		User user = this.userDAO.getUserByEmail(username);
 		if (user == null)
 		{
 			throw new UsernameNotFoundException("");

@@ -121,7 +121,7 @@ public class ExportingServiceImpl implements ExportingService
 		Locale locale = LocaleContextHolder.getLocale();
 		if (byteArray.length == 0)
 		{
-			throw new SokokanriException(SokokanriMessage.getErrorSelectFileToUpload(locale));
+			throw new SokokanriException("");
 		}
 		List<ShukkaBody> updateBodies = new ArrayList<ShukkaBody>();
 		List<ShukkaBody> insertBodies = new ArrayList<ShukkaBody>();
@@ -142,8 +142,7 @@ public class ExportingServiceImpl implements ExportingService
 				if (line.length() != 160)
 				{
 					logger.debug("All lines must length 160 characters");
-					throw new SokokanriException(
-						SokokanriMessage.getErrorUnexpectedUploadError(locale));
+					throw new SokokanriException();
 				}
 				Date currentDate = new Date();
 				if ("H1".equals(line.substring(21, 23)))
@@ -237,8 +236,7 @@ public class ExportingServiceImpl implements ExportingService
 						{
 							throw new SokokanriException(ex);
 						}
-						throw new SokokanriException(
-							SokokanriMessage.getErrorUnexpectedUploadError(locale));
+						throw new SokokanriException();
 					}
 				}
 				else
@@ -346,8 +344,7 @@ public class ExportingServiceImpl implements ExportingService
 						{
 							throw new SokokanriException(ex);
 						}
-						throw new SokokanriException(
-							SokokanriMessage.getErrorUnexpectedUploadError(locale));
+						throw new SokokanriException();
 					}
 				}
 			}
@@ -355,7 +352,7 @@ public class ExportingServiceImpl implements ExportingService
 		catch (IOException ex)
 		{
 			logger.debug(ex);
-			throw new SokokanriException(SokokanriMessage.getErrorUnexpectedUploadError(locale));
+			throw new SokokanriException();
 		}
 		try
 		{
@@ -370,7 +367,7 @@ public class ExportingServiceImpl implements ExportingService
 		catch (Exception ex)
 		{
 			logger.debug(ex);
-			throw new SokokanriException(SokokanriMessage.getErrorUnexpectedUploadError(locale));
+			throw new SokokanriException();
 		}
 		//we store the items successfully, but still show the errors if exist
 		this.handleError(locale, existed, nonExisted, notFoundOrder);
@@ -420,20 +417,20 @@ public class ExportingServiceImpl implements ExportingService
 		if (!existed.isEmpty())
 		{
 			hasError = true;
-			errorMesssages.append(SokokanriMessage.getItemAlreadyExist(existed, locale));
+			errorMesssages.append("");
 		}
 		if (!nonExisted.isEmpty())
 		{
 			hasError = true;
 			errorMesssages.append("<br/>");
-			errorMesssages.append(SokokanriMessage.getItemNotExist(nonExisted, locale));
+			errorMesssages.append("");
 		}
 		if (!notFoundOrder.isEmpty())
 		{
 			hasError = true;
 			errorMesssages.append("<br/>");
 			errorMesssages
-				.append(SokokanriMessage.getErrorNotFoundUploadOrder(notFoundOrder, locale));
+				.append("");
 		}
 		if (hasError)
 		{
@@ -525,11 +522,11 @@ public class ExportingServiceImpl implements ExportingService
 		Locale locale = LocaleContextHolder.getLocale();
 		if (shukkaHead == null)
 		{
-			throw new SokokanriException(SokokanriMessage.getHeaderIsNotExists(locale));
+			throw new SokokanriException();
 		}
 		if (shukkaHead.getStatus() != null && shukkaHead.getStatus() == 1)
 		{
-			throw new SokokanriException(SokokanriMessage.getHeaderIsExported(locale));
+			throw new SokokanriException();
 		}
 		List<ShukkaBody> shukkaBodys = this.shukkaBodyDAO
 			.getBodyByHeader(exportParameter.getSagyoDate(), exportParameter.getSojoNo(), sokoCd);
@@ -541,21 +538,20 @@ public class ExportingServiceImpl implements ExportingService
 			String bodyId = item.getBodyId();
 			if (!this.containsInHeader(bodyId, shukkaBodys))
 			{
-				throw new SokokanriException(
-					SokokanriMessage.getBodyIsNotBelongToHeaderOrDuplicated(bodyId, locale));
+				throw new SokokanriException();
 			}
 			ShukkaBody shukkaBody = this.shukkaBodyDAO.getById(bodyId);
 			if (shukkaBody == null
 				|| (shukkaBody.getDeleteFlg() != null && shukkaBody.getDeleteFlg() == 1))
 			{
-				throw new SokokanriException(SokokanriMessage.getItemNotExist(bodyId, locale));
+				throw new SokokanriException();
 			}
 
 			String szNo = item.getSzNo();
 			if (exportingNyuko.containsKey(szNo)
 				&& !Utils.stringCompare(exportingNyuko.get(szNo), bodyId))
 			{
-				throw new SokokanriException(SokokanriMessage.getNyukoIsDuplicated(szNo, locale));
+				throw new SokokanriException();
 			}
 			exportingNyuko.put(szNo, bodyId);
 
@@ -568,8 +564,7 @@ public class ExportingServiceImpl implements ExportingService
 			if (nyuko == null || nyuko.getStatus() != 1)
 			{
 				//note that Nyuko can be in Trans table, but we do not handle now.
-				throw new SokokanriException(
-					SokokanriMessage.getNyukoIsNotAvailableOrExported(szNo, locale));
+				throw new SokokanriException();
 			}
 
 			//it is validated (by client) => change state to 1.
@@ -585,7 +580,7 @@ public class ExportingServiceImpl implements ExportingService
 			exportParameter.getSojoNo(),
 			sokoCd) != count)
 		{
-			throw new SokokanriException(SokokanriMessage.getErrorSelectAllItems(locale));
+			throw new SokokanriException();
 		}
 		try
 		{
@@ -609,7 +604,7 @@ public class ExportingServiceImpl implements ExportingService
 		}
 		catch (Exception ex)
 		{
-			throw new SokokanriException(SokokanriMessage.getErrorUnexpected(locale));
+			throw new SokokanriException();
 		}
 	}
 	private boolean containsInHeader(String bodyId, List<ShukkaBody> shukkaBodies)

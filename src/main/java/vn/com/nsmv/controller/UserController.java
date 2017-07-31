@@ -1,27 +1,41 @@
 package vn.com.nsmv.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.i18n.*;
-import org.springframework.http.*;
-import org.springframework.security.core.*;
-import org.springframework.security.core.context.*;
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.validation.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.support.*;
-import org.springframework.web.servlet.view.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
-import vn.com.nsmv.common.*;
-import vn.com.nsmv.entity.*;
-import vn.com.nsmv.i18n.*;
-import vn.com.nsmv.javabean.*;
-import vn.com.nsmv.service.*;
+import vn.com.nsmv.bean.CustomUser;
+import vn.com.nsmv.bean.ResponseResult;
+import vn.com.nsmv.common.HTMLUtils;
+import vn.com.nsmv.common.SokokanriException;
+import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.entity.User;
+import vn.com.nsmv.i18n.SokokanriMessage;
+import vn.com.nsmv.javabean.UserBean;
+import vn.com.nsmv.javabean.UserRegistration;
+import vn.com.nsmv.service.UserService;
 
 @Controller
 public class UserController extends SokokanriCommonController
@@ -266,6 +280,88 @@ public class UserController extends SokokanriCommonController
 		return "redirect:../list";
 	}
 
-
+	@RequestMapping(value = "/dang-ky", method = RequestMethod.POST, 
+	    consumes = "application/json", produces = "application/json")
+	public @ResponseBody ResponseEntity<ResponseResult<String>> register(
+       @RequestBody UserRegistration userRegistration)
+    {
+	    try {
+            this.userService.register(userRegistration);
+        } catch (SokokanriException e) {
+            return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, e.getErrorMessage(), null), HttpStatus.OK);
+        }
+	    return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+	
+	@RequestMapping(value = "/quen-mat-khau", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<ResponseResult<String>> resetPassword(@RequestParam String email)
+    {
+        try {
+            this.userService.resetPassword(email);
+        } catch (SokokanriException e) {
+            return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, e.getErrorMessage(), null), HttpStatus.OK);
+        }
+        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+	
+	@RequestMapping(value = "/quen-mat-khau", method = RequestMethod.GET)
+    public String resetPassword(Model model, @RequestParam String email, @RequestParam String timestamp)
+    {
+        try {
+            this.userService.resetPassword(email, timestamp);
+        } catch (SokokanriException e) {
+            return null;
+        }
+        User user = new User();
+        user.setEmail(email);
+        user.setResetPwTimestamp(timestamp);
+        model.addAttribute("user", user);
+        return "/user/changePassword1";
+    }
+	
+	@RequestMapping(value = "/doi-mat-khau", method = RequestMethod.POST)
+    public String changePassword(Model model, @ModelAttribute User user)
+    {
+        try {
+            this.userService.changePassword(user);
+        } catch (SokokanriException e) {
+            model.addAttribute("errorMessage", e.getErrorMessage());
+            return "/user/changePassword1";
+        }
+        model.addAttribute("errorMessage", SokokanriMessage.getMessageInforChangePasswordSuccessfully(LocaleContextHolder.getLocale()));
+        return "/user/changePassword1";
+    }
+	
+	@RequestMapping(value = "/thay-doi-mat-khau", method = RequestMethod.GET)
+    public String changePassword(Model model)
+    {
+        User user = new User();
+        CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.setEmail(customUser.getEmail());
+        model.addAttribute("user", user);
+        return "/user/userChangePassword";
+    }
+	
+	@RequestMapping(value = "/thay-doi-mat-khau", method = RequestMethod.POST)
+	public RedirectView updatePassword(Model model, @ModelAttribute User user, RedirectAttributes redirectAttributes)
+    {
+        try {
+            this.userService.updatePassword(user);
+        } catch (SokokanriException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getErrorMessage());
+            return new RedirectView("thay-doi-mat-khau-kq");
+        }
+        redirectAttributes.addFlashAttribute("errorMessage", SokokanriMessage.getMessageInforChangePasswordSuccessfully(LocaleContextHolder.getLocale()));
+        return new RedirectView("thay-doi-mat-khau-kq");
+    }
+	
+	@RequestMapping(value = "/thay-doi-mat-khau-kq", method = RequestMethod.GET)
+	public String updatePasswordResult(Model model){
+	    User user = new User();
+	    CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.setEmail(customUser.getEmail());
+        model.addAttribute("user", user);
+	    return "/user/userChangePassword"; 
+	}
 	
 }

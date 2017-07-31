@@ -25,9 +25,13 @@
 	}
 	function confirmChange(){
 		
+		var	pOld = document.getElementById('oldPassword').value;
 		var pNew1 = document.getElementById('new_password').value;
 		var pNew2 = document.getElementById('confirmPassword').value;
-
+		if(pOld == ""){
+			$("#errorMessenger").html("Vui lòng nhập mật khẩu hiện tại.");
+			return;
+		}
 		if(pNew1 == ""){
 			$("#errorMessenger").html("Vui lòng nhập mật khẩu mới.");
 			return;
@@ -64,6 +68,10 @@
 </head>
 <body>
 	<div class="rightContent" align="center">
+		<c:if test="${resetPw ne true }">
+			<div class="header_bar">
+				<jsp:include page="/WEB-INF/pages/common/header.jsp" /></div>
+		</c:if>
 		<div id="wrapper">
 			<div class="body_container">
 				<div class="container body">
@@ -72,7 +80,7 @@
 					border-radius:4px; background: #fff">
 						<section class="login_content">
 						<form:form modelAttribute="user" method="POST"
-							action="doi-mat-khau" class="form-horizontal" id = "changePass">
+							action="thay-doi-mat-khau" class="form-horizontal" id = "changePass">
 							<div class="block-eff-no-margin">
 							<h1>Thay đổi mật khẩu</h1>
 							<div id="error_message">
@@ -85,11 +93,16 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<input type="text" value="${user.email }" class="form-control" name="email"  disabled="disabled"/>
+								<input type="text" value="${user.email }" class="form-control"  disabled="disabled">
 								<input type="hidden" name="email"  value="${user.email }" />
 							</div>
+							<div class="form-group">
+								<c:if test="${resetPw ne true }">
+									<input name="oldPassword" type="password" class="form-control" id="oldPassword"
+										placeholder="Mật khẩu hiện tại" required maxlength="20" onkeypress="checkPrtScn(event)"/>
+								</c:if>
+							</div>
 							
-							<input type="hidden" value="${user.resetPwTimestamp }" name="resetPwTimestamp">  
 							<div class="form-group">
 								<input name="password" type="password" class="form-control" id="new_password"
 									required placeholder="Mật khẩu mới" maxlength="20" onkeypress="checkPrtScn(event)"/>
@@ -101,7 +114,6 @@
 
 							<div class="form-group" style="margin-top:30px;">
 								<button type="button" class="btn btn-primary btn-lg" onclick="confirmChange()" ><i class="fa fa-save m-right-xs"></i> Đổi mật khẩu</button>
-								<a href="<c:url value= "/"/>" type="button btn-default" class="btn btn-lg" ><i class="fa m-right-xs"></i> Về trang chủ</a>
 							</div>
 							</div>
 							<div class="clearfix"></div>

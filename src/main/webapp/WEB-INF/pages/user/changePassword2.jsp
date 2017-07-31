@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-<title>パスワードの更新</title>
+<title>Thay đổi mật khẩu</title>
 <link rel="shortcut icon" href="<c:url value="/resources/img/favicon.ico" />" />
 <link href="<c:url value="/resources/css/bootstrap.min.css" />"
 	rel="stylesheet">
@@ -24,7 +24,7 @@ function goBack() {
 				<div class="row tile_count">
 					<div class="page-title">
 						<div class="title_left">
-							<h3>パスワードの更新</h3>
+							<h3>Thay đổi mật khẩu</h3>
 						</div>
 					</div>
 				</div>

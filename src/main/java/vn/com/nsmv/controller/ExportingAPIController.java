@@ -101,7 +101,7 @@ public class ExportingAPIController
 				1,
 				Utils.getSokoCdFromJwt()));
 		return new ResponseEntity<String>(
-			SokokanriMessage.getItemExportSuccessfully(LocaleContextHolder.getLocale()),
+			"",
 			HttpStatus.OK);
 	}
 
