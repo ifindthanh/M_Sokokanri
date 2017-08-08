@@ -88,7 +88,7 @@ public class UserRegistration {
         }
     }
     
-    private void checkPhoneNumber() throws SokokanriException {
+    public void checkPhoneNumber() throws SokokanriException {
         if (Utils.isEmpty(this.phone)) {
             throw new SokokanriException(SokokanriMessage.getMessageErrorPhoneCannotBeEmpty(locale));
         }

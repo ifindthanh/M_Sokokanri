@@ -22,7 +22,6 @@
 <link href="<c:url value="/resources/css/icheck/green.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/fonts/css/font-awesome.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/dialogbox.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/dataTables.bootstrap.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/bootstrap-select.min.css" />" rel="stylesheet"><style>
 	.ui-datepicker-next::before {
 	    content: " - ";
@@ -62,7 +61,7 @@
 				<table id="tableList" class="listBusCard table" style="width: 1500px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'cho-duyet')" /></th>
+							<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, 'cho-duyet')" /></th>
 							<th>Mã đơn hàng</th>
 							<th style="width: 100px">Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -216,6 +215,8 @@
     <script>
     var table;
     $(document).ready(function(){
+    	//check the check boxx
+    	checkSelectAll();
 		//init datatables
 		$("#tableList").tableHeadFixer({"head" : false, "left" : 2, "right": 1}); 
 		

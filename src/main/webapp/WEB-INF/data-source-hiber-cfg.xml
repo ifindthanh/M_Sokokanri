@@ -23,6 +23,7 @@
 			<list>
 				<value>vn.com.nsmv.entity.User</value>
 				<value>vn.com.nsmv.entity.UserRole</value>
+				<value>vn.com.nsmv.entity.Role</value>
 				<value>vn.com.nsmv.entity.MoneyExchange</value>
 				<value>vn.com.nsmv.entity.Item</value>
 				<value>vn.com.nsmv.entity.ItemHistory</value>

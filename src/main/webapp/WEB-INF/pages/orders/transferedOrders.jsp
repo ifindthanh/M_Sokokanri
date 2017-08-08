@@ -89,7 +89,7 @@
 					<thead>
 						<tr class="headings" role="row">
 							<sec:authorize access="hasAnyRole('ROLE_T2', 'ROLE_A')">
-								<th><input type="checkbox" onchange="selectAllItems(this, 'da-chuyen')" /></th>
+								<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, 'da-chuyen')" /></th>
 							</sec:authorize>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
@@ -282,6 +282,7 @@
     <script>
     var table;
     $(document).ready(function(){
+    	checkSelectAll();
 		//init datatables
     	$("#tableList").tableHeadFixer({"head" : false, "left" : 2, "right": 2}); 
 		

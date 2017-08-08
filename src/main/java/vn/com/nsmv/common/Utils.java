@@ -206,4 +206,8 @@ public class Utils
 	public static String getFormattedId (Object id, int nbOfDigit) {
 		return String.format("%0" + nbOfDigit + "d", id);
 	}
+	
+	public static void main(String args[]) {
+	    System.out.println(Utils.encode("a"));
+	}
 }

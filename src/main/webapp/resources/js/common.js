@@ -55,6 +55,7 @@
     		"computeCost": currentElement.closest('tr').find(".txtComputeCost").val(),
     		"buyingCode": currentElement.closest('tr').find(".txtBuyingCode").val()
     	};
+    	$('#ajax-overlay').show();
     	$.ajax({
 			type : "POST",
 			url : "luu-item",
@@ -62,6 +63,7 @@
 			contentType : 'application/json; charset=utf-8',
 			dataType : 'json',
 			success : function(response) {
+				$('#ajax-overlay').hide();
 				if (response.status == 0) {
 					alert(response.message);
 					action.hide();
@@ -88,6 +90,7 @@
 				revertPrice();
 			},
 			error : function() {
+				$('#ajax-overlay').hide();
 				currentElement.closest('tr').find(".origin").show();
 				action.hide();
 				displayBack(currentElement);
@@ -210,25 +213,32 @@
 	
 	function selectItem(id, element, baseUrl) {
     	var chkbox = $(element);
+    	$('#ajax-overlay').show();
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
     			url : baseUrl+"/chon-don-hang?id=" + id,
     			success : function(result) {
+    				$('#ajax-overlay').hide();
     			},
     			error : function() {
+    				$('#ajax-overlay').hide();
     			}
     		});
     	} else {
+    		$('#ajax-overlay').show();
     		$.ajax({
     			type : "GET",
     			url : baseUrl+"/bo-chon-don-hang?id=" + id,
     			success : function(result) {
+    				$('#ajax-overlay').hide();
     			},
     			error : function() {
+    				$('#ajax-overlay').hide();
     			}
     		});
     	}
+    	checkSelectAll();
     }
     
 	function selectAllItems(element, baseUrl) {
@@ -239,23 +249,27 @@
 			ids += $(this).attr("order_id")+",";
 		})
     	if (chkbox.is(':checked')) {
+    		$('#ajax-overlay').show();
     		$.ajax({
     			type : "GET",
     			url : baseUrl + "/chon-tat-ca?ids="+ids,
     			success : function(result) {
-    				
+    				$('#ajax-overlay').hide();
     			},
     			error : function() {
+    				$('#ajax-overlay').hide();
     			}
     		});
     	} else {
+    		$('#ajax-overlay').show();
     		$.ajax({
     			type : "GET",
     			url : baseUrl + "/bo-chon-tat-ca?ids="+ids,
     			success : function(result) {
-    				
+    				$('#ajax-overlay').hide();
     			},
     			error : function() {
+    				$('#ajax-overlay').hide();
     				
     			}
     		});
@@ -344,15 +358,34 @@
     
 
     function viewOrder(id) {
+    	$('#ajax-overlay').show();
 		$.ajax({
 			type : "GET",
 			url : "xem-don-hang/"+ id,
 			success : function(result) {
+				$('#ajax-overlay').hide();
 				$("#orderDetailModal").modal('show');
 				$('#order_detail').html(result);
 			},
 			error : function() {
+				$('#ajax-overlay').hide();
 			}
 		});
-}
+		
+    }
+    
+    function checkSelectAll(){
+		var check = true;
+		$(".order_id").each(function (){
+			if (!$(this).is(':checked')) {
+				check = false;
+				return;
+			}
+		});
+		if (check) {
+			$("#selectAll").prop('checked', true);
+		} else {
+			$("#selectAll").prop('checked', false);
+		}
+	}
     

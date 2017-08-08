@@ -76,7 +76,7 @@
 					<thead>
 						<tr class="headings" role="row">
 							<sec:authorize access="hasAnyRole('ROLE_BG', 'ROLE_A')">
-								<th><input type="checkbox" onchange="selectAllItems(this, 'nhap-kho')" /></th>
+								<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, 'nhap-kho')" /></th>
 							</sec:authorize>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
@@ -216,6 +216,7 @@
     <script>
     var table;
     $(document).ready(function(){
+    	checkSelectAll();
 		//init datatables
           table = $('#tableList').DataTable({
      		destroy: true,

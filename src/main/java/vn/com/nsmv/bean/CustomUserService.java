@@ -28,7 +28,7 @@ public class CustomUserService implements UserDetailsService
 			throw new UsernameNotFoundException("");
 		}
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		Set<UserRole> roles = userDAO.getRoles(user.getId());
+		Set<UserRole> roles = this.userDAO.getRoles(user.getId());
 		if (roles != null) {
 			for (UserRole item : roles) {
 				SimpleGrantedAuthority authority = new SimpleGrantedAuthority(

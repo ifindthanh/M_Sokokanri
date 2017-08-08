@@ -62,7 +62,7 @@
 				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this)" /></th>
+							<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this)" /></th>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
 							<th>Vận đơn</th>
@@ -198,6 +198,7 @@
     <script>
     var table;
     $(document).ready(function(){
+    	checkSelectAll();
 		//init datatables
           table = $('#tableList').DataTable({
      		destroy: true,
@@ -235,6 +236,7 @@
     			}
     		});
     	}
+    	checkSelectAll();	
     }
     
     function selectAllItems(element) {
@@ -324,6 +326,21 @@
 	
 	function search() {
 		$("#finishedOrders").submit();
+	}
+	
+	function checkSelectAll(){
+		var check = true;
+		$(".order_id").each(function (){
+			if (!$(this).is(':checked')) {
+				check = false;
+				return;
+			}
+		});
+		if (check) {
+			$("#selectAll").prop('checked', true);
+		} else {
+			$("#selectAll").prop('checked', false);
+		}
 	}
 	
 </script>

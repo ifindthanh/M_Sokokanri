@@ -73,7 +73,7 @@
 				<table id="tableList" class="listBusCard table" style="width: 2000px !important;">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" onchange="selectAllItems(this, 'cho-mua')" /></th>
+							<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, 'cho-mua')" /></th>
 							<th>Mã đơn hàng</th>
 							<th>Tên khách hàng</th>
 							<th style="width: 180px">Tên sản phẩm</th>
@@ -266,6 +266,7 @@
 	
     <script>
     $(document).ready(function(){
+    	checkSelectAll();
     	$("#tableList").tableHeadFixer({"head" : false, "left" : 2, "right": 1}); 
     });
     

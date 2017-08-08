@@ -101,7 +101,7 @@
 
 							<div class="form-group" style="margin-top:30px;">
 								<button type="button" class="btn btn-primary btn-lg" onclick="confirmChange()" ><i class="fa fa-save m-right-xs"></i> Đổi mật khẩu</button>
-								<a href="<c:url value= "/"/>" type="button btn-default" class="btn btn-lg" ><i class="fa m-right-xs"></i> Về trang chủ</a>
+								<a href="<c:url value= "/"/>" type="button" class="btn btn-lg btn-default" ><i class="fa m-right-xs"></i> Về trang chủ</a>
 							</div>
 							</div>
 							<div class="clearfix"></div>

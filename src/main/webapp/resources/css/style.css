@@ -208,3 +208,16 @@ td.myLabel {
 .gender {
 	font-weight: normal;
 }
+
+#ajax-overlay {
+    z-index:9999;
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    background:#a7a7a7;
+    opacity:0.2;
+    cursor: wait;
+}

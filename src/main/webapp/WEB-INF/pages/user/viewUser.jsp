@@ -5,20 +5,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags"
 	prefix="sec"%>
-
+<%@ taglib uri="/WEB-INF/taglibs/rolesDisplayingTaglib.tld" prefix="roles" %>
 <html>
 <head>
-<title>ユーザー情報</title>
+<title>Thông tin user</title>
 <!-- Bootstrap core CSS -->
 <link rel="shortcut icon"
 	href="<c:url value="/resources/img/favicon.ico" />" />
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/menu.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/custom.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/sweet-alert.css" />" rel="stylesheet">
-<script src="<c:url value="/resources/js/sweet-alert.min.js" />"></script>
 <script src="<c:url value="/resources/js/jquery.min.js" />"></script>
-<link href="<c:url value="/resources/css/icheck/green.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/fonts/css/font-awesome.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/dialogbox.css" />" rel="stylesheet">
 <script src="<c:url value="/resources/js/dialogbox.js" />"></script>
@@ -44,7 +39,7 @@
 
 													<div class="main">
 
-														<h3>ユーザー情報</h3>
+														<h3>THÔNG TIN USER</h3>
 													</div>
 													<form:form modelAttribute="viewUserForm" method="POST"
 														action="viewUser" enctype="multipart/form-data"
@@ -61,225 +56,103 @@
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
 																					for="first-name"> </label>
 																				<div class="col-md-6 col-sm-6 col-xs-12">
-
-																					<h2 class="pull-left">
-																						<strong>登録日:</strong>
-																						<fmt:formatDate
-																							value="${userEntity.getCreateDate()}"
-																							pattern="yyyy/MM/dd" />
-																					</h2>
-																					&nbsp; &nbsp;&nbsp;
-																					<h2 class="pull-left" style="margin-left: 20px">
-																						<strong>更新日:</strong>
-																						<fmt:formatDate
-																							value="${userEntity.getUpdateDate()}"
-																							pattern="yyyy/MM/dd" />
-																					</h2>
 																					<h2 class="pull-right" style="margin-left: 20px">
 																						<strong><i class="fa fa-user">
-																								&nbsp;&nbsp;</i>${userEntity.getLastName()}
-																							${userEntity.getFirstName()} </strong>
+																								&nbsp;&nbsp;</i>${user.getFullname()}</strong>
 
 																					</h2>
 																				</div>
 																			</div>
 																			<div class="form-group">
-
 																				<label
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">社員番号 </label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input class="form-control has-feedback-left"
-																						style="text-align: left; background-color: #eee; line-height: 22px; pointer-events: none;"
-																						value="${userEntity.getUserCd()}"
-																						disabled="disabled" readonly="readonly"><span
-																						class="fa fa-user form-control-feedback left"
-																						aria-hidden="true"></span> <input type="hidden"
-																						name="userCd" id="userCd"
-																						value="${userEntity.getUserCd()}" />
-																				</div>
-																			</div>
-																			<div class="form-group">
-
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name" 　data-toggle="tooltip"
-																					data-placement="right" title="必須項目です。">姓名 </label>
-
-																				<div class="col-md-3 col-sm-3 col-xs-6">
-																					<input type="text"
-																						class="form-control has-feedback-left pointer-events: none;"
-																						name="lastName" maxlength="30" id="lastName"
-																						disabled="disabled" readonly="readonly"
-																						value="${userEntity.getLastName()}"
-																						placeholder="姓"> <span
-																						class="fa fa-user form-control-feedback left"
-																						aria-hidden="true"></span>
-																				</div>
-																				<div class="col-md-3 col-sm-3 col-xs-6">
-																					<input type="text"
-																						class="form-control has-feedback-left pointer-events: none;"
-																						name="firstName" maxlength="30" id="firstName"
-																						disabled="disabled" readonly="readonly"
-																						value="${userEntity.getFirstName()}"
-																						placeholder="名"> <span
-																						class="fa fa-user form-control-feedback left"
-																						aria-hidden="true"></span>
-																				</div>
-																			</div>
-																			<div class="form-group">
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12">性別</label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<div id="gender" class="btn-group left"
-																						data-toggle="buttons">
-																						<label class="btn btn-default disabled"
-																							data-toggle-class="btn-primary"
-																							data-toggle-passive-class="btn-default">
-																							&nbsp; 男 &nbsp; <input type="radio" class="flat"
-																							name="gender" id="genderM" value="M"
-																							<c:if test="${userEntity.getGender()=='M'}"> checked </c:if>
-																							disabled required />
-																						</label> <label class="btn btn-default disabled"
-																							data-toggle-class="btn-primary"
-																							data-toggle-passive-class="btn-default">
-																							&nbsp; 女 &nbsp; <input type="radio" class="flat"
-																							name="gender" id="genderF" value="F"
-																							<c:if test="${userEntity.getGender()=='F'}"> checked </c:if>
-																							disabled />
-																						</label>
-																					</div>
-																				</div>
-																			</div>
-																			<div class="form-group">
-
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">電話番号 </label>
+																					for="first-name">Email </label>
 																				<div class="col-md-6 col-sm-6 col-xs-12">
 																					<input type="text"
 																						class="form-control has-feedback-left"
 																						style="ime-mode: disabled" disabled="disabled"
-																						readonly="readonly" name="phone" maxlength="30"
-																						id="phone" value="${userEntity.getPhone()}">
-																					<span
-																						class="fa fa-phone form-control-feedback left"
-																						aria-hidden="true"></span>
+																						readonly="readonly" maxlength="30"
+																						value="${user.email }">
 																				</div>
 																			</div>
-
 																			<div class="form-group">
-
 																				<label
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">会社名 </label>
+																					for="first-name" 　data-toggle="tooltip"
+																					data-placement="right" title="">Họ và tên</label>
+																				<div class="col-md-6 col-sm-6 col-xs-12">
+																					<input type="text" class="form-control has-feedback-left pointer-events: none;"
+																						name="fullname" maxlength="30" id="fullname"
+																						disabled="disabled" readonly="readonly"
+																						value="${user.fullname }">
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<label
+																					class="control-label col-md-3 col-sm-3 col-xs-12">Giới tính</label>
+																				<div class="col-md-6 col-sm-6 col-xs-12">
+																					<input type="text"
+																						class="form-control has-feedback-left"
+																						style="ime-mode: disabled" disabled="disabled"
+																						readonly="readonly" maxlength="30"
+																						<c:if test="${user.gender == 'M' }">value = "Nam"</c:if>
+																						<c:if test="${user.gender == 'F' }">value = "Nữ"</c:if>
+																						>
+																				</div>
+																				<div class="col-md-6 col-sm-6 col-xs-12"
+																					style="text-align: left">
+																					
+																					
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<label
+																					class="control-label col-md-3 col-sm-3 col-xs-12"
+																					for="first-name">Số điện thoại</label>
 																				<div class="col-md-6 col-sm-6 col-xs-12">
 																					<input type="text"
 																						class="form-control has-feedback-left"
 																						disabled="disabled" readonly="readonly"
-																						name="companyName" maxlength="30" id="companyName"
-																						value="${userEntity.getCompanyName()}"> <span
-																						class="fa fa-building-o form-control-feedback left"
-																						aria-hidden="true"></span>
+																						name="phone" maxlength="30" id="phone"
+																						value="${user.phone }">
 																				</div>
 																			</div>
+																			
 																			<div class="form-group">
 																				<label
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">部署 </label>
+																					for="first-name">Địa chỉ</label>
 																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text"
-																						class="form-control has-feedback-left"
+																					<textarea class="form-control description"
 																						disabled="disabled" readonly="readonly"
-																						name="dept" maxlength="30" id="dept"
-																						value="${userEntity.getDept()}"> <span
-																						class="fa fa-users form-control-feedback left"
-																						aria-hidden="true"></span>
+																						name="address" maxlength="30" id="address">${user.address } </textarea>
 																				</div>
 																			</div>
+																			
 																			<div class="form-group">
 																				<label
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">役職/職責 </label>
+																					for="first-name">Roles</label>
 																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text"
-																						class="form-control has-feedback-left"
-																						name="title" maxlength="30" id="title"
-																						disabled="disabled" readonly="readonly"
-																						value="${userEntity.getTitle()}"> <span
-																						class="fa fa-briefcase form-control-feedback left"
-																						aria-hidden="true"></span>
+																					<roles:roles disable="true" allRoles="${roles }"/>
 																				</div>
 																			</div>
-																			<div class="form-group">
-
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">住所 </label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text"
-																						class="form-control has-feedback-left"
-																						name="address" maxlength="100" id="address"
-																						disabled="disabled" readonly="readonly"
-																						value="${userEntity.getAddress()}"> <span
-																						class="fa fa-map-marker form-control-feedback left"
-																						aria-hidden="true"></span>
-																				</div>
-																			</div>
-
-																			<div class="form-group">
-
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">メールアドレス </label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text"
-																						class="form-control has-feedback-left"
-																						style="ime-mode: disabled" name="email"
-																						maxlength="50" id="email" disabled="disabled"
-																						readonly="readonly"
-																						value="${userEntity.getEmail()}"> <span
-																						class="fa fa-envelope-o form-control-feedback left"
-																						aria-hidden="true"></span>
-																				</div>
-																			</div>
-
+															
 																			<div class="ln_solid"></div>
 																			<div class="form-group">
 																				<div
 																					class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-
-																					<a href="../editUser/${userEntity.getUserCd()}"
+																					<a href="../editUser/${user.getId()}"
 																						class="btn btn-primary btn-lg" onclick=""> <i
-																						class="fa fa-edit "></i> 編集
+																						class="fa fa-edit "></i> Chỉnh sửa
 																					</a>
-																					<sec:authorize access="hasAnyRole('ROLE_A', 'ROLE_S')">
-																						<c:set var="offset" scope="page"
-																							value="${offsetInUser}" />
-
-																						<c:set var="maxResults" scope="page"
-																							value="${maxResultsInUser}" />
-
-																						<c:if test="${empty offset}">
-																							<c:set var="offset" value="0" />
-																						</c:if>
-																						<c:set var="url" scope="page"
-																							value="../list?offset=${offset}" />
-																						<c:if test="${not empty maxResults}">
-																							<c:set var="url"
-																								value="${url}&maxResults=${maxResults}" />
-																						</c:if>
-
-																						<a href="${url}" class="btn btn-default btn-lg"
-																							onclick=""> <i class="fa fa-arrow-left "></i>
-																							戻る
-																						</a>
-																					</sec:authorize>
+																					<a href="tat-ca"
+																						class="btn btn-default btn-lg">
+																						<i class="fa fa-close m-right-xs"></i> Quay lại
+																					</a>
 																				</div>
 																			</div>
 																		</div>
-
-
 																	</div>
 																</div>
 															</div>
@@ -297,21 +170,6 @@
 			</div>
 		</div>
 	</div>
-	<script>
-		$(document).ready(function() {
-			$("#gender").delegate('a', 'click', function(e){ e.stopImmediatePropagation(); })
-		});
-	</script>
-	<!-- /page content -->
-	<!-- <div id="custom_notifications" class="custom-notifications dsp_none"> -->
-	<!-- 	<ul class="list-unstyled notifications clearfix" -->
-	<!-- 		data-tabbed_notifications="notif-group"> -->
-	<!-- 	</ul> -->
-	<!-- 	<div class="clearfix"></div> -->
-	<!-- 	<div id="notif-group" class="tabbed_notifications"></div> -->
-	<!-- </div> -->
 	<script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-	<script src="<c:url value="/resources/js/icheck/icheck.min.js" />"></script>
-	<script src="<c:url value="/resources/js/custom.js" />"></script>
 </body>
 </html>

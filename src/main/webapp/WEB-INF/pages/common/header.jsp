@@ -11,6 +11,7 @@
 <script src="<c:url value="/resources/js/jquery.min.js" />"></script>
 
 <div>
+	<div id="ajax-overlay"></div>
 	<div class="top-block"
 		style="height: 50px; width0: 100%; background-color: #9e9595">
 		<sec:authorize access="isAuthenticated()">
@@ -95,6 +96,9 @@
 				    </ul>
 				</li>
 			</sec:authorize>
+			<sec:authorize access="hasRole('ROLE_A')">
+				<li><a href="<c:url value= "/user/tat-ca/0"/>">Danh sách người dùng</a></li>
+			</sec:authorize>
 		</ul>
 			</nav>
 </div>
@@ -117,8 +121,8 @@
         	<p id= "reset_errorMessage" class="error"></p>
         		<h1>Nhập địa chỉ email</h1>
         		<br>
-        		<form name='f' class ="" id ="reset_form">
-					<input type="text" id="reset_email" name="email" placeholder="Email"> 
+        		<form name='f' id ="reset_form">
+					<input type="text" id="reset_email" class="form-control" name="email" placeholder="Email"> 
 					<input type="button" id="resetPwd" onclick="resetPw()" class="login loginmodal-submit" value="Forgot Password">
 				</form>
         </div>
@@ -139,14 +143,14 @@
             <br/>
             <fieldset>
             	<form name='f' id ="reg_form">
-                <input id="reg_email" name="Email" class="form-control" type="text" placeholder="Email" class="input-large" required="">
-                <input id="reg_name" name="name" class="form-control" type="text" placeholder="Full name" class="input-large" required="">
-                <input id="reg_password" name="password" class="form-control" type="password" placeholder="Mật khẩu" class="input-large" required="">
-                <input id="reg_reenterpassword" class="form-control" placeholder="Nhập lại mật khẩu" type="password" class="input-large" required="">
-                <input id="reg_phone" class="form-control" name="phone" placeholder="Số điện thoại" class="input-large" required="">
-                <input id="reg_male" type="radio" name="gender"  value="M" ><label class="gender" for="reg_male">Nam</label>
-                <input id="reg_female"type="radio" name="gender" value="F"><label class="gender" for="reg_female">Nữ</label>
-				<input type="button" id="reg_button" class="login loginmodal-submit" value="Đăng ký" onclick="register()">
+	                <input id="reg_email" name="email" class="form-control" type="text" placeholder="Email" class="input-large">
+	                <input id="reg_name" name="name" class="form-control" type="text" placeholder="Full name" class="input-large">
+	                <input id="reg_password" name="password" class="form-control" type="password" placeholder="Mật khẩu" class="input-large">
+	                <input id="reg_reenterpassword" class="form-control" placeholder="Nhập lại mật khẩu" type="password" class="input-large">
+	                <input id="reg_phone" class="form-control" name="phone" placeholder="Số điện thoại" class="input-large">
+	                <input id="reg_male" type="radio" name="gender"  value="M" ><label class="gender" for="reg_male">Nam</label>
+	                <input id="reg_female"type="radio" name="gender" value="F"><label class="gender" for="reg_female">Nữ</label>
+					<input type="button" id="reg_button" class="login loginmodal-submit" value="Đăng ký" onclick="register()">
 				</form>
             </fieldset>
             <br/>
@@ -199,16 +203,18 @@
 				$("#password").focus();
 				return;
 			}
-			
+			$('#ajax-overlay').show();
 			$.ajax({
 				type : "POST",
 				url : "${pageContext.request.contextPath}/j_spring_security_check",
 				data: $("#login_form").serialize(),
 				success : function(result) {
+					$('#ajax-overlay').hide();
 					window.location.href = window.location.href.split("#")[0];
 				},
 				error : function() {
 					$("#errorMessage").html("User name hoac password khong dung");
+					$('#ajax-overlay').hide();
 				}
 			
 			});
@@ -263,6 +269,7 @@
 				return;
 			}
 			
+			$('#ajax-overlay').show();
 			var data = {
 				"email": $("#reg_email").val(),
 				"password": $("#reg_password").val(),
@@ -271,7 +278,6 @@
 				"phone": $("#reg_phone").val(),
 				"sex": $('input:radio[name=gender]:checked').val()
 			};
-
 			$.ajax({
 				type : "POST",
 				contentType : "application/json",
@@ -280,14 +286,17 @@
 				dataType : 'json',
 				success : function(result) {
 					if (result.status == 0) {
+						$('#ajax-overlay').hide();
 						$("#reg_errorMessage").html(result.message);
 						return;
 					}
 					alert("Đăng ký thành công");
+					$('#ajax-overlay').hide();
 					window.location.href = window.location.href.split("#")[0];
 				},
 				error : function() {
 					$("#reg_errorMessage").html("Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
+					$('#ajax-overlay').hide();
 				}
 			
 			});
@@ -306,6 +315,7 @@
 		}
 		
 		function saveMoneyRate(url) {
+			$('#ajax-overlay').show();
 			$.ajax({
 				type : "GET",
 				url : url+'?value='+$('#money_rate').val(),
@@ -317,10 +327,12 @@
 					}
 					$("#moneyRate").html($('#money_rate').val());
 					$("#money-rate-modal").modal("hide");
+					$('#ajax-overlay').hide();
 				},
 				error : function(response) {
 					$("#saveError").html(response);
 					$('#money_rate').forcus();
+					$('#ajax-overlay').hide();
 				}
 			
 			});
@@ -334,23 +346,27 @@
 				return;
 			}
 			
+			$('#ajax-overlay').show();
+			
 			$.ajax({
 				type : "POST",
 				url : "${pageContext.request.contextPath}/quen-mat-khau",
 				data: $("#reset_form").serialize(),
 				success : function(result) {
-					console.log(result);
-					if (result.code == 0) {
-						alert (result.message);
+					if (result.status == 0) {
+						$("#reset_errorMessage").html(result.message);
 						$("#reset_email").val("");
 						$("#reset_email").focus();
+						$('#ajax-overlay').hide();
 						return;
 					}
-					alert("Yêu cầu đã được gửi đến địa chỉ email của bạn, vui lòng kiểm tra lại hòm thư.");
+					alert("Yêu cầu đã được gửi đến địa chỉ email của bạn, vui lòng kiểm tra hòm thư và tiến hành thay đổi mật khẩu của bạn trong thời hạn 1 ngày.");
+					$('#ajax-overlay').hide();
 					window.location.href = window.location.href.split("#")[0];
 				},
 				error : function() {
 					$("#reset_errorMessage").html("Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
+					$('#ajax-overlay').hide();
 				}
 			
 			});

@@ -29,4 +29,8 @@ public class UserRole {
 	public UserRole() {
 	}
 
+    public UserRole(UserRoleID id) {
+        this.id = id;
+    }
+
 }

@@ -1,5 +1,7 @@
 package vn.com.nsmv.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,6 +27,8 @@ public class User implements java.io.Serializable
 	private String resetPwTimestamp;
 	private String confirmPassword;
 	private String oldPassword;
+	private String address;
+	private List<String> roles;
 
 	public User()
 	{
@@ -45,7 +49,7 @@ public class User implements java.io.Serializable
 	}
 
 
-	@Column(name = "PASSWORD", length = 50, nullable = true)
+	@Column(name = "PASSWORD", length = 450, nullable = true)
 	public String getPassword()
 	{
 		return this.password;
@@ -125,7 +129,25 @@ public class User implements java.io.Serializable
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
     }
-	
-	
-	
+
+
+    @Column(name = "address", length = 450, nullable = true)
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Transient
+    public List<String> getRoles() {
+        return roles;
+    }
+    
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+  
+
 }

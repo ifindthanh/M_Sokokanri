@@ -1,17 +1,17 @@
 package vn.com.nsmv.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,24 +28,29 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
-import vn.com.nsmv.common.HTMLUtils;
+import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.entity.Role;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.UserBean;
 import vn.com.nsmv.javabean.UserRegistration;
+import vn.com.nsmv.javabean.UserSearchCondition;
 import vn.com.nsmv.service.UserService;
 
 @Controller
+@Scope("session")
 public class UserController extends SokokanriCommonController
 {
 
 	@Autowired
 	private UserService userService;
 
-	//TODO fix this issue
-	private String userCd_CP;
+	private Integer offset;
+    private Integer maxResults;
+    private Set<Long> selectedItems = new HashSet<Long>();
+    private UserSearchCondition searchCondition = new UserSearchCondition();
 
 	@ModelAttribute("userBean")
 	public UserBean createUserBeanModel()
@@ -53,232 +58,100 @@ public class UserController extends SokokanriCommonController
 		return new UserBean();
 	}
 
-	@RequestMapping(value = "/user/list/0")
-	public String listUsers(HttpServletRequest request)
+	@RequestMapping(value = "/user/tat-ca/0")
+	public String init(HttpServletRequest request)
 	{
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null || Utils.isEmpty(auth.getName()))
-		{
-			return "redirect:../../login";
-		}
-		request.getSession().setAttribute("selectedMenu", 5);
-		request.getSession().setAttribute("userBean", new UserBean());
-		return "redirect:../list";
+	    this.offset = 0;
+        this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+        this.selectedItems.clear();
+        this.searchCondition = new UserSearchCondition();
+		return "redirect:../tat-ca";
 	}
-	@RequestMapping({ "/user/list" })
+	
+	@RequestMapping(value="/user/tat-ca", method = RequestMethod.GET)
 	public ModelAndView list(
 		HttpServletRequest request,
 		Model model,
 		Integer offset,
 		Integer maxResults)
 	{
-		HttpSession session = request.getSession();
-		session.setAttribute("selectedMenu", 5);
-		session.setAttribute("offsetInUser", offset);
-		session.setAttribute("maxResultsInUser", maxResults);
-		return this.getListUser(model, offset, maxResults);
+	    if (this.maxResults == null)
+        {
+            this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+        }
+        
+        if (offset != null)
+        {
+            this.offset = offset;
+        }
+        
+        if (maxResults != null)
+        {
+            this.maxResults = maxResults;
+        }
+        String message = request.getParameter("message");
+        if (!Utils.isEmpty(message)) {
+            model.addAttribute("message", message);
+        }
+        this.doBusiness(model);
+        return new ModelAndView("/user/listUser");
 	}
 
-	/******************************************
-	 * get list user
-	 *
-	 * @param Model model,Integer offset, Integer maxResults
-	 * @return ModelAndView
-	 ******************************************/
-	public ModelAndView getListUser(Model model, Integer offset, Integer maxResults)
-	{
-		List<User> list = userService.listUser(offset, maxResults);
-		Long count = userService.countListUser();
-		model.addAttribute("list", list);
-		model.addAttribute("count", count);
-		model.addAttribute("offset", offset);
-		model.addAttribute("maxResult", maxResults);
-		model.addAttribute("mode", 1);
-		return new ModelAndView("user/listUser", "command", new UserBean());
-	}
-
-	/******************************************
-	 * Handle action register user button click
-	 *
-	 * @param Model
-	 * @return ModelAndView
-	 ******************************************/
-	@RequestMapping(value = "/user/registerAnUser")
-	public ModelAndView registerUser(HttpServletRequest request, Model model)
-	{
-		return new ModelAndView("user/register1", "command", new UserBean());
-	}
-
-	/******************************************
-	 * Handle action delete user button click
-	 *
-	 * @param Model
-	 * @return ModelAndView
-	 ******************************************/
-	@RequestMapping(value = "/user/list", params = "deleteUser", method = RequestMethod.POST)
-	public ModelAndView deleteUser(
-		Model model,
-		HttpServletRequest request,
-		@RequestParam(value = "table_records", required = false) String[] listId,
-		Integer offset,
-		Integer maxResults)
-	{
-		userService.deleteUserById(listId);
-		return this.getListUser(model, offset, maxResults);
-	}
-
-	/******************************************
-	 * Handle action search button click
-	 *
-	 * @param HttpServletRequest,
-	 *            Model, UserBean, Integer, Integer
-	 * @return ModelAndView
-	 ******************************************/
-	@RequestMapping(value = "/user/list", params = "search")
-	public RedirectView search1(
+	private void doBusiness(Model model) {
+	    if (this.searchCondition == null) {
+            this.searchCondition = new UserSearchCondition();
+        }
+        try {
+            List<User> allUsers = this.userService.getAllUsers(this.searchCondition, null, this.offset,
+                    this.maxResults);
+            int count = this.userService.countAllUsers(this.searchCondition);
+            model.addAttribute("allUsers", allUsers);
+            model.addAttribute("offset", this.offset);
+            model.addAttribute("maxResult", this.maxResults);
+            model.addAttribute("selectedItems", this.selectedItems);
+            model.addAttribute("searchCondition", this.searchCondition);
+            model.addAttribute("count", count);
+        } catch (SokokanriException ex) {
+            model.addAttribute("message", ex.getErrorMessage());
+        }
+    }
+	@RequestMapping(value="/user/tat-ca", method = RequestMethod.POST)
+	public RedirectView search(
 		HttpServletRequest request,
 		Model model,
-		RedirectAttributes redirectAttributes,
+		UserSearchCondition searchCondition,
 		UserBean userBean,
 		Integer offset,
 		Integer maxResults)
 	{
-		String txtSearch = HTMLUtils.escapeForJavascriptString(userBean.getTxtSearch());
-		if (Utils.isEmpty(txtSearch))
-		{
-			request.getSession().setAttribute("userBean", userBean);
-			return new RedirectView("../user/list/0");
-		}
-		request.getSession().setAttribute("offsetInUser", offset);
-		userBean.setTxtSearch(txtSearch);
-		redirectAttributes.addFlashAttribute("userBean", userBean);
-		redirectAttributes.addAttribute("txtSearch", txtSearch);
-		redirectAttributes.addAttribute("offset", offset);
-		redirectAttributes.addAttribute("maxResults", maxResults);
+	    this.selectedItems.clear();
+	    if (this.maxResults == null)
+        {
+            this.maxResults = Constants.MAX_IMAGE_PER_PAGE;
+        }
+        
+        if (offset != null)
+        {
+            this.offset = offset;
+        }
+        
+        if (maxResults != null)
+        {
+            this.maxResults = maxResults;
+        }
+        if (searchCondition != null) 
+        {
+            this.searchCondition = searchCondition;
+        }
 		return new RedirectView("../user/searchUserResult");
 	}
 	@RequestMapping(value = "/user/searchUserResult", method = RequestMethod.GET)
 	public ModelAndView searchResult(Model model, HttpServletRequest request)
 	{
-		String txtSearch = request.getParameter("txtSearch");
-		String offsetStr = request.getParameter("offset");
-		String maxResultsStr = request.getParameter("maxResultsStr");
-		UserBean userBean = (UserBean) model.asMap().get("userBean");
-		if (userBean == null)
-		{
-			userBean = new UserBean();
-		}
-		userBean.setTxtSearch(txtSearch);
-		Integer offset = null;
-		Integer maxResults = null;
-		try
-		{
-			if (!Utils.isEmpty(offsetStr))
-			{
-				offset = Integer.valueOf(offsetStr);
-			}
-			if (!Utils.isEmpty(maxResultsStr))
-			{
-				maxResults = Integer.valueOf(maxResultsStr);
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return this.getListUserBySearchCondition(request, model, userBean, offset, maxResults);
+	    this.doBusiness(model);
+	    return new ModelAndView("/user/listUser");
 	}
 
-	/******************************************
-	 * Get business card deleted by search condition
-	 *
-	 * @param HttpServletRequest,
-	 *            Model,BusinessCardBean,Integer,Integer
-	 * @return ModelAndView
-	 ******************************************/
-	private ModelAndView getListUserBySearchCondition(
-		HttpServletRequest request,
-		Model model,
-		UserBean userBean,
-		Integer offset,
-		Integer maxResults)
-	{
-
-		List<User> list = new ArrayList<User>();
-		long count = 0;
-		try
-		{
-			list = userService
-				.getListUserByCondition(userBean.getTxtSearch().trim(), offset, maxResults);
-			if (list != null)
-			{
-				count = userService.countUserBySearchCondition(userBean.getTxtSearch().trim());
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		request.getSession().setAttribute("userBean", userBean);
-		model.addAttribute("userBean", userBean);
-		model.addAttribute("list", list);
-		model.addAttribute("count", count);
-		model.addAttribute("offset", offset);
-		model.addAttribute("mode", 2);
-
-		return new ModelAndView("user/listUser", "command", userBean);
-	}
-
-	/******************************************
-	 * Handle action search paging button click
-	 *
-	 * @param HttpServletRequest,
-	 *            HttpSession, Model, BusinessCardBean, Integer, Integer
-	 * @return ModelAndView
-	 ******************************************/
-	@RequestMapping(value = "/user/user_search")
-	public ModelAndView searchUserPaging(
-		HttpServletRequest request,
-		HttpSession session,
-		UserBean userBean,
-		Model model,
-		Integer offset,
-		Integer maxResults)
-	{
-		userBean = (UserBean) session.getAttribute("userBean");
-		request.getSession().setAttribute("offsetInUser", offset);
-		if (Utils.isEmpty(userBean.getTxtSearch().trim()))
-		{
-			return this.getListUser(model, offset, maxResults);
-		}
-		return this.getListUserBySearchCondition(request, model, userBean, offset, maxResults);
-	}
-
-	/******************************************
-	 * Handle action reset button click
-	 *
-	 * @param HttpServletRequest,
-	 *            HttpSession, Model, BusinessCardBean, Integer, Integer
-	 * @return ModelAndView
-	 ******************************************/
-	@RequestMapping(value = "/user/resetUser/{userCd}")
-	public String restoreCard(
-		Model model,
-		HttpServletRequest request,
-		@PathVariable("userCd") String userCd,
-		Integer offset,
-		Integer maxResults)
-	{
-		try
-		{
-			userService.resetUser(userCd);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return "redirect:../list";
-	}
 
 	@RequestMapping(value = "/dang-ky", method = RequestMethod.POST, 
 	    consumes = "application/json", produces = "application/json")
@@ -310,7 +183,8 @@ public class UserController extends SokokanriCommonController
         try {
             this.userService.resetPassword(email, timestamp);
         } catch (SokokanriException e) {
-            return null;
+            model.addAttribute("message", e.getErrorMessage());
+            return "/orders/error";
         }
         User user = new User();
         user.setEmail(email);
@@ -364,4 +238,147 @@ public class UserController extends SokokanriCommonController
 	    return "/user/userChangePassword"; 
 	}
 	
+	@RequestMapping(value = "/user/chon-don-hang", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
+        this.selectedItems.add(id);
+        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+    
+	@RequestMapping(value = "/user/bo-chon-don-hang", method = RequestMethod.GET)
+    protected @ResponseBody ResponseEntity<ResponseResult<String>> deSelectItem(@RequestParam Long id){
+        this.selectedItems.remove(id);
+        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+	
+	@RequestMapping(value = "/user/chon-tat-ca", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<ResponseResult<String>> selectAllItems(@RequestParam String ids){
+        String[] allIds = ids.split(",");
+        for (String item : allIds) {
+            if (Utils.isEmpty(item)) {
+                continue;
+            }
+            try {
+                Long id = Long.parseLong(item);
+                this.selectedItems.add(id);
+            } catch (Exception ex) {
+                continue;
+            }
+        }
+        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+    
+	@RequestMapping(value = "/user/bo-chon-tat-ca", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<ResponseResult<String>> deSelectAllItems(@RequestParam String ids){
+        String[] allIds = ids.split(",");
+        for (String item : allIds) {
+            if (Utils.isEmpty(item)) {
+                continue;
+            }
+            try {
+                Long id = Long.parseLong(item);
+                this.selectedItems.remove(id);
+            } catch (Exception ex) {
+                continue;
+            }
+        }
+        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+    
+	@RequestMapping(value="/user/xoa-user", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseResult<String>> delete(Model model) {
+        try {
+            this.userService.deleteUsers(this.selectedItems);
+            this.selectedItems.clear();
+        } catch (SokokanriException ex) {
+            return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(0, ex.getErrorMessage(), null), HttpStatus.OK);
+        }
+        return new ResponseEntity<ResponseResult<String>>(new ResponseResult<String>(1, "Success", null), HttpStatus.OK);
+    }
+	
+	@RequestMapping(value="/user/{userId}", method = RequestMethod.GET)
+    public ModelAndView getDetails(Model model, @PathVariable Long userId) {
+        try {
+            User user = this.userService.getUserByCode(userId);
+            if (user == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+            }
+            model.addAttribute("user", user);
+            model.addAttribute("roles", this.userService.getAllRoles(user.getId()));
+        } catch (SokokanriException ex) {
+            return new ModelAndView("/user/viewUser");
+        }
+        return new ModelAndView("/user/viewUser");
+    }
+	
+	@RequestMapping(value="/editUser/{userId}", method = RequestMethod.GET)
+    public ModelAndView editDetails(Model model, @PathVariable Long userId) {
+        try {
+            User user = this.userService.getUserByCode(userId);
+            if (user == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+            }
+            model.addAttribute("user", user);
+            model.addAttribute("roles", this.userService.getAllRoles(user.getId()));
+        } catch (SokokanriException ex) {
+            return new ModelAndView("/user/editUser");
+        }
+        return new ModelAndView("/user/editUser");
+    }
+	
+	@RequestMapping(value="/editUser/luu-thong-tin", method = RequestMethod.POST)
+    public RedirectView save(Model model, @ModelAttribute User userForm,  RedirectAttributes redirectAttributes) {
+        try {
+            User user = this.userService.saveInformation(userForm);
+            redirectAttributes.addFlashAttribute("user", user);
+        } catch (SokokanriException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getErrorMessage());
+            redirectAttributes.addFlashAttribute("user", userForm);
+        }
+        return new RedirectView("../saveUser/" + userForm.getId());
+    }
+	
+	@RequestMapping(value="/saveUser/{userId}", method = RequestMethod.GET)
+	public String saveResult(Model model, @PathVariable Long userId){
+        User user = (User) model.asMap().get("user");
+        if (user == null) {
+            try {
+                user = this.userService.getUserByCode(userId);
+                if (user == null) {
+                    return "redirect:/editUser/" + userId; 
+                }
+            } catch (SokokanriException e) {
+                model.addAttribute("errorMessage", e.getErrorMessage());
+            }
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("roles", this.userService.getAllRoles(userId));
+        return "/user/editUser"; 
+        
+    } 
+	
+	@RequestMapping(value="/user/them-moi", method = RequestMethod.GET)
+    public ModelAndView moveToAddUserPage(Model model) {
+	    User user = (User) model.asMap().get("user");
+	    if (user == null) {
+	        model.addAttribute("user", new User());
+	        model.addAttribute("roles", new ArrayList<Role>());
+	    } else {
+	        model.addAttribute("user", user);
+	        model.addAttribute("roles", user.getRoles());
+	    }
+        return new ModelAndView("user/addUser");
+    }
+	
+	@RequestMapping(value="/user/them-moi", method = RequestMethod.POST)
+    public RedirectView addUse(Model model, @ModelAttribute User userForm, RedirectAttributes redirectAttributes) {
+	    try {
+            Long userId = this.userService.addUser(userForm);
+            return new RedirectView(String.valueOf(userId));
+        } catch (SokokanriException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getErrorMessage());
+            redirectAttributes.addFlashAttribute("user", userForm);
+            return new RedirectView("them-moi");
+        }
+        
+    }
 }

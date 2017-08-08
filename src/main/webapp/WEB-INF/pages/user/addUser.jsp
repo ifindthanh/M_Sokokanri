@@ -20,10 +20,7 @@
 			alert("Vui lòng chọn ít nhật một role.");
 			return;
 		}
-		var saveConfirm = window.confirm("Lưu thông tin về tài khoản này?");
-		if (saveConfirm) {
-			$("#viewUser").submit();
-		}
+		$("#viewUser").submit();
 	}
 	function confirmClose(evt) {
 		location.href = "../user/" + evt;
@@ -50,7 +47,7 @@
 														<h3>CHỈNH SỬA USER</h3>
 													</div>
 													<form:form modelAttribute="userForm" method="POST"
-														action="../editUser/luu-thong-tin" enctype="multipart/form-data"
+														action="../user/them-moi" enctype="multipart/form-data"
 														class="form-horizontal div-center" id="viewUser">
 														<p class="error">${errorMessage }</p>
 														<div class="row">
@@ -58,7 +55,6 @@
 																<div class="x_panel">
 																	<div class="x_content">
 																		<div class="row">
-																			<input type="hidden" value="${user.id }" name="id"/>
 																			<div class="form-group">
 																				<label
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
@@ -76,11 +72,7 @@
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
 																					for="first-name">Email </label>
 																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text" disabled="disabled" readonly="readonly"
-																						class="form-control has-feedback-left"
-																						style="ime-mode: disabled" maxlength="30"
-																						value="${user.email }" />
-																					<input type="hidden" name="email" maxlength="30"
+																					<input type="text" name="email" class="form-control has-feedback-left" maxlength="30"
 																						value="${user.email }" />
 																				</div>
 																			</div>
@@ -150,7 +142,7 @@
 																					<button type="button" name="update"
 																						class="btn btn-default btn-lg"
 																						onclick="confirmClose('${user.getId()}');">
-																						<i class="fa fa-close m-right-xs"></i> Hủy bỏ
+																						<i class="fa fa-close m-right-xs"></i> キャンセル
 																					</button>
 																				</div>
 																			</div>

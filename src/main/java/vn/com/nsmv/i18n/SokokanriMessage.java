@@ -25,7 +25,7 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("label.bill.exported", args, locale);
 }
 
-	//Email không tồn tại trong hệ thống.  
+	//Email không tồn tại trong hệ thống.
 	public static String getMessageErrorEmailNotExists( Locale locale){
 
 		Object[] args = {};
@@ -123,6 +123,13 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("label.number.of.display", args, locale);
 }
 
+	//User không tồn tại trong hệ thống.
+	public static String getMessageErrorUserNotExists( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.error.user.not.exists", args, locale);
+}
+
 	//Đơn giá tính tiền mua của đơn {0} không được để trống
 	public static String getMessageErrorComputeCostCannotBeEmpty(Object arg0,  Locale locale){
 
@@ -205,6 +212,13 @@ public class SokokanriMessage {
 
 		Object[] args = {};
 		return SokokanriMessage.messageSource.getMessage("label.approved", args, locale);
+}
+
+	//Vui lòng chọn ít nhật một role.  
+	public static String getMessageErrorUserRoleEmpty( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.error.user.role.empty", args, locale);
 }
 
 	//Đã lưu kho
@@ -319,18 +333,18 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.cost.cannot.be.empty", args, locale);
 }
 
-	//Đang giao hàng
-	public static String getLabelIsShipping( Locale locale){
-
-		Object[] args = {};
-		return SokokanriMessage.messageSource.getMessage("label.is.shipping", args, locale);
-}
-
 	//Đã hoàn thành
 	public static String getLabelFinished( Locale locale){
 
 		Object[] args = {};
 		return SokokanriMessage.messageSource.getMessage("label.finished", args, locale);
+}
+
+	//Đang giao hàng
+	public static String getLabelIsShipping( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("label.is.shipping", args, locale);
 }
 
 	//Đơn hàng đã được duyệt, không thể xóa đơn hàng.

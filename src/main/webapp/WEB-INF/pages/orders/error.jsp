@@ -10,7 +10,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Đã có lỗi xảy ra</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />

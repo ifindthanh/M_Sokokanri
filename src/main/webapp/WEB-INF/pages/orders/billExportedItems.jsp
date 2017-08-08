@@ -77,7 +77,7 @@
 					<thead>
 						<tr class="headings" role="row">
 							<sec:authorize access="hasRole('ROLE_A')">
-								<th><input type="checkbox" onchange="selectAllItems(this, 'da-xuat-hd')" /></th>
+								<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, 'da-xuat-hd')" /></th>
 							</sec:authorize>
 							<th>Mã hóa đơn</th>
 							<th>Mã đơn hàng</th>
@@ -213,7 +213,7 @@
     var table;
     $(document).ready(function(){
 		//init datatables
-		
+    	checkSelectAll();
     });
     
     
