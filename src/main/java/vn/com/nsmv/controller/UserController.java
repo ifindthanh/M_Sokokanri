@@ -28,10 +28,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
+import vn.com.nsmv.bean.RoleEnum;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Role;
+import vn.com.nsmv.entity.Transaction;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.UserBean;
@@ -380,5 +382,49 @@ public class UserController extends SokokanriCommonController
             return new RedirectView("them-moi");
         }
         
+    }
+	
+	@RequestMapping(value="/user/vi-tien/{userId}", method = RequestMethod.GET)
+    public ModelAndView walletManagement(Model model, @PathVariable Long userId) {
+        try {
+            User user = this.userService.getUserByCode(userId);
+            if (user == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+            }
+            if (!this.userService.getAllRoles(user.getId()).contains(new Role("U"))) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorAddTransactionNotAllow(LocaleContextHolder.getLocale()));
+            }
+            Transaction transaction = new Transaction();
+            transaction.setUser(user);
+            model.addAttribute("transaction", transaction);
+            return new ModelAndView("/user/walletManagement");
+        } catch (SokokanriException e) {
+            model.addAttribute("message", e.getErrorMessage());
+            return new ModelAndView("/orders/error");
+        }
+        
+    }
+	
+	@RequestMapping(value="/user/vi-tien/them-giao-dich", method = RequestMethod.POST)
+    public RedirectView addTransaction(Model model, @ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
+        try {
+            this.userService.saveTransaction(transaction);
+            redirectAttributes.addFlashAttribute("inforMessage", SokokanriMessage.getMessageInforAddTransactionSuccessfully(LocaleContextHolder.getLocale()));
+        } catch (SokokanriException e) {
+            redirectAttributes.addFlashAttribute("message", e.getErrorMessage());
+        }
+        redirectAttributes.addFlashAttribute("transaction", transaction);
+        return new RedirectView("them-giao-dich");
+    }
+	
+	@RequestMapping(value="/user/vi-tien/them-giao-dich", method = RequestMethod.GET)
+    public ModelAndView addTransactionResult(Model model) {
+        Transaction transaction = (Transaction) model.asMap().get("transaction");
+        if (transaction == null) {
+            model.addAttribute("message", SokokanriMessage.getMessageErrorInvalidRequest(LocaleContextHolder.getLocale()));
+            return new ModelAndView("/orders/error");
+        }
+        model.addAttribute("transaction", transaction);
+        return new ModelAndView("/user/walletManagement");
     }
 }

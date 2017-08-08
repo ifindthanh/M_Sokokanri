@@ -32,6 +32,7 @@
 				<value>vn.com.nsmv.entity.VBrand</value>
 				<value>vn.com.nsmv.entity.VBuyingCode</value>
 				<value>vn.com.nsmv.entity.VTransferId</value>
+				<value>vn.com.nsmv.entity.Transaction</value>
 				
 				<value>vn.com.nsmv.entity.PriShainBas</value>
 				<value>vn.com.nsmv.entity.Nyuko</value>

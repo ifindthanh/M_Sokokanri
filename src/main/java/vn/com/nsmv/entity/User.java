@@ -29,6 +29,7 @@ public class User implements java.io.Serializable
 	private String oldPassword;
 	private String address;
 	private List<String> roles;
+	private Integer accountBalance;
 
 	public User()
 	{
@@ -147,6 +148,15 @@ public class User implements java.io.Serializable
     
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    @Column(name = "account_balance", length = 45, nullable = false)
+    public Integer getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(Integer accountBalance) {
+        this.accountBalance = accountBalance;
     }
   
 

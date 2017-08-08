@@ -37,4 +37,8 @@ public interface UserService
 
     public Long addUser(User userForm) throws SokokanriException;
 
+    public User getWallet(Long userId) throws SokokanriException;
+
+    public void saveTransaction(Transaction transaction) throws SokokanriException;
+
 }

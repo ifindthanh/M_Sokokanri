@@ -20,13 +20,16 @@ import vn.com.nsmv.common.Mail;
 import vn.com.nsmv.common.MailForm;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
+import vn.com.nsmv.dao.TransactionDAO;
 import vn.com.nsmv.dao.UserDAO;
 import vn.com.nsmv.entity.Role;
+import vn.com.nsmv.entity.Transaction;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.entity.UserRole;
 import vn.com.nsmv.entity.UserRoleID;
 import vn.com.nsmv.i18n.SokokanriMessage;
 import vn.com.nsmv.javabean.SortCondition;
+import vn.com.nsmv.javabean.TransactionTypeEnum;
 import vn.com.nsmv.javabean.UserRegistration;
 import vn.com.nsmv.javabean.UserSearchCondition;
 import vn.com.nsmv.service.UserService;
@@ -37,6 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private TransactionDAO transactionDAO;
 
     public User getUserByEmail(String userCd) throws SokokanriException {
         return userDAO.getUserByEmail(userCd);
@@ -259,6 +264,47 @@ public class UserServiceImpl implements UserService {
         //default password
         userForm.setPassword(Utils.encode("12345678"));
         return this.userDAO.add(userForm);
+    }
+
+    public User getWallet(Long userId) throws SokokanriException {
+        
+        return null;
+    }
+
+    @Transactional
+    public void saveTransaction(Transaction transaction) throws SokokanriException {
+        transaction.validate();
+        User user = this.userDAO.getUserByCode(transaction.getUserId());
+        if (user == null) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+        }
+        if (!this.getAllRoles(user.getId()).contains(new Role("U"))) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorAddTransactionNotAllow(LocaleContextHolder.getLocale()));
+        }
+        TransactionTypeEnum transactionType = TransactionTypeEnum.valueOf(transaction.getTransactionType());
+        if (user.getAccountBalance() == null) {
+            user.setAccountBalance(0);
+        }
+        switch (transactionType) {
+            case RECHARGE:
+                user.setAccountBalance(user.getAccountBalance() + transaction.getAmount());
+                break;
+            case PAY:
+                if (user.getAccountBalance() < transaction.getAmount()) {
+                    throw new SokokanriException(SokokanriMessage.getMessageErrorAddAccountBalanceCannotLessThanAmount(LocaleContextHolder.getLocale()));
+                }
+                user.setAccountBalance(user.getAccountBalance() - transaction.getAmount());
+                break;
+            case REFUND:
+                user.setAccountBalance(user.getAccountBalance() + transaction.getAmount());
+                user.setAccountBalance(user.getAccountBalance() + transaction.getAmount());
+                break;
+
+            default:
+                break;
+        }
+        this.userDAO.saveUser(user);
+        this.transactionDAO.addTransaction(transaction);
     }
 
 }

@@ -48,5 +48,10 @@
  
  <bean id="itemHistoryDAOImpl" class="vn.com.nsmv.dao.impl.ItemHistoryDAOImpl">
      <property name="sessionFactory" ref="mySessionFactory" />
- </bean>   
+ </bean>  
+ 
+ <bean id="transactionDAOImpl" class="vn.com.nsmv.dao.impl.TransactionDAOImpl">
+     <property name="sessionFactory" ref="mySessionFactory" />
+ </bean> 
+  
 </beans>

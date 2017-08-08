@@ -136,14 +136,13 @@
 																				<div
 																					class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
 																					<a class="btn btn-primary btn-lg" onclick="confirmSave();"> <i
-																						class="fa fa-edit "></i> Lưu thông tin
+																						class="fa fa-edit "></i> Thêm user
 																					</a>
 																					
-																					<button type="button" name="update"
-																						class="btn btn-default btn-lg"
-																						onclick="confirmClose('${user.getId()}');">
-																						<i class="fa fa-close m-right-xs"></i> キャンセル
-																					</button>
+																					<a class="btn btn-default btn-lg"
+																						href="tat-ca">
+																						<i class="fa fa-close m-right-xs"></i> Quay lại
+																					</a>
 																				</div>
 																			</div>
 																		</div>

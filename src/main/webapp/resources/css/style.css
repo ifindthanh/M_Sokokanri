@@ -86,7 +86,10 @@ a.myAction {
 	color: red;
 	text-align: center;
 }
-
+.info {
+	color: blue;
+	text-align: center;
+}
 .waiting {
 	cursor: wait;
 	top: 0px;

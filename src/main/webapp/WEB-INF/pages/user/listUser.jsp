@@ -35,13 +35,14 @@
 			<sec:authorize access="hasAnyRole('ROLE_A')">
 				<div class="col-sm-12 action_container">
 					<div class="col-sm-1">
-						<a href = "them-moi" class="btn btn-default">Add user <i class="fa fa-plus"></i></a>
+						<a href = "them-moi" class="btn btn-default">Thêm user <i class="fa fa-plus"></i></a>
 					</div>
 					<div class="col-sm-2">
 						<div class="dropdown">
 						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 						  <span class="caret"></span></button>
 							<ul class="dropdown-menu">
+								<li><a onclick="addTransaction()">Thêm giao dịch</a></li>
 								<li><a onclick="manageWallet()">Quản lý ví điện tử</a></li>
 								<li><a onclick="deleteUsers()">Xóa user</a></li>
 							</ul>
@@ -99,6 +100,7 @@
 	$(document).ready(function(){
 		checkSelectAll();
 		$('.table-row').on('dblclick', function() {
+			$('#ajax-overlay').show();
 			window.location.href = $(this).attr("user_id"); 
 		});
 	});
@@ -127,6 +129,22 @@
 				}
 			});
 		}
+	}
+	
+	function manageWallet(){
+		if ($('.order_id:checkbox:checked').length != 1) {
+			alert("Vui lòng chọn một user.");
+			return;
+		}
+		window.location.href = "vi-tien/"+$('.order_id:checkbox:checked').attr("order_id");
+	}
+	
+	function addTransaction(){
+		if ($('.order_id:checkbox:checked').length != 1) {
+			alert("Vui lòng chọn một user.");
+			return;
+		}
+		window.location.href = "vi-tien/"+$('.order_id:checkbox:checked').attr("order_id");
 	}
 	
 </script>
