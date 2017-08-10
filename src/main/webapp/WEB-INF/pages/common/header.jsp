@@ -38,15 +38,19 @@
 							aria-hidden="true"></i> Đăng ký</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
+					<li><a href="<c:url value= "/xem-thong-tin"/>"><sec:authentication property="principal.displayName"/> <i class="fa fa-user"
+							aria-hidden="true"></i></a>
+					</li>
 					<li><a href="<c:url value= "/thay-doi-mat-khau"/>">Đổi mật khẩu <i class="fa fa-key"
 							aria-hidden="true"></i></a>
 					</li>
-					<li>
-						<a href="<c:url value= "/logout"/>"><sec:authentication property="principal.displayName"/> <i class="fa fa-sign-out"
-						aria-hidden="true"></i>
-						</a>
-					</li>
+
+					<li><a href="<c:url value= "/logout"/>">Đăng xuất  <i
+							class="fa fa-sign-out" aria-hidden="true"></i>
+					</a></li>
 				</sec:authorize>
+				
+
 			</ul>
 		</div>
 	</div>
@@ -183,142 +187,149 @@
 </div>
 	
 	<script>
-		var mode = 1;
 		$(document).ready(function() {
 			$('#user-modal').on('shown.bs.modal', function(e) {
 			    var tab = e.relatedTarget.hash;
 			    $('.nav-tabs a[href="'+tab+'"]').tab('show')
-			})    
+			});
+			
 		});
-		
-		function login(){
+
+		function login() {
 			$("#errorMessage").html("");
-			if ($("#email").val() =="") {
+			if ($("#email").val() == "") {
 				alert("Email không được để trống");
 				$("#email").focus();
 				return;
 			}
-			if ($("#password").val() =="") {
+			if ($("#password").val() == "") {
 				alert("Mật khẩu không được để trống");
 				$("#password").focus();
 				return;
 			}
 			$('#ajax-overlay').show();
-			$.ajax({
-				type : "POST",
-				url : "${pageContext.request.contextPath}/j_spring_security_check",
-				data: $("#login_form").serialize(),
-				success : function(result) {
-					$('#ajax-overlay').hide();
-					window.location.href = window.location.href.split("#")[0];
-				},
-				error : function() {
-					$("#errorMessage").html("User name hoac password khong dung");
-					$('#ajax-overlay').hide();
-				}
-			
-			});
+			$
+					.ajax({
+						type : "POST",
+						url : "${pageContext.request.contextPath}/j_spring_security_check",
+						data : $("#login_form").serialize(),
+						success : function(result) {
+							$('#ajax-overlay').hide();
+							window.location.href = window.location.href
+									.split("#")[0];
+						},
+						error : function() {
+							$("#errorMessage").html(
+									"User name hoac password khong dung");
+							$('#ajax-overlay').hide();
+						}
+
+					});
 		}
-		
-		function register(){
+
+		function register() {
 			$("#errorMessage").html("");
-			if ($("#reg_email").val() =="") {
+			if ($("#reg_email").val() == "") {
 				alert("Email không được để trống");
 				$("#reg_email").focus();
 				return;
 			}
-			
-			if ($("#reg_password").val() =="") {
+
+			if ($("#reg_password").val() == "") {
 				alert("Mật khẩu không được để trống");
 				$("#reg_password").focus();
 				return;
 			}
-			
+
 			if ($("#reg_password").val().length < 6) {
 				alert("Mật khẩu phải có ít nhất 6 ký tự");
 				$("#reg_password").focus();
 				return;
 			}
-			
-			if ($("#reg_reenterpassword").val() =="") {
+
+			if ($("#reg_reenterpassword").val() == "") {
 				alert("Mật khẩu xác nhận không được để trống");
 				$("#reg_reenterpassword").focus();
 				return;
 			}
-			
+
 			if ($("#reg_password").val() != $("#reg_reenterpassword").val()) {
 				alert("Mật khẩu xác nhận không khớp");
 				$("#reg_reenterpassword").focus();
 				return;
 			}
-			
-			if ($("#reg_name").val() =="") {
+
+			if ($("#reg_name").val() == "") {
 				alert("Tên người dùng không được để trống");
 				$("#reg_name").focus();
 				return;
 			}
-			
-			if ($("#reg_phone").val() =="") {
+
+			if ($("#reg_phone").val() == "") {
 				alert("Số điện thoại không được để trống");
 				$("#reg_phone").focus();
 				return;
 			}
-			
+
 			if (!$('input:radio[name=gender]:checked').val()) {
 				alert("Vui lòng nhập giới tính");
 				return;
 			}
-			
+
 			$('#ajax-overlay').show();
 			var data = {
-				"email": $("#reg_email").val(),
-				"password": $("#reg_password").val(),
-				"confirmPassword": $("#reg_reenterpassword").val(),
-				"fullName": $("#reg_name").val(),
-				"phone": $("#reg_phone").val(),
-				"sex": $('input:radio[name=gender]:checked').val()
+				"email" : $("#reg_email").val(),
+				"password" : $("#reg_password").val(),
+				"confirmPassword" : $("#reg_reenterpassword").val(),
+				"fullName" : $("#reg_name").val(),
+				"phone" : $("#reg_phone").val(),
+				"sex" : $('input:radio[name=gender]:checked').val()
 			};
-			$.ajax({
-				type : "POST",
-				contentType : "application/json",
-				url : "${pageContext.request.contextPath}/dang-ky",
-				data : JSON.stringify(data),
-				dataType : 'json',
-				success : function(result) {
-					if (result.status == 0) {
-						$('#ajax-overlay').hide();
-						$("#reg_errorMessage").html(result.message);
-						return;
-					}
-					alert("Đăng ký thành công");
-					$('#ajax-overlay').hide();
-					window.location.href = window.location.href.split("#")[0];
-				},
-				error : function() {
-					$("#reg_errorMessage").html("Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
-					$('#ajax-overlay').hide();
-				}
-			
-			});
+			$
+					.ajax({
+						type : "POST",
+						contentType : "application/json",
+						url : "${pageContext.request.contextPath}/dang-ky",
+						data : JSON.stringify(data),
+						dataType : 'json',
+						success : function(result) {
+							if (result.status == 0) {
+								$('#ajax-overlay').hide();
+								$("#reg_errorMessage").html(result.message);
+								return;
+							}
+							alert("Đăng ký thành công");
+							$('#ajax-overlay').hide();
+							window.location.href = window.location.href
+									.split("#")[0];
+						},
+						error : function() {
+							$("#reg_errorMessage")
+									.html(
+											"Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
+							$('#ajax-overlay').hide();
+						}
+
+					});
 		}
-		
+
 		function onEnter(event) {
-		    if(event.keyCode == 13){
-		        $("#loginBtn").click();
-		    }
+			if (event.keyCode == 13) {
+				$("#loginBtn").click();
+			}
 		}
-		
+
 		function updateMoneyRate() {
 			$("#saveError").html("");
 			$("#money-rate-modal").modal("show");
 			$("#money_rate").val($("#moneyRate").html());
 		}
-		
+
 		function saveMoneyRate(url) {
 			$('#ajax-overlay').show();
 			$.ajax({
 				type : "GET",
-				url : url+'?value='+$('#money_rate').val(),
+				url : url + '?value=' + $('#money_rate').val(),
 				success : function(response) {
 					if (response.status == 0) {
 						$("#saveError").html(response.message);
@@ -334,41 +345,45 @@
 					$('#money_rate').forcus();
 					$('#ajax-overlay').hide();
 				}
-			
+
 			});
 		}
-		
+
 		function resetPw() {
 			$("#reset_errorMessage").html("");
-			if ($("#reset_email").val() =="") {
+			if ($("#reset_email").val() == "") {
 				alert("Email không được để trống");
 				$("#reg_email").focus();
 				return;
 			}
-			
+
 			$('#ajax-overlay').show();
-			
-			$.ajax({
-				type : "POST",
-				url : "${pageContext.request.contextPath}/quen-mat-khau",
-				data: $("#reset_form").serialize(),
-				success : function(result) {
-					if (result.status == 0) {
-						$("#reset_errorMessage").html(result.message);
-						$("#reset_email").val("");
-						$("#reset_email").focus();
-						$('#ajax-overlay').hide();
-						return;
-					}
-					alert("Yêu cầu đã được gửi đến địa chỉ email của bạn, vui lòng kiểm tra hòm thư và tiến hành thay đổi mật khẩu của bạn trong thời hạn 1 ngày.");
-					$('#ajax-overlay').hide();
-					window.location.href = window.location.href.split("#")[0];
-				},
-				error : function() {
-					$("#reset_errorMessage").html("Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
-					$('#ajax-overlay').hide();
-				}
-			
-			});
+
+			$
+					.ajax({
+						type : "POST",
+						url : "${pageContext.request.contextPath}/quen-mat-khau",
+						data : $("#reset_form").serialize(),
+						success : function(result) {
+							if (result.status == 0) {
+								$("#reset_errorMessage").html(result.message);
+								$("#reset_email").val("");
+								$("#reset_email").focus();
+								$('#ajax-overlay').hide();
+								return;
+							}
+							alert("Yêu cầu đã được gửi đến địa chỉ email của bạn, vui lòng kiểm tra hòm thư và tiến hành thay đổi mật khẩu của bạn trong thời hạn 1 ngày.");
+							$('#ajax-overlay').hide();
+							window.location.href = window.location.href
+									.split("#")[0];
+						},
+						error : function() {
+							$("#reset_errorMessage")
+									.html(
+											"Đã có lỗi xảy ra, vui lòng liên hệ với quản trị viên.");
+							$('#ajax-overlay').hide();
+						}
+
+					});
 		}
 	</script>

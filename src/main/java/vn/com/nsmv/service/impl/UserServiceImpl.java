@@ -305,6 +305,7 @@ public class UserServiceImpl implements UserService {
         }
         this.userDAO.saveUser(user);
         this.transactionDAO.addTransaction(transaction);
+        transaction.getUser().setAccountBalance(user.getAccountBalance());
     }
 
 }

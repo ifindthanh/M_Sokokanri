@@ -28,7 +28,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.bean.ResponseResult;
-import vn.com.nsmv.bean.RoleEnum;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
@@ -385,7 +384,7 @@ public class UserController extends SokokanriCommonController
     }
 	
 	@RequestMapping(value="/user/vi-tien/{userId}", method = RequestMethod.GET)
-    public ModelAndView walletManagement(Model model, @PathVariable Long userId) {
+    public ModelAndView transactionManagement(Model model, @PathVariable Long userId) {
         try {
             User user = this.userService.getUserByCode(userId);
             if (user == null) {
@@ -426,5 +425,60 @@ public class UserController extends SokokanriCommonController
         }
         model.addAttribute("transaction", transaction);
         return new ModelAndView("/user/walletManagement");
+    }
+	
+	@RequestMapping(value="/user/vi-tien/tat-ca-giao-dich", method = RequestMethod.GET)
+    public ModelAndView walletManagement(Model model, @PathVariable Long userId) {
+        try {
+            User user = this.userService.getUserByCode(userId);
+            if (user == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+            }
+            if (!this.userService.getAllRoles(user.getId()).contains(new Role("U"))) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorAddTransactionNotAllow(LocaleContextHolder.getLocale()));
+            }
+            Transaction transaction = new Transaction();
+            transaction.setUser(user);
+            model.addAttribute("transaction", transaction);
+            return new ModelAndView("/user/walletManagement");
+        } catch (SokokanriException e) {
+            model.addAttribute("message", e.getErrorMessage());
+            return new ModelAndView("/orders/error");
+        }
+        
+    }
+	
+	@RequestMapping(value="/xem-thong-tin", method = RequestMethod.GET)
+    public ModelAndView viewInformation(Model model) {
+        try {
+            User user = this.userService.getUserByCode(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+            if (user == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+            }
+            model.addAttribute("user", user);
+            model.addAttribute("selfEdit", Boolean.TRUE);
+            model.addAttribute("roles", this.userService.getAllRoles(user.getId()));
+        } catch (SokokanriException ex) {
+            model.addAttribute("selfEdit", Boolean.TRUE);
+            return new ModelAndView("/user/viewUser");
+        }
+        return new ModelAndView("/user/viewUser");
+    }
+	
+	@RequestMapping(value="/sua-thong-tin", method = RequestMethod.GET)
+    public ModelAndView editInformation(Model model) {
+        try {
+            User user = this.userService.getUserByCode(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+            if (user == null) {
+                throw new SokokanriException(SokokanriMessage.getMessageErrorUserNotExists(LocaleContextHolder.getLocale()));
+            }
+            model.addAttribute("user", user);
+            model.addAttribute("roles", this.userService.getAllRoles(user.getId()));
+            model.addAttribute("selfEdit", Boolean.TRUE);
+        } catch (SokokanriException ex) {
+            model.addAttribute("selfEdit", Boolean.TRUE);
+            return new ModelAndView("/user/editUser");
+        }
+        return new ModelAndView("/user/editUser");
     }
 }

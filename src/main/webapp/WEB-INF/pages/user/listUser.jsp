@@ -43,7 +43,7 @@
 						  <span class="caret"></span></button>
 							<ul class="dropdown-menu">
 								<li><a onclick="addTransaction()">Thêm giao dịch</a></li>
-								<li><a onclick="manageWallet()">Quản lý ví điện tử</a></li>
+								<li><a onclick="manageWallet()">Lịch sử giao dịch</a></li>
 								<li><a onclick="deleteUsers()">Xóa user</a></li>
 							</ul>
 						</div>
@@ -136,7 +136,7 @@
 			alert("Vui lòng chọn một user.");
 			return;
 		}
-		window.location.href = "vi-tien/"+$('.order_id:checkbox:checked').attr("order_id");
+		window.location.href = "vi-tien/tat-ca-giao-dich";
 	}
 	
 	function addTransaction(){

@@ -30,6 +30,10 @@ public class RolesDisplayingTaglib extends AbstractTaglib {
             writer.append("Khách hàng");
             writer.append(" </div> ");
             writer.append("</div>");
+            writer.append("<select name=\"roles\" multiple style=\"display:none\" id=\"allRoles\">");
+            writer.append("<option value=\"U\" selected></option>");
+            writer.append("</option>");
+            writer.append("<select>");
             return;
         }
         for (Role item : RoleEnum.ALL_ROLES) {

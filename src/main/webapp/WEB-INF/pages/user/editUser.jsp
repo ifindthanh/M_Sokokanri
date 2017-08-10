@@ -15,8 +15,8 @@
 <link href="<c:url value="/resources/css/fonts/css/font-awesome.min.css" />" rel="stylesheet">
 <script>
 	
-	function confirmSave() {
-		if (!$('#allRoles').val()) {
+	function confirmSave(checkRole) {
+		if (!$('#allRoles').val() && checkRole) {
 			alert("Vui lòng chọn ít nhật một role.");
 			return;
 		}
@@ -49,8 +49,12 @@
 													<div class="main">
 														<h3>CHỈNH SỬA USER</h3>
 													</div>
+													<c:set var="form_action" value="../editUser/luu-thong-tin" scope="page"></c:set>
+													<c:if test="${selfEdit eq true }">
+														<c:set var="form_action" value="" scope="page"></c:set>
+													</c:if>
 													<form:form modelAttribute="userForm" method="POST"
-														action="../editUser/luu-thong-tin" enctype="multipart/form-data"
+														action="${form_action }" enctype="multipart/form-data"
 														class="form-horizontal div-center" id="viewUser">
 														<p class="error">${errorMessage }</p>
 														<div class="row">
@@ -129,15 +133,14 @@
 																						name="address" maxlength="30" id="address">${user.address } </textarea>
 																				</div>
 																			</div>
-																			
-																			<div class="form-group">
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">Roles</label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<roles:roles disable="false" allRoles="${roles }"/>
+																				<div class="form-group">
+																					<label
+																						class="control-label col-md-3 col-sm-3 col-xs-12"
+																						for="first-name">Roles</label>
+																					<div class="col-md-6 col-sm-6 col-xs-12">
+																						<roles:roles disable="${selfEdit}" allRoles="${roles }"/>
+																					</div>
 																				</div>
-																			</div>
 																			
 																			<div class="form-group">
 																				<label
@@ -156,15 +159,24 @@
 																			<div class="form-group">
 																				<div
 																					class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-																					<a class="btn btn-primary btn-lg" onclick="confirmSave();"> <i
-																						class="fa fa-edit "></i> Lưu thông tin
-																					</a>
-																					
-																					<button type="button" name="update"
-																						class="btn btn-default btn-lg"
-																						onclick="confirmClose('${user.getId()}');">
-																						<i class="fa fa-close m-right-xs"></i> Hủy bỏ
-																					</button>
+																					<c:if test="${selfEdit eq true }">
+																						<a class="btn btn-primary btn-lg" onclick="confirmSave(false);"> <i
+																							class="fa fa-edit "></i> Lưu thông tin
+																						</a>
+																						<a class="btn btn-default btn-lg" href="xem-thong-tin"> <i
+																							class="fa fa-close m-right-xs"></i> Hủy bỏ
+																						</a>
+																					</c:if>
+																					<c:if test="${selfEdit ne true }">
+																						<a class="btn btn-primary btn-lg" onclick="confirmSave(true);"> <i
+																							class="fa fa-edit "></i> Lưu thông tin
+																						</a>
+																						<button type="button" name="update"
+																							class="btn btn-default btn-lg"
+																							onclick="confirmClose('${user.getId()}');">
+																							<i class="fa fa-close m-right-xs"></i> Hủy bỏ
+																						</button>
+																					</c:if>
 																				</div>
 																			</div>
 																		</div>

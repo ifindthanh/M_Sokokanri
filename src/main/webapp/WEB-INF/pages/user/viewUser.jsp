@@ -154,14 +154,26 @@
 																			<div class="form-group">
 																				<div
 																					class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-																					<a href="../editUser/${user.getId()}"
-																						class="btn btn-primary btn-lg" onclick=""> <i
-																						class="fa fa-edit "></i> Chỉnh sửa
-																					</a>
-																					<a href="tat-ca"
-																						class="btn btn-default btn-lg">
-																						<i class="fa fa-close m-right-xs"></i> Quay lại
-																					</a>
+																					<c:if test="${selfEdit ne true }">
+																						<a href="../editUser/${user.getId()}"
+																							class="btn btn-primary btn-lg" onclick=""> <i
+																							class="fa fa-edit "></i> Chỉnh sửa
+																						</a>
+																						<a href="tat-ca"
+																							class="btn btn-default btn-lg">
+																							<i class="fa fa-close m-right-xs"></i> Quay lại
+																						</a>
+																					</c:if>
+																					<c:if test="${selfEdit eq true }">
+																						<a href="sua-thong-tin"
+																							class="btn btn-primary btn-lg" onclick=""> <i
+																							class="fa fa-edit "></i> Chỉnh sửa
+																						</a>
+																						<a href="<c:url value= "/"/>"
+																							class="btn btn-default btn-lg">
+																							<i class="fa fa-close m-right-xs"></i> Quay lại
+																						</a>
+																					</c:if>
 																				</div>
 																			</div>
 																		</div>

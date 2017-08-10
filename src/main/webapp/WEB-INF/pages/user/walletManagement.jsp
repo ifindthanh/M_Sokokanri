@@ -67,6 +67,20 @@
 							<input type="hidden" value="${transaction.user.fullname }" name="user.fullname">
 						</div>
 					</div>
+					
+					<div class="form-group row">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12"
+							for="first-name" 　data-toggle="tooltip" data-placement="right"
+							title="">Số dư tài khoản</label>
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<input type="text"
+								class="form-control has-feedback-left pointer-events: none;"
+								maxlength="30" id="fullname" disabled="disabled"
+								readonly="readonly" value="${transaction.user.accountBalance }">
+							<input type="hidden" value="${transaction.user.accountBalance }" name="user.accountBalance">
+						</div>
+					</div>
+					
 					<div class="form-group row">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
 							for="first-name">Loại giao dịch</label>
@@ -77,7 +91,7 @@
 
 					<div class="form-group row">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12"
-							for="first-name">Số tiền</label>
+							for="first-name">Số tiền (VNĐ)</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input type="number" class="form-control has-feedback-left"
 								name="amount"
