@@ -150,7 +150,7 @@ public class User implements java.io.Serializable
         this.roles = roles;
     }
 
-    @Column(name = "account_balance", length = 45, nullable = false)
+    @Column(name = "account_balance", length = 45, nullable = true)
     public Integer getAccountBalance() {
         return accountBalance;
     }

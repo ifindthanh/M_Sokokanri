@@ -51,7 +51,7 @@
 													</div>
 													<c:set var="form_action" value="../editUser/luu-thong-tin" scope="page"></c:set>
 													<c:if test="${selfEdit eq true }">
-														<c:set var="form_action" value="" scope="page"></c:set>
+														<c:set var="form_action" value="luu-thong-tin" scope="page"></c:set>
 													</c:if>
 													<form:form modelAttribute="userForm" method="POST"
 														action="${form_action }" enctype="multipart/form-data"

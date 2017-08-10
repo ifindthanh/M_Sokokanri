@@ -33,7 +33,7 @@ public interface UserService
     
     public List<Role> getAllRoles(Long userId);
     
-    public User saveInformation(User user) throws SokokanriException;
+    public User saveInformation(User user, boolean canEditRole) throws SokokanriException;
 
     public Long addUser(User userForm) throws SokokanriException;
 

@@ -224,10 +224,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public User saveInformation(User user) throws SokokanriException {
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            throw new SokokanriException(SokokanriMessage.getMessageErrorUserRoleEmpty(LocaleContextHolder.getLocale()));
+    public User saveInformation(User user, boolean canEditRole) throws SokokanriException {
+        if (canEditRole && (user.getRoles() == null || user.getRoles().isEmpty())) {
+            throw new SokokanriException(
+                SokokanriMessage.getMessageErrorUserRoleEmpty(LocaleContextHolder.getLocale()));
         }
+        UserRegistration userRegistration = new UserRegistration();
+        userRegistration.setPhone(user.getPhone());
+        userRegistration.checkPhoneNumber();
+        
         Long userId = user.getId();
         User userByCode = this.userDAO.getUserByCode(userId);
         if (userByCode == null) {
@@ -238,6 +243,9 @@ public class UserServiceImpl implements UserService {
         userByCode.setGender(user.getGender());
         userByCode.setPhone(user.getPhone());
         this.userDAO.update(userByCode);
+        if (!canEditRole) {
+            return userByCode;
+        }
         this.userDAO.deleteAllOtherRoles(userId, user.getRoles());
         for (String role : user.getRoles()) {
             UserRole userRole = this.userDAO.getUserRole(userId, role);
@@ -248,6 +256,7 @@ public class UserServiceImpl implements UserService {
         return userByCode;
     }
 
+    @Transactional
     public Long addUser(User userForm) throws SokokanriException {
         Utils.checkEmail(userForm.getEmail());
         UserRegistration userRegistration = new UserRegistration();
@@ -263,7 +272,12 @@ public class UserServiceImpl implements UserService {
         }
         //default password
         userForm.setPassword(Utils.encode("12345678"));
-        return this.userDAO.add(userForm);
+        
+        long userID = this.userDAO.add(userForm);
+        for (String roleID : userForm.getRoles()) {
+            this.userDAO.addUserRole(new UserRole(new UserRoleID(userID, roleID)));
+        }
+        return userID;
     }
 
     public User getWallet(Long userId) throws SokokanriException {

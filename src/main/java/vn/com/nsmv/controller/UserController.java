@@ -329,7 +329,7 @@ public class UserController extends SokokanriCommonController
 	@RequestMapping(value="/editUser/luu-thong-tin", method = RequestMethod.POST)
     public RedirectView save(Model model, @ModelAttribute User userForm,  RedirectAttributes redirectAttributes) {
         try {
-            User user = this.userService.saveInformation(userForm);
+            User user = this.userService.saveInformation(userForm, true);
             redirectAttributes.addFlashAttribute("user", user);
         } catch (SokokanriException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getErrorMessage());
@@ -481,4 +481,37 @@ public class UserController extends SokokanriCommonController
         }
         return new ModelAndView("/user/editUser");
     }
+	
+	@RequestMapping(value="/luu-thong-tin", method = RequestMethod.POST)
+	public RedirectView savePersonalInformation(Model model, @ModelAttribute User userForm,  RedirectAttributes redirectAttributes) {
+        try {
+            User user = this.userService.saveInformation(userForm, false);
+            redirectAttributes.addFlashAttribute("user", user);
+        } catch (SokokanriException ex) {
+            redirectAttributes.addFlashAttribute("user", userForm);
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getErrorMessage());
+        }
+       
+        return new RedirectView("luu-thong-tin");
+    }
+	
+	@RequestMapping(value="/luu-thong-tin", method = RequestMethod.GET)
+	public String savePersonalInformationResult(Model model) {
+	    Long userId = ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+	    User user = (User) model.asMap().get("user");
+        if (user == null) {
+            try {
+                user = this.userService.getUserByCode(userId);
+                if (user == null) {
+                    return "redirect:/sua-thong-tin"; 
+                }
+            } catch (SokokanriException e) {
+                model.addAttribute("errorMessage", e.getErrorMessage());
+            }
+        }
+        model.addAttribute("selfEdit", Boolean.TRUE);
+        model.addAttribute("user", user);
+        model.addAttribute("roles", this.userService.getAllRoles(userId));
+        return "/user/editUser"; 
+	}
 }

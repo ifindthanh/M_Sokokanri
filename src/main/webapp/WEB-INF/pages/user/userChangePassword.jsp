@@ -81,42 +81,54 @@
 						<section class="login_content">
 						<form:form modelAttribute="user" method="POST"
 							action="thay-doi-mat-khau" class="form-horizontal" id = "changePass">
-							<div class="block-eff-no-margin">
-							<h1>Thay đổi mật khẩu</h1>
-							<div id="error_message">
-								<div class="row">
-									<p style="color: red; text-align: center;">${errorMessage }</p>
-								</div>
-								<div class="row">
-									<p style="color: red; text-align: left;" id="errorMessenger">
-									</p>
-								</div>
-							</div>
-							<div class="form-group">
-								<input type="text" value="${user.email }" class="form-control"  disabled="disabled">
-								<input type="hidden" name="email"  value="${user.email }" />
-							</div>
-							<div class="form-group">
-								<c:if test="${resetPw ne true }">
-									<input name="oldPassword" type="password" class="form-control" id="oldPassword"
-										placeholder="Mật khẩu hiện tại" required maxlength="20" onkeypress="checkPrtScn(event)"/>
-								</c:if>
-							</div>
-							
-							<div class="form-group">
-								<input name="password" type="password" class="form-control" id="new_password"
-									required placeholder="Mật khẩu mới" maxlength="20" onkeypress="checkPrtScn(event)"/>
-							</div>
-							<div class="form-group">
-								<input name="confirmPassword" type="password"  id="confirmPassword"
-									class="form-control" placeholder="Nhập lại mật khẩu" maxlength="20" onkeypress="checkPrtScn(event)"/>
-							</div>
+									<div class="block-eff-no-margin">
+										<h1>Thay đổi mật khẩu</h1>
+										<div id="error_message">
+											<div class="row">
+												<p style="color: red; text-align: center;">${errorMessage }</p>
+											</div>
+											<div class="row">
+												<p style="color: red; text-align: left;" id="errorMessenger">
+												</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<input type="text" value="${user.email }"
+												class="form-control" disabled="disabled"> <input
+												type="hidden" name="email" value="${user.email }" />
+										</div>
+										<div class="form-group">
+											<c:if test="${resetPw ne true }">
+												<input name="oldPassword" type="password"
+													class="form-control" id="oldPassword"
+													placeholder="Mật khẩu hiện tại" required maxlength="20"
+													onkeypress="checkPrtScn(event)" />
+											</c:if>
+										</div>
 
-							<div class="form-group" style="margin-top:30px;">
-								<button type="button" class="btn btn-primary btn-lg" onclick="confirmChange()" ><i class="fa fa-save m-right-xs"></i> Đổi mật khẩu</button>
-							</div>
-							</div>
-							<div class="clearfix"></div>
+										<div class="form-group">
+											<input name="password" type="password" class="form-control"
+												id="new_password" required placeholder="Mật khẩu mới"
+												maxlength="20" onkeypress="checkPrtScn(event)" />
+										</div>
+										<div class="form-group">
+											<input name="confirmPassword" type="password"
+												id="confirmPassword" class="form-control"
+												placeholder="Nhập lại mật khẩu" maxlength="20"
+												onkeypress="checkPrtScn(event)" />
+										</div>
+
+										<div class="form-group" style="margin-top: 30px;">
+											<button type="button" class="btn btn-primary btn-lg"
+												onclick="confirmChange()">
+												<i class="fa fa-save m-right-xs"></i> Đổi mật khẩu
+											</button>
+											<a class="btn btn-default btn-lg" href="<c:url value= "/"/>"> <i
+												class="fa fa-close m-right-xs"></i> Hủy bỏ
+											</a>
+										</div>
+									</div>
+									<div class="clearfix"></div>
 							
 						</form:form>
 					</section>
