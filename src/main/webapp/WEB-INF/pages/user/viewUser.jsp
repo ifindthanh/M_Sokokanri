@@ -141,12 +141,8 @@
 																				<label
 																					class="control-label col-md-3 col-sm-3 col-xs-12"
 																					for="first-name">Số dư tài khoản</label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text"
-																						class="form-control has-feedback-left"
-																						disabled="disabled" readonly="readonly"
-																						name="accountBalance" maxlength="30" id="accountBalance"
-																						value="${user.accountBalance }">
+																				<div class="col-md-6 col-sm-6 col-xs-12" style="text-align: left; padding-top: 8px" >
+																					<a href='<c:url value="/user/vi-tien/tat-ca-giao-dich/${user.id}"></c:url>'>${user.accountBalance }</a>
 																				</div>
 																			</div>
 															

@@ -100,4 +100,9 @@ public class Transaction {
             throw new SokokanriException(SokokanriMessage.getMessageErrorAmountCannotBeEmpty(locale));
         }
     }
+    
+    @Transient
+    public String getFormattedId() {
+        return Utils.getFormattedId(this.id, 7);
+    }
 }

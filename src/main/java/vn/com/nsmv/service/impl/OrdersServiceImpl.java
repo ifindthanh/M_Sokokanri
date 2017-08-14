@@ -180,6 +180,11 @@ public class OrdersServiceImpl implements OrdersService {
         if (item.getStatus() == null || (item.getStatus() != 0 && item.getStatus() != -1)) {
             throw new SokokanriException(SokokanriMessage.getMessageErrorCannotApproveSelectedOrder(locale));
         }
+        //check money
+        Double loan = this.itemDAO.getLoanMoney(item.getUser().getId());
+        if (loan + item.getTotal() > item.getUser().getAccountBalance()) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorAddAccountBalanceCannotLessThanTotalAmout(item.getUser().getFullname(), item.getUser().getAccountBalance(), item.getTotal() + loan, locale));
+        }
         item.setApprovalNote("");
         item.setApprover(
             ((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());

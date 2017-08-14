@@ -19,4 +19,5 @@ public interface ItemDAO {
 	public List<String> getAllBrands(Long userId, Integer status) throws SokokanriException;
     public List<String> getAllBuyingCodes(Long userId, Integer status) throws SokokanriException;
     public List<String> getAllTransferId(Long userId, Integer status) throws SokokanriException;
+    public Double getLoanMoney(Long id) throws SokokanriException;
 }

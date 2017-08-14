@@ -224,3 +224,7 @@ td.myLabel {
     opacity:0.2;
     cursor: wait;
 }
+
+.footer {
+	height: 70px;
+}

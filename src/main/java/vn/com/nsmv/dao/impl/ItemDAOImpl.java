@@ -251,4 +251,21 @@ public class ItemDAOImpl implements ItemDAO {
         return new ArrayList<String>();
     }
 
+    public Double getLoanMoney(Long id) throws SokokanriException {
+        //get all loan money
+        // this money is sum of total of the orders that has status from approved (1) to waiting to bill exported (6)
+        Session session = this.sessionFactory.getCurrentSession();
+        try
+        {
+            StringBuilder sql = new StringBuilder("select SUM(total) from Item where user.id = :userId and status > 0 and status < 7");
+            Query query = session.createQuery(sql.toString());
+            query.setLong("userId", id);
+            return (Double) query.uniqueResult();
+        }
+        catch (Exception ex)
+        {
+            throw new SokokanriException(ex);
+        }
+    }
+
 }

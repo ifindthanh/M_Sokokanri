@@ -110,7 +110,6 @@ public class WaitingToApprove extends AbstractController{
 	
 	@RequestMapping(value = "/donhang/duyet-don-hang", method=RequestMethod.GET)
 	public ModelAndView approval(@RequestParam Long id, Model model){
-		//TODO check money, permission
 		if (!Utils.hasRole(Constants.ROLE_C) && !Utils.hasRole(Constants.ROLE_A)) {
 			model.addAttribute("message", "Bạn không có quyền duyệt đơn hàng");
 		}

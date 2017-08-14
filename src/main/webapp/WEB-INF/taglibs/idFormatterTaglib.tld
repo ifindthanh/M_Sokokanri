@@ -16,4 +16,15 @@
       <type>java.lang.Long</type>
     </attribute>
   </tag>
+  <tag>
+    <name>date</name>
+    <tag-class>vn.com.nsmv.taglib.DateFormattedTaglib</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>date</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.util.Date</type>
+    </attribute>
+  </tag>
 </taglib>

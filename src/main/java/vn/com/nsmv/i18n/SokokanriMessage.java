@@ -74,7 +74,7 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.no.order.in.file", args, locale);
 }
 
-	//User đã chọn thuộc là người quản trị hệ thống, không thể thêm giao dịch .
+	//User đã chọn thuộc là người quản trị hệ thống, không thể quản lý giao dịch .
 	public static String getMessageErrorAddTransactionNotAllow( Locale locale){
 
 		Object[] args = {};
@@ -415,6 +415,13 @@ public class SokokanriMessage {
 
 		Object[] args = {};
 		return SokokanriMessage.messageSource.getMessage("message.error.phone.cannot.be.empty", args, locale);
+}
+
+	//Số tiền trong tài khoản của {0}({1}) không thể nhỏ hơn tổng số tiền cần thanh toán và số tiền các đơn hàng chưa thanh toán({2}).
+	public static String getMessageErrorAddAccountBalanceCannotLessThanTotalAmout(Object arg0, Object arg1, Object arg2,  Locale locale){
+
+		Object[] args = {arg0, arg1, arg2};
+		return SokokanriMessage.messageSource.getMessage("message.error.add.account.balance.cannot.less.than.total.amout", args, locale);
 }
 
 	//Số tiền trong tài khoản nhỏ hơn số tiền cần thanh toán.

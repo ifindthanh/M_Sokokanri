@@ -73,10 +73,7 @@
 							for="first-name" 　data-toggle="tooltip" data-placement="right"
 							title="">Số dư tài khoản</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<input type="text"
-								class="form-control has-feedback-left pointer-events: none;"
-								maxlength="30" id="fullname" disabled="disabled"
-								readonly="readonly" value="${transaction.user.accountBalance }">
+							<a href='<c:url value="/user/vi-tien/tat-ca-giao-dich/${transaction.user.id}"></c:url>'>${transaction.user.accountBalance }</a>
 							<input type="hidden" value="${transaction.user.accountBalance }" name="user.accountBalance">
 						</div>
 					</div>

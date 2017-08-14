@@ -51,7 +51,7 @@
 				</div>
 			</sec:authorize>
 			<div class="table_container">
-				<table id="tableList" class="listBusCard table">
+				<table id="tableList" class="listBusCard table" style="width: 1000px">
 					<thead>
 						<tr class="headings" role="row">
 							<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, '../user')" /></th>
@@ -136,7 +136,7 @@
 			alert("Vui lòng chọn một user.");
 			return;
 		}
-		window.location.href = "vi-tien/tat-ca-giao-dich";
+		window.location.href = "vi-tien/tat-ca-giao-dich/" + $('.order_id:checkbox:checked').attr("order_id");
 	}
 	
 	function addTransaction(){

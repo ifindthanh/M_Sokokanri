@@ -1,7 +1,6 @@
 package vn.com.nsmv.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -280,11 +279,6 @@ public class UserServiceImpl implements UserService {
         return userID;
     }
 
-    public User getWallet(Long userId) throws SokokanriException {
-        
-        return null;
-    }
-
     @Transactional
     public void saveTransaction(Transaction transaction) throws SokokanriException {
         transaction.validate();
@@ -320,6 +314,11 @@ public class UserServiceImpl implements UserService {
         this.userDAO.saveUser(user);
         this.transactionDAO.addTransaction(transaction);
         transaction.getUser().setAccountBalance(user.getAccountBalance());
+    }
+
+    @Transactional
+    public List<Transaction> listAllTransactions(Long userId) throws SokokanriException {
+        return this.transactionDAO.listAllTransactions(userId);
     }
 
 }
