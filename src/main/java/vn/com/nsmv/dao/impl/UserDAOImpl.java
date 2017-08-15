@@ -113,9 +113,13 @@ public class UserDAOImpl implements UserDAO
     }
 
 
-    public boolean deleteUser(String listId) {
-        //TODO delete úe
-        return false;
+    public boolean deleteUser(Set<Long> ids) {
+        Session session = this.sessionFactory.getCurrentSession();
+        StringBuilder sql = new StringBuilder();
+        sql.append("DELETE User where id in :ids");
+        Query query = session.createQuery(sql.toString());
+        query.setParameterList("ids", ids);
+        return query.executeUpdate() > 0;
     }
 
 

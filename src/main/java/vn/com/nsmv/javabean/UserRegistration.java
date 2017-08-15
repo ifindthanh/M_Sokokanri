@@ -93,7 +93,7 @@ public class UserRegistration {
             throw new SokokanriException(SokokanriMessage.getMessageErrorPhoneCannotBeEmpty(locale));
         }
         
-        if (!this.phone.matches("^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$")) {
+        if (!this.phone.matches("(\\+84|0)\\d{9,10}")) {
                                  
             throw new SokokanriException(SokokanriMessage.getMessageErrorInvalidPhone(locale));
         }

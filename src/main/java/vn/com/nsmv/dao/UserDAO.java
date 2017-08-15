@@ -17,7 +17,7 @@ public interface UserDAO
 
 	public User getUserByEmail(String userCd);
 
-	public boolean deleteUser(String listId);
+	public boolean deleteUser(Set<Long> ids);
 
 	public Set<UserRole> getRoles(Long userID);
 	

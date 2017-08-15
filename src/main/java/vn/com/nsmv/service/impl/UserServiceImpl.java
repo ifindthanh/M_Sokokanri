@@ -198,13 +198,9 @@ public class UserServiceImpl implements UserService {
         return this.userDAO.countAllUsers(searchCondition);
     }
 
+    @Transactional
     public void deleteUsers(Set<Long> selectedItems) throws SokokanriException {
-        String strListId = "";
-        for (Long id : selectedItems) {
-            strListId = strListId + id + ",";
-        }
-        strListId = strListId.substring(0, strListId.length() - 1);
-        userDAO.deleteUser(strListId);
+        userDAO.deleteUser(selectedItems);
     }
 
     public User getUserByCode(Long userCd) throws SokokanriException {

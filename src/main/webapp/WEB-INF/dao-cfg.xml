@@ -8,28 +8,6 @@
      <property name="sessionFactory" ref="mySessionFactory" />
  </bean>
  
- <bean id="priShainBasDAO" class="vn.com.nsmv.dao.impl.PriShainBasDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- <bean id="nyukoDAO" class="vn.com.nsmv.dao.impl.NyukoDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- <bean id="transDAO" class="vn.com.nsmv.dao.impl.TransDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- <bean id="shukkaBodyDAOImpl" class="vn.com.nsmv.dao.impl.ShukkaBodyDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- <bean id="shukkaHeadDAOImpl" class="vn.com.nsmv.dao.impl.ShukkaHeadDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
-<bean id="logRequestDaoImpl" class="vn.com.nsmv.dao.impl.LogRequestDaoImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean> 
- <bean id="sokoDaoImpl" class="vn.com.nsmv.dao.impl.SokoDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean> 
- 
  <bean id="moneyExchangeDAOImpl" class="vn.com.nsmv.dao.impl.MoneyExchangeDAOImpl">
      <property name="sessionFactory" ref="mySessionFactory" />
  </bean> 
