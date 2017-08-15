@@ -31,6 +31,11 @@
 				<div class="col-xs-4">
 					<input type="text" class="form-control" value="${searchCondition.email }" name="email" />
 				</div>
+				<div>
+					<button type="submit" class="btn btn-primary">
+						<i class="fa fa-search" aria-hidden="true"> Tìm kiếm</i>
+					</button>
+				</div>
 			</div>
 			<sec:authorize access="hasAnyRole('ROLE_A')">
 				<div class="col-sm-12 action_container">

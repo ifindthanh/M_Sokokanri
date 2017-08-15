@@ -180,8 +180,9 @@ public class UserController extends SokokanriCommonController
     }
 	
 	@RequestMapping(value = "/quen-mat-khau", method = RequestMethod.GET)
-    public String resetPassword(Model model, @RequestParam String email, @RequestParam String timestamp)
+    public String resetPassword(HttpServletRequest request, Model model, @RequestParam String email, @RequestParam String timestamp)
     {
+	    request.getSession().setAttribute("listType", 10);
         try {
             this.userService.resetPassword(email, timestamp);
         } catch (SokokanriException e) {
@@ -387,7 +388,8 @@ public class UserController extends SokokanriCommonController
 	
 	
 	@RequestMapping(value="/xem-thong-tin", method = RequestMethod.GET)
-    public ModelAndView viewInformation(Model model) {
+    public ModelAndView viewInformation(HttpServletRequest request, Model model) {
+	    request.getSession().setAttribute("listType", 10);
         try {
             User user = this.userService.getUserByCode(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
             if (user == null) {

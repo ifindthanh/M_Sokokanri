@@ -5,9 +5,12 @@ import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -27,6 +30,8 @@ public class Transaction {
     private Integer amount;
     private Date createDate;
     private User user;
+    private User trader;
+    private String comment;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -105,4 +110,25 @@ public class Transaction {
     public String getFormattedId() {
         return Utils.getFormattedId(this.id, 7);
     }
+
+    @ManyToOne(fetch = FetchType.EAGER )
+    @JoinColumn(name = "trader", nullable = false)    
+    public User getTrader() {
+        return trader;
+    }
+    
+    public void setTrader(User trader) {
+        this.trader = trader;
+    }
+
+    @Column(name = "comment")
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    
 }

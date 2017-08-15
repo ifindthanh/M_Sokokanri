@@ -97,6 +97,18 @@
         <intercept-url pattern="/donhang/giao-hang-tim-kiem" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/da-giao-hang" access="hasRole('ROLE_A')" />
         
+        <intercept-url pattern="/user/vi-tien/them-giao-dich" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/user/vi-tien/tat-ca-giao-dich/{userId}" access="hasRole('ROLE_A')" />
+        
+        <intercept-url pattern="/user/tat-ca" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/user/tat-ca/0" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/user/xoa-user" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/user/{userId}" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/editUser/{userId}" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/saveUser/{userId}" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/editUser/luu-thong-tin" access="hasRole('ROLE_A')" />
+        <intercept-url pattern="/user/them-moi" access="hasRole('ROLE_A')" />
+        
         <intercept-url pattern="/*" access="isAuthenticated()" />
  
         <access-denied-handler error-page="/403" />

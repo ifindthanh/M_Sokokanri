@@ -10,10 +10,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import vn.com.nsmv.bean.CustomUser;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.Mail;
 import vn.com.nsmv.common.MailForm;
@@ -311,9 +313,12 @@ public class UserServiceImpl implements UserService {
             default:
                 break;
         }
-        this.userDAO.saveUser(user);
+        User trader = new User();
+        trader.setId(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+        transaction.setTrader(trader);
         this.transactionDAO.addTransaction(transaction);
         transaction.getUser().setAccountBalance(user.getAccountBalance());
+        this.userDAO.saveUser(user);
     }
 
     @Transactional

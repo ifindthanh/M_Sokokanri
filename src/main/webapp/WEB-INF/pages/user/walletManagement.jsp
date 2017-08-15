@@ -95,6 +95,15 @@
 								maxlength="30" id="amount" >
 						</div>
 					</div>
+					
+					<div class="form-group row">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12"
+							for="first-name">Ghi chú</label>
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<textarea class="form-control has-feedback-left description"
+								name="comment" id="comment" ></textarea>
+						</div>
+					</div>
 
 
 					<div class="ln_solid"></div>

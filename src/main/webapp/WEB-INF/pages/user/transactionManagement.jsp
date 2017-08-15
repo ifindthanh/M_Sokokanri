@@ -43,14 +43,16 @@
 				<div class="col-xs-2"><h2>${user.fullname}</h2></div>
 			</div>
 			<div class="col-sm-12">
-				<table id="tableList" class="listBusCard table" style = "width: 1000px">
+				<table id="tableList" class="listBusCard table">
 					<thead>
 						<tr class="headings" role="row">
 							<th style="width: 20px">No.</th>
-							<th>Mã giao dịch</th>
+							<th style="width: 100px">Mã giao dịch</th>
 							<th>Loại giao dịch</th>
 							<th>Số tiền</th>
-							<th>Ngày giao dịch</th>
+							<th>Ghi chú</th>
+							<th style="width: 200px">Người tạo giao dịch</th>
+							<th style="width: 200px">Ngày giao dịch</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -65,6 +67,12 @@
 								</td>
 								<td>
 									${item.amount}
+								</td>
+								<td>
+									${item.comment}
+								</td>
+								<td>
+									${item.trader.fullname }
 								</td>
 								<td>
 									<formatter:date date="${item.createDate}"/>

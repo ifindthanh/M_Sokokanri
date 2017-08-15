@@ -54,8 +54,6 @@
 			</ul>
 		</div>
 	</div>
-	<div class="extra-content"
-		style="height: 150px; width: 100%; background-color: white"></div>
 	<nav class="navbar navbar-inverse">
 		<ul class="nav navbar-nav">
 			<li class="active"><a href="#">Home</a></li>

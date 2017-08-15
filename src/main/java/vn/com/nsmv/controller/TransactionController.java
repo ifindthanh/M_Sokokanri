@@ -33,8 +33,6 @@ public class TransactionController extends SokokanriCommonController
 	@Autowired
 	private UserService userService;
 
-	private Integer offset;
-    private Integer maxResults;
     private Set<Long> selectedItems = new HashSet<Long>();
     private TransactionSearchCondition searchCondition = new TransactionSearchCondition();
 

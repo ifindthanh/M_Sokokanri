@@ -2,6 +2,8 @@ package vn.com.nsmv.javabean;
 
 import java.util.Map;
 
+import vn.com.nsmv.common.Utils;
+
 public class UserSearchCondition {
     private String email;
 
@@ -18,7 +20,7 @@ public class UserSearchCondition {
 
     public String getSearching(UserSearchCondition searchCondition, Map<String, Object> params) {
         StringBuilder searching = new StringBuilder();
-        if (this.email != null) {
+        if (!Utils.isEmpty(this.email)) {
             searching.append(" and email = :email");
             params.put("email", this.email);
         }
