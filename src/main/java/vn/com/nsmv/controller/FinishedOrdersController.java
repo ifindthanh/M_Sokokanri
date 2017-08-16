@@ -128,6 +128,7 @@ public class FinishedOrdersController extends AbstractController {
 	public ModelAndView deleteOrders(Model model) {
 		try {
 			this.ordersService.deleteOrders(this.getSelectedItems());
+			
 		} catch (SokokanriException ex) {
 			model.addAttribute("message", ex.getErrorMessage());
 		}

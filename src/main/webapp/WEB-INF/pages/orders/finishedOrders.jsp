@@ -85,7 +85,6 @@
 							<th>Vận đơn</th>
 							<th>Tên khách hàng</th>
 							<th>Tổng tiền thực tế</th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
