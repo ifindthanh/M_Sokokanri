@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
         }
         user = new User();
         user.setEmail(userBean.getEmail());
+        user.setPhone(userBean.getPhone());
         user.setFullname(userBean.getFullName());
         user.setPassword(Utils.encode(userBean.getPassword()));
         user.setGender(userBean.getSex());
