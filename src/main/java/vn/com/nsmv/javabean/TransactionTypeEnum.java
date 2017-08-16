@@ -1,8 +1,12 @@
 package vn.com.nsmv.javabean;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+import vn.com.nsmv.i18n.SokokanriMessage;
 
 public enum TransactionTypeEnum {
-    RECHARGE("RECHARGE","Nạp tiền"), PAY("PAY", "Thanh toán"), REFUND("REFUND", "Hoàn tiền");
+    RECHARGE("RECHARGE", SokokanriMessage.getMessageInforLabelTransactionTypeRecharge(LocaleContextHolder.getLocale()))
+    , PAY("PAY", SokokanriMessage.getMessageInforLabelTransactionTypePay(LocaleContextHolder.getLocale()))
+    , REFUND("REFUND", SokokanriMessage.getMessageInforLabelTransactionTypeRefund(LocaleContextHolder.getLocale()));
     private String code;
     private String name;
     private TransactionTypeEnum(String code, String name) {

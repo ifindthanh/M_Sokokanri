@@ -11,6 +11,13 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.transaction.type.cannot.be.empty", args, locale);
 }
 
+	//Khách hàng 
+	public static String getMessageInforLabelCustomer( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.infor.label.customer", args, locale);
+}
+
 	//Không thể chuyển trạng thái đơn hàng đã chọn.
 	public static String getMessageErrorCannotUpdateStatus( Locale locale){
 
@@ -46,6 +53,13 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.email.not.exists", args, locale);
 }
 
+	//Thanh toán
+	public static String getMessageInforLabelTransactionTypePay( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.infor.label.transaction.type.pay", args, locale);
+}
+
 	//Chi tiết hóa đơn: {0}
 	public static String getLabelBillDetail(Object arg0,  Locale locale){
 
@@ -67,18 +81,18 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("label.name.of.customer", args, locale);
 }
 
+	//User đã chọn là người quản trị hệ thống, không thể quản lý giao dịch .
+	public static String getMessageErrorAddTransactionNotAllow( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.error.add.transaction.not.allow", args, locale);
+}
+
 	//File đã chọn không chứa thông tin của đơn hàng nào.
 	public static String getMessageErrorNoOrderInFile( Locale locale){
 
 		Object[] args = {};
 		return SokokanriMessage.messageSource.getMessage("message.error.no.order.in.file", args, locale);
-}
-
-	//User đã chọn thuộc là người quản trị hệ thống, không thể quản lý giao dịch .
-	public static String getMessageErrorAddTransactionNotAllow( Locale locale){
-
-		Object[] args = {};
-		return SokokanriMessage.messageSource.getMessage("message.error.add.transaction.not.allow", args, locale);
 }
 
 	//File vừa chọn không phải là excel file.
@@ -270,6 +284,13 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.quantity.cannot.be.empty", args, locale);
 }
 
+	//Nạp tiền
+	public static String getMessageInforLabelTransactionTypeRecharge( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.infor.label.transaction.type.recharge", args, locale);
+}
+
 	//Ghi chú không hợp lệ.
 	public static String getMessageErrorInvalidNote( Locale locale){
 
@@ -312,18 +333,18 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.invalid.cost", args, locale);
 }
 
-	//Đăng ký tài khoản thành công.
-	public static String getMessageInforSignInSuccessfully( Locale locale){
-
-		Object[] args = {};
-		return SokokanriMessage.messageSource.getMessage("message.infor.sign.in.successfully", args, locale);
-}
-
 	//Chờ duyệt
 	public static String getLabelWaitingToApproval( Locale locale){
 
 		Object[] args = {};
 		return SokokanriMessage.messageSource.getMessage("label.waiting.to.approval", args, locale);
+}
+
+	//Đăng ký tài khoản thành công.
+	public static String getMessageInforSignInSuccessfully( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.infor.sign.in.successfully", args, locale);
 }
 
 	//Số điện thoại không đúng.
@@ -471,6 +492,13 @@ public class SokokanriMessage {
 
 		Object[] args = {};
 		return SokokanriMessage.messageSource.getMessage("message.error.invalie.quantity", args, locale);
+}
+
+	//Hoàn tiền
+	public static String getMessageInforLabelTransactionTypeRefund( Locale locale){
+
+		Object[] args = {};
+		return SokokanriMessage.messageSource.getMessage("message.infor.label.transaction.type.refund", args, locale);
 }
 
 }

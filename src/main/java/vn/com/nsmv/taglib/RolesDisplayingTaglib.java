@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.servlet.jsp.JspWriter;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import vn.com.nsmv.bean.RoleEnum;
 import vn.com.nsmv.entity.Role;
+import vn.com.nsmv.i18n.SokokanriMessage;
 
 public class RolesDisplayingTaglib extends AbstractTaglib {
 
@@ -27,7 +30,7 @@ public class RolesDisplayingTaglib extends AbstractTaglib {
             writer.append(" checked ");
             writer.append(" onchange=\"selectRole(this, 'U')\" ");
             writer.append(" /> ");
-            writer.append("Khách hàng");
+            writer.append(SokokanriMessage.getMessageInforLabelCustomer(LocaleContextHolder.getLocale()));
             writer.append(" </div> ");
             writer.append("</div>");
             writer.append("<select name=\"roles\" multiple style=\"display:none\" id=\"allRoles\">");

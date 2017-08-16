@@ -58,6 +58,23 @@
 					</select>
 				</div>
 			</div>
+			<sec:authorize access="hasRole('ROLE_A')">
+				<div class="col-sm-12 action_container">
+					<div class="left_10">
+						<div class="dropdown">
+						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
+						  <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li><a onclick="deleteOrders()">Xóa đơn hàng</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="left_10">
+						<label id="selectedRecords" style="padding-top: 15px">(Đã
+							chọn ${selectedItems.size()})</label>
+					</div>
+				</div>
+			</sec:authorize>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">
 					<thead>
@@ -122,13 +139,6 @@
 					next="&raquo;" previous="&laquo;" />
 			</div>
 			
-			<div class="col-sm-12" style="margin-bottom: 20px;">
-				<sec:authorize access="hasAnyRole('ROLE_A')">
-					<button id="addRow" type="button" class="btn btn-primary" onclick="deleteOrders()">
-						<i class="fa" aria-hidden="true" ></i> Xóa đơn hàng
-					</button>
-				</sec:authorize>
-			</div>
 		</form>
 	</div>
 	
@@ -220,7 +230,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "giao-hang/chon-don-hang?id=" + id,
+    			url : "da-hoan-thanh/chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -229,7 +239,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "giao-hang/bo-chon-don-hang?id=" + id,
+    			url : "da-hoan-thanh/bo-chon-don-hang?id=" + id,
     			success : function(result) {
     			},
     			error : function() {
@@ -237,6 +247,7 @@
     		});
     	}
     	checkSelectAll();	
+    	$("#selectedRecords").html("(Đã chọn " + $('.order_id:checkbox:checked').length+")");
     }
     
     function selectAllItems(element) {
@@ -249,7 +260,7 @@
     	if (chkbox.is(':checked')) {
     		$.ajax({
     			type : "GET",
-    			url : "giao-hang/chon-tat-ca?ids="+ids,
+    			url : "da-hoan-thanh/chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -259,7 +270,7 @@
     	} else {
     		$.ajax({
     			type : "GET",
-    			url : "giao-hang/bo-chon-tat-ca?ids="+ids,
+    			url : "da-hoan-thanh/bo-chon-tat-ca?ids="+ids,
     			success : function(result) {
     				
     			},
@@ -268,6 +279,7 @@
     			}
     		});
     	}
+		$("#selectedRecords").html("(Đã chọn " + $('.order_id:checkbox:checked').length+")");
     }
     
 	function approval(id){

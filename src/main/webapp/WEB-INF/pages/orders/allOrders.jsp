@@ -64,7 +64,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="col-xs-12 row">
+				<%-- <div class="col-xs-12 row">
 					<label class="col-xs-2 right_align top_margin_5" >Từ ngày: </label>
 					<div class="col-xs-2">
 						<input name="fromDate" type="text"
@@ -85,7 +85,7 @@
 							class="fa fa-calendar form-control-feedback left"
 							aria-hidden="true"></span>
 					</div>
-				</div>
+				</div> --%>
 			</div>
 			<div class="col-sm-12">
 				<table id="tableList" class="listBusCard table">

@@ -26,7 +26,7 @@
 	<div id="page_content">
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
-			<div class="row">
+			<div class="col-xs-12 row">
 				<label class="col-xs-2 right_align top_margin_5" >Email: </label>
 				<div class="col-xs-4">
 					<input type="text" class="form-control" value="${searchCondition.email }" name="email" />
@@ -39,10 +39,10 @@
 			</div>
 			<sec:authorize access="hasAnyRole('ROLE_A')">
 				<div class="col-sm-12 action_container">
-					<div class="col-sm-1">
+					<div class="left_10">
 						<a href = "them-moi" class="btn btn-default">Thêm user <i class="fa fa-plus"></i></a>
 					</div>
-					<div class="col-sm-2">
+					<div class="left_10">
 						<div class="dropdown">
 						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 						  <span class="caret"></span></button>
@@ -52,6 +52,10 @@
 								<li><a onclick="deleteUsers()">Xóa user</a></li>
 							</ul>
 						</div>
+						
+					</div>
+					<div class="left_10">
+						<label id="selectedRecords" style="padding-top: 15px">(Đã chọn ${selectedItems.size()})</label>
 					</div>
 				</div>
 			</sec:authorize>
@@ -59,7 +63,9 @@
 				<table id="tableList" class="listBusCard table" style="width: 1000px">
 					<thead>
 						<tr class="headings" role="row">
-							<th><input type="checkbox" id="selectAll" onchange="selectAllItems(this, '../user')" /></th>
+							<th>
+								<input type="checkbox" id="selectAll" onchange="selectAllItems(this, '../user')" />
+							</th>
 							<th>Địa chỉ email</th>
 							<th style="width: 100px">Họ và tên</th>
 							<th style="width: 180px">Số điện thoại</th>

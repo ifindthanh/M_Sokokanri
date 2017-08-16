@@ -239,6 +239,7 @@
     		});
     	}
     	checkSelectAll();
+    	$("#selectedRecords").html("(Đã chọn " + $('.order_id:checkbox:checked').length+")");
     }
     
 	function selectAllItems(element, baseUrl) {
@@ -274,6 +275,7 @@
     			}
     		});
     	}
+		$("#selectedRecords").html("(Đã chọn " + $('.order_id:checkbox:checked').length+")");
     }
 	
 	function computeRealMoney(element) {

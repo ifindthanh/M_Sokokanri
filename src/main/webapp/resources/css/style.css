@@ -185,6 +185,7 @@ td.myLabel {
 	padding-top: 20px;
 	padding-bottom: 10px;
 	padding-left: 5px;
+	display: inline-flex;
 	
 }
 
@@ -227,4 +228,8 @@ td.myLabel {
 
 .footer {
 	height: 70px;
+}
+
+.left_10 {
+	margin-left: 10px;
 }

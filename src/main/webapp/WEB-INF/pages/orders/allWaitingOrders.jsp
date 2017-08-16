@@ -42,7 +42,7 @@
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 action_container">
-				<div class="col-sm-2">
+				<div class="left_10">
 					<div class="dropdown">
 					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 					  <span class="caret"></span></button>
@@ -55,6 +55,10 @@
 							<li><a onclick="deleteOrders('cho-duyet/xoa-don-hang')">Xóa đơn hàng</a></li>
 						</ul>
 					</div>
+				</div>
+				<div class="left_10">
+					<label id="selectedRecords" style="padding-top: 15px">(Đã
+						chọn ${selectedItems.size()})</label>
 				</div>
 			</div>
 			<div class="table_container">

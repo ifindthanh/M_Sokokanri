@@ -69,7 +69,7 @@
 			<input type="hidden" name="status" value = "${searchCondition.status }" />
 			<sec:authorize access="hasAnyRole('ROLE_T1', 'ROLE_A')">
 				<div class="col-sm-12 action_container">
-					<div class="col-sm-2">
+					<div class="left_10">
 						<div class="dropdown">
 						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 						  <span class="caret"></span></button>
@@ -81,6 +81,10 @@
 								</sec:authorize>
 							</ul>
 						</div>
+					</div>
+					<div class="left_10">
+						<label id="selectedRecords" style="padding-top: 15px">(Đã
+							chọn ${selectedItems.size()})</label>
 					</div>
 				</div>
 			</sec:authorize>
