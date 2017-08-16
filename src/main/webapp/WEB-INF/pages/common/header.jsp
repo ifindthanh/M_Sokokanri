@@ -60,7 +60,7 @@
 			<li><a href="#">Giới thiệu</a></li>
 			<li><a href="#">Báo giá</a></li>
 			<sec:authorize access="isAuthenticated()">
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Đơn hàng</a>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" id="mnuOrder">Đơn hàng</a>
 					<ul class="dropdown-menu">
 						<sec:authorize access="hasRole('ROLE_U')">
 							<li><a href="<c:url value= "/donhang/tao-moi"/>">Tạo đơn hàng</a></li>
@@ -69,7 +69,7 @@
 							<li><a href="<c:url value= "/donhang/tat-ca/0"/>">Tất cả đơn hàng</a></li>
 						</sec:authorize>
 						<sec:authorize access="hasAnyRole('ROLE_C','ROLE_A','ROLE_U')">
-				    		<li><a href="<c:url value= "/donhang/cho-duyet/0"/>">Chờ duyệt</a></li>
+				    		<li><a id="mnu_waiting2approve" href="<c:url value= "/donhang/cho-duyet/0"/>">Chờ duyệt</a></li>
 				    	</sec:authorize>
 				    	<sec:authorize access="hasAnyRole('ROLE_B','ROLE_A','ROLE_U')">
 				        	<li><a href="<c:url value= "/donhang/cho-mua/0"/>">Đã duyệt</a></li>
@@ -357,8 +357,7 @@
 
 			$('#ajax-overlay').show();
 
-			$
-					.ajax({
+			$.ajax({
 						type : "POST",
 						url : "${pageContext.request.contextPath}/quen-mat-khau",
 						data : $("#reset_form").serialize(),
@@ -385,3 +384,23 @@
 					});
 		}
 	</script>
+	<sec:authorize access="hasRole('ROLE_U')">
+		<script>
+			$(document).ready(function() {
+				$.ajax({
+	    			type : "GET",
+	    			url : "${pageContext.request.contextPath}/thong-tin-don-hang",
+	    			success : function(result) {
+	    				if (result.status == 1 && result.result.nbOfNotedOrder > 0) {
+	    					$("#mnuOrder").html("Đơn hàng <span class='error'>(" + result.result.nbOfNotedOrder + ")</span>");
+	    					$("#mnu_waiting2approve").html("Chờ duyệt <span class='error'>(" + result.result.nbOfNotedOrder + ")</span>");
+	    				}
+	    			},
+	    			error : function() {
+	    				
+	    			}
+	    		});
+			});
+		</script>
+	</sec:authorize>
+

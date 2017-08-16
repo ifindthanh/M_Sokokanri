@@ -40,6 +40,7 @@ import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.entity.ItemHistory;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.i18n.SokokanriMessage;
+import vn.com.nsmv.javabean.NumberOfOrdersByStatusBean;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.javabean.SortCondition;
 import vn.com.nsmv.javabean.UploadBean;
@@ -713,6 +714,13 @@ public class OrdersServiceImpl implements OrdersService {
     @Transactional
     public List<Long> getAllBillIDs(SearchCondition searchCondition) throws SokokanriException {
         return this.billDAO.getAllBillIDs(searchCondition);
+    }
+
+    @Transactional
+    public NumberOfOrdersByStatusBean getNumberOfOrdersByStatusBean(Long userId) throws SokokanriException {
+        SearchCondition searchCondition = new SearchCondition(-1);
+        searchCondition.setUserId(userId);
+        return new NumberOfOrdersByStatusBean(this.countAllItems(searchCondition));
     }
 
 

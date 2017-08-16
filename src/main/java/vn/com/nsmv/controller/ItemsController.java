@@ -31,6 +31,7 @@ import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
 import vn.com.nsmv.i18n.SokokanriMessage;
+import vn.com.nsmv.javabean.NumberOfOrdersByStatusBean;
 import vn.com.nsmv.javabean.UploadBean;
 import vn.com.nsmv.service.OrdersService;
 
@@ -198,6 +199,20 @@ public class ItemsController {
 					"order", category);
 			return new ModelAndView("redirect:/donhang/" + category.getId());
 		}
+	}
+	
+	@RequestMapping(value = "/thong-tin-don-hang", method=RequestMethod.GET)
+    public @ResponseBody ResponseEntity<ResponseResult<NumberOfOrdersByStatusBean>> getNumberOfOrdersByStatus() {
+	    
+        try {
+            if (!Utils.isUser()) {
+                throw new SokokanriException("Not supportted user");
+            }
+            NumberOfOrdersByStatusBean result = this.ordersService.getNumberOfOrdersByStatusBean(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+            return new ResponseEntity<ResponseResult<NumberOfOrdersByStatusBean>>(new ResponseResult<NumberOfOrdersByStatusBean>(1, null, result), HttpStatus.OK);
+        } catch (SokokanriException e) {
+            return new ResponseEntity<ResponseResult<NumberOfOrdersByStatusBean>>(new ResponseResult<NumberOfOrdersByStatusBean>(0, e.getErrorMessage(), null), HttpStatus.OK);
+        }
 	}
 	
 }
