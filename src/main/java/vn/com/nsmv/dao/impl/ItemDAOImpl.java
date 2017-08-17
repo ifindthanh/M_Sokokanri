@@ -165,7 +165,7 @@ public class ItemDAOImpl implements ItemDAO {
         Session session = this.sessionFactory.getCurrentSession();
         try
         {
-            StringBuilder sql = new StringBuilder("select distinct brand from VBrand where brand is not null");
+            StringBuilder sql = new StringBuilder("select distinct TRIM(brand) from VBrand where brand is not null");
             @SuppressWarnings("unchecked")
             List<String> list = getList(userId, status, session, sql);
             if (list != null)
@@ -184,7 +184,7 @@ public class ItemDAOImpl implements ItemDAO {
         Session session = this.sessionFactory.getCurrentSession();
         try
         {
-            StringBuilder sql = new StringBuilder("select distinct buyingCode from VBuyingCode where buyingCode is not null");
+            StringBuilder sql = new StringBuilder("select distinct TRIM(buyingCode) from VBuyingCode where buyingCode is not null");
             @SuppressWarnings("unchecked")
             List<String> list = getList(userId, status, session, sql);
             if (list != null)
@@ -236,7 +236,7 @@ public class ItemDAOImpl implements ItemDAO {
         Session session = this.sessionFactory.getCurrentSession();
         try
         {
-            StringBuilder sql = new StringBuilder("select distinct transferId from VTransferId where transferId is not null");
+            StringBuilder sql = new StringBuilder("select distinct TRIM(transferId) from VTransferId where transferId is not null");
             @SuppressWarnings("unchecked")
             List<String> list = getList(userId, status, session, sql);
             if (list != null)

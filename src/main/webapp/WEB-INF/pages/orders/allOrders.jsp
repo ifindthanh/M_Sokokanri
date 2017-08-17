@@ -157,16 +157,10 @@
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
 								</td>
 								<td>
-									<div class="lblComputeCost">${item.computeCost }</div> <input
-									type="number" value="${item.computeCost }"
-									onchange="computeMoneyFromRealCost(this)"
-									class="small_width form-control hiddenAction txtComputeCost" />
+									<div class="lblComputeCost">${item.computeCost }</div> 
 								</td>
 								<td>
-									<div class="lblRealQuantity">${item.realQuantity }</div> <input
-									type="number" value="${item.realQuantity}"
-									onchange="computeMoneyFromRealQuantity(this)"
-									class="small_width form-control hiddenAction txtRealQuantity" />
+									<div class="lblRealQuantity">${item.realQuantity }</div> 
 								</td>
 								<td>
 									<div class="lblComputePrice">${item.computePrice }</div> <input

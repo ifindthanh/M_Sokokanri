@@ -1,8 +1,6 @@
 package vn.com.nsmv.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -22,7 +20,6 @@ import vn.com.nsmv.entity.Role;
 import vn.com.nsmv.entity.Transaction;
 import vn.com.nsmv.entity.User;
 import vn.com.nsmv.i18n.SokokanriMessage;
-import vn.com.nsmv.javabean.TransactionSearchCondition;
 import vn.com.nsmv.service.UserService;
 
 @Controller
@@ -32,9 +29,6 @@ public class TransactionController extends SokokanriCommonController
 
 	@Autowired
 	private UserService userService;
-
-    private Set<Long> selectedItems = new HashSet<Long>();
-    private TransactionSearchCondition searchCondition = new TransactionSearchCondition();
 
     @RequestMapping(value="/user/vi-tien/{userId}", method = RequestMethod.GET)
     public ModelAndView transactionManagement(Model model, @PathVariable Long userId) {

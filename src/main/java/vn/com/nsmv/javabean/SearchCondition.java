@@ -85,6 +85,12 @@ public final class SearchCondition
             params.put("buyingCodes", this.buyingCodes);
         }
 		
+		if (this.transferIds != null && !this.transferIds.isEmpty())
+        {
+            searching.append(" and transferId in :transferIds");
+            params.put("transferIds", this.transferIds);
+        }
+		
 		if (this.bills != null && !this.bills.isEmpty())
         {
             searching.append(" and billId in :bills");
