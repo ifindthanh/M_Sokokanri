@@ -112,8 +112,6 @@
 	}
 	
 	function computeMoney(element) {
-		var start = new Date().getTime();
-		console.log(start);
     	var currentElement = $(element);
     	var txtTotal = currentElement.closest('tr').find(".txtTotal");
     	var txtCost = currentElement.closest('tr').find(".txtCost");

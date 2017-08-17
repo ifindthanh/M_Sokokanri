@@ -84,6 +84,7 @@ public class OrdersServiceImpl implements OrdersService {
                 continue;
             }
             hasRecord = true;
+            item.setTotal(SettingMoneyRate.VALUE * item.getQuantity() * item.getCost());
             item.setCategory(category);
             item.setUser(user);
             item.setStatus(0);
@@ -183,8 +184,16 @@ public class OrdersServiceImpl implements OrdersService {
         }
         //check money
         Double loan = this.itemDAO.getLoanMoney(item.getUser().getId());
-        if (loan + item.getTotal() > item.getUser().getAccountBalance()) {
-            throw new SokokanriException(SokokanriMessage.getMessageErrorAddAccountBalanceCannotLessThanTotalAmout(item.getUser().getFullname(), item.getUser().getAccountBalance(), item.getTotal() + loan, locale));
+        Integer accountBalance = item.getUser().getAccountBalance();
+        Double total = item.getTotal();
+        if (total == null) {
+            total = Double.valueOf(0);
+        }
+        if (accountBalance == null) {
+            accountBalance = 0;
+        }
+        if (loan + total > accountBalance) {
+            throw new SokokanriException(SokokanriMessage.getMessageErrorAddAccountBalanceCannotLessThanTotalAmout(item.getUser().getFullname(), accountBalance, total + loan, locale));
         }
         item.setApprovalNote("");
         item.setApprover(

@@ -148,6 +148,7 @@
 	<!-- daterangepicker -->
     <script src="<c:url value="/resources/js/datepicker/daterangepicker.js"/>"></script>
 	<script src="<c:url value="/resources/js/datePicker.custom.js"/>"></script>
+	<script src="<c:url value="/resources/js/common.js"/>"></script>
     <script>
     var table;
     $(document).ready(function(){
@@ -218,25 +219,6 @@
 			cell.innerHTML = i+1;
 		}).draw();
    	}
-    
-    function computeMoney(element) {
-    	var currentElement = $(element);
-    	var txtTotal = currentElement.closest('tr').find(".txtTotal");
-    	var txtCost = currentElement.closest('tr').find(".txtCost");
-    	var txtQuantity = currentElement.closest('tr').find(".txtQuantity");
-    	if (txtCost.val() && txtCost.val() != "" 
-    			&& txtQuantity.val() && txtQuantity.val() != "") {
-    		txtTotal.val(parseInt(txtQuantity.val())* parseFloat(txtCost.val()));
-    	} else {
-    		txtTotal.val("");
-    	}
-    	var total_price = 0;
-    	$(".txtTotal").each(function (){
-    		if ($(this).val() && $(this).val() != "")
-    			total_price += parseFloat($(this).val());
-    	});
-    	$("#total_price").html(total_price.toFixed(0));
-    }
     
     function validateForm() {
     	var BreakException = {};

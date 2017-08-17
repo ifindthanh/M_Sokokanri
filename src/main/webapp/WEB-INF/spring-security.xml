@@ -39,12 +39,6 @@
  		<intercept-url pattern="/dang-ky" access="permitAll" />
  		<intercept-url pattern="/quen-mat-khau" access="permitAll" />
  		<intercept-url pattern="/doi-mat-khau" access="permitAll" />
-        <intercept-url pattern="/imported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
-        <intercept-url pattern="/export/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
-        <intercept-url pattern="/exported/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
-        <intercept-url pattern="/profile/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
-        <intercept-url pattern="/user/list" access="hasAnyRole('ROLE_A', 'ROLE_S')" />
-        <intercept-url pattern="/user/**" access="hasAnyRole('ROLE_U', 'ROLE_S', 'ROLE_A')" />
         
         <intercept-url pattern="/donhang/tao-moi" access="hasRole('ROLE_U')" />
         <intercept-url pattern="/donhang/tat-ca" access="hasAnyRole('ROLE_U', 'ROLE_A')" />

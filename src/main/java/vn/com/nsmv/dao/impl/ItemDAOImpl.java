@@ -260,7 +260,11 @@ public class ItemDAOImpl implements ItemDAO {
             StringBuilder sql = new StringBuilder("select SUM(total) from Item where user.id = :userId and status > 0 and status < 7");
             Query query = session.createQuery(sql.toString());
             query.setLong("userId", id);
-            return (Double) query.uniqueResult();
+            Double result = (Double) query.uniqueResult();
+            if (result == null) {
+                return Double.valueOf(0);
+            }
+            return result;
         }
         catch (Exception ex)
         {
