@@ -20,8 +20,10 @@ import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
+import vn.com.nsmv.entity.User;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
+import vn.com.nsmv.service.UserService;
 
 @Controller
 @Scope("session")
@@ -30,6 +32,7 @@ public class AllOrdersController extends AbstractController{
 	
 	@Autowired
 	private OrdersService ordersService;
+	@Autowired UserService userService;
 	
 	@RequestMapping(value = "/donhang/tat-ca/0", method=RequestMethod.GET)
 	public String init()
@@ -102,6 +105,50 @@ public class AllOrdersController extends AbstractController{
 			if (item == null) {
 				throw new SokokanriException("Đơn hàng không tồn tại");
 			}
+			
+			//setting other values
+			if (item.getApprover() != null) {
+			    User approver = this.userService.getUserByCode(item.getApprover());
+			    if (approver != null) {
+			        item.setApproverDetail(approver.getEmail() + " - " + approver.getFullname());
+			    }
+			}
+			
+			if (item.getBuyer() != null) {
+                User buyer = this.userService.getUserByCode(item.getBuyer());
+                if (buyer != null) {
+                    item.setBuyerDetail(buyer.getEmail() + " - " + buyer.getFullname());
+                }
+            }
+			
+			if (item.getTransported() != null) {
+                User transporter = this.userService.getUserByCode(item.getTransported());
+                if (transporter != null) {
+                    item.setTransporterDetail(transporter.getEmail() + " - " + transporter.getFullname());
+                }
+            }
+			
+			if (item.getTransporterVn() != null) {
+                User transporterVn = this.userService.getUserByCode(item.getTransporterVn());
+                if (transporterVn != null) {
+                    item.setTransporterVnDetail(transporterVn.getEmail() + " - " + transporterVn.getFullname());
+                }
+            }
+			
+			if (item.getChecker() != null) {
+                User checker = this.userService.getUserByCode(item.getChecker());
+                if (checker != null) {
+                    item.setCheckerDetail(checker.getEmail() + " - " + checker.getFullname());
+                }
+            }
+			
+			if (item.getInformer() != null) {
+                User informer = this.userService.getUserByCode(item.getInformer());
+                if (informer != null) {
+                    item.setInformerDetail(informer.getEmail() + " - " + informer.getFullname());
+                }
+            }
+			
 			model.addAttribute("category", item);
 			return new ModelAndView("/admin/orderDetail");
 		} catch (SokokanriException ex) {

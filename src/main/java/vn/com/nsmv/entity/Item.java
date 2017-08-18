@@ -61,7 +61,14 @@ public class Item implements java.io.Serializable {
     private Double computeCost;
     private Double computePrice;
     private String buyingCode;
+	private String approverDetail;
+	private String buyerDetail;
+	private String transporterDetail;
+	private String transporterVnDetail;
+	private String checkerDetail;
+	private String informerDetail;
 	
+    
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
@@ -432,4 +439,60 @@ public class Item implements java.io.Serializable {
 	    
 	    return true;
 	}
+    
+	@Transient
+    public String getApproverDetail() {
+        return approverDetail;
+    }
+    
+    public void setApproverDetail(String approverDetail) {
+        this.approverDetail = approverDetail;
+    }
+    
+    @Transient
+    public String getBuyerDetail() {
+        return buyerDetail;
+    }
+    
+    public void setBuyerDetail(String buyerDetail) {
+        this.buyerDetail = buyerDetail;
+    }
+    
+    @Transient
+    public String getTransporterDetail() {
+        return transporterDetail;
+    }
+    
+    public void setTransporterDetail(String transporterDetail) {
+        this.transporterDetail = transporterDetail;
+    }
+    
+    @Transient
+    public String getTransporterVnDetail() {
+        return transporterVnDetail;
+    }
+    
+    public void setTransporterVnDetail(String transporterVnDetail) {
+        this.transporterVnDetail = transporterVnDetail;
+    }
+    
+    @Transient
+    public String getCheckerDetail() {
+        return checkerDetail;
+    }
+    
+    public void setCheckerDetail(String checkerDetail) {
+        this.checkerDetail = checkerDetail;
+    }
+    
+    @Transient
+    public String getInformerDetail() {
+        return informerDetail;
+    }
+    
+    public void setInformerDetail(String informerDetail) {
+        this.informerDetail = informerDetail;
+    }
+	
+	
 }
