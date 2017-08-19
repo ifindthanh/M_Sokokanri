@@ -354,7 +354,7 @@ public class OrdersServiceImpl implements OrdersService {
             }
             
             content.append(breakLine);
-            total += item.getRealPrice();
+            total += item.getComputePrice();
         }
         content.append(breakLine);
         content.append(String.format("%50s", "").replaceAll(" ", "="));
