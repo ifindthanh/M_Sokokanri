@@ -179,10 +179,6 @@
 												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
 										</div>
 									</c:if> 
-									<sec:authorize access="hasRole('ROLE_A')">
-										<a class="myBtn origin" href="admin/${item.id }"><i class="fa fa-cogs"
-										aria-hidden="true"></i> </a>
-									</sec:authorize>
 								</td>
 						</tr>
 						</c:forEach>

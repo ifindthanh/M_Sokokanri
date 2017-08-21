@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.com.nsmv.common.SokokanriException;
+import vn.com.nsmv.common.Utils;
 import vn.com.nsmv.entity.ItemHistory;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.service.OrdersService;
@@ -37,7 +38,7 @@ public class HistoryController extends AbstractController{
 
     @Override
     protected void doBusiness(Model model) {
-        model.addAttribute("orderId", this.searchCondition.getOrderId());
+        model.addAttribute("orderId", Utils.getFormattedId(this.searchCondition.getOrderId(), 7));
         List<ItemHistory> allHistory;
         try {
             allHistory = this.ordersService.getAllHistory(this.searchCondition, this.getMaxResults(), this.getOffset());

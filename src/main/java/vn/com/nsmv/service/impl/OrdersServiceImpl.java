@@ -613,7 +613,7 @@ public class OrdersServiceImpl implements OrdersService {
         destinationItem.setBuyingCode(item.getBuyingCode());
         this.itemDAO.saveOrUpdate(destinationItem);
 
-        if (Utils.hasRole(Constants.ROLE_C)
+        if ((Utils.hasRole(Constants.ROLE_C) || Utils.hasRole(Constants.ROLE_A))
             && (destinationItem.getStatus() == 0 || destinationItem.getStatus() == -1)) {
             // if current user is checker and item is not approved yet
             // we save the history of update order

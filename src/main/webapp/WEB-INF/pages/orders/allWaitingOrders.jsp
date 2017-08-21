@@ -155,11 +155,6 @@
 									<div>
 										
 									</div>
-									
-									<sec:authorize access="hasRole('ROLE_A')">
-										<a class="myBtn origin" href="admin/${item.id }" title="Xem chi tiết"><i class="fa fa-cogs"
-										aria-hidden="true"></i> </a>
-									</sec:authorize>
 								</td>
 						</tr>
 						</c:forEach>
