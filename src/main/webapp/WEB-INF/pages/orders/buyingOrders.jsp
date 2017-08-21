@@ -107,8 +107,11 @@
 								<td class="fixed"><chkbox2:chbox item="${item.id }"
 										selectedItems="${selectedItems}" action="cho-mua" /></td>
 								<td class="fixed">
-									<div <c:if test="${item.status eq -2 }">class = "noted"</c:if>>
-									${item.formattedId} </div>
+									<c:set var="link_action" scope="page" value="onclick = 'viewOrder(${item.id })' style='cursor: pointer'"></c:set>
+										<sec:authorize access="hasRole('ROLE_A')">
+											<c:set var="link_action" scope="page" value="href = 'admin/${item.id }'"></c:set>
+										</sec:authorize>
+										<a <c:if test="${item.status eq -1 }">class = "noted"</c:if> ${link_action }>${item.getFormattedId() }</a>
 								</td>
 								<td>${item.user.fullname}</td>
 								<td>
@@ -245,6 +248,30 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" onclick="addNote()">Ghi chú</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Thông tin đơn hàng</h4>
+				</div>
+				<div class="modal-body">
+					<div id="order_detail"></div>
+					<input type="hidden" id="modal_orderId">
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-default" onclick="viewOrderHistory()">Xem lịch sử</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>

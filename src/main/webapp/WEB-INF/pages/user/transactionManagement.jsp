@@ -139,7 +139,6 @@
          // Change events
          $("#dateStart").change(function() {
          	var dateStart = new Date($("#dateStart").val());
-         	console.log(dateStart);
          	if ((dateStart == "") || (!isValidDate(dateStart)))
         		{
          		$("#dateEnd").datepicker("option", "minDate", dateStart);

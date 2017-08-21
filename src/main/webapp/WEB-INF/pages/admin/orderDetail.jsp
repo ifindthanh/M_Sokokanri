@@ -71,7 +71,7 @@
 				<c:if test="${listType == 9}">
 					<c:set var = "cancelLink" value = "../da-hoan-thanh"></c:set>
 				</c:if>
-				<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
+				
 				</div>
 				<table id="tableList" class="listBusCard table" width="600px">
 					<thead>
@@ -219,6 +219,13 @@
 							<td class="myLabel">Ngày báo giá</td>
 							<td><fmt:formatDate value="${category.getInformedDate()}" />
 							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="btn btn-default" href="../xem-lich-su/${category.id }">Xem lịch sử</a>
+								<a class="btn btn-default" href="${ cancelLink}">Quay lại</a>
+							</td>
+							<td style="display: none"></td>
 						</tr>
 					</tbody>
 				</table>

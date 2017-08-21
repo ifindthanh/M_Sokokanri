@@ -732,5 +732,10 @@ public class OrdersServiceImpl implements OrdersService {
         return new NumberOfOrdersByStatusBean(this.countAllItems(searchCondition));
     }
 
+    @Transactional
+    public List<ItemHistory> getAllHistory(SearchCondition searchCondition, Integer maxResults, Integer offset) throws SokokanriException {
+        return this.itemHistoryDAO.getAllHistory(searchCondition, maxResults, offset);
+    }
+
 
 }

@@ -8,6 +8,7 @@ import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.entity.Bill;
 import vn.com.nsmv.entity.Category;
 import vn.com.nsmv.entity.Item;
+import vn.com.nsmv.entity.ItemHistory;
 import vn.com.nsmv.javabean.NumberOfOrdersByStatusBean;
 import vn.com.nsmv.javabean.SearchCondition;
 import vn.com.nsmv.javabean.SortCondition;
@@ -50,4 +51,5 @@ public interface OrdersService {
     public void buyOrders(Set<Long> selectedItems) throws SokokanriException;
     public Long removeFromBill(Long itemId) throws SokokanriException;
     public NumberOfOrdersByStatusBean getNumberOfOrdersByStatusBean(Long userId) throws SokokanriException;
+    public List<ItemHistory> getAllHistory(SearchCondition searchCondition, Integer maxResults, Integer offset) throws SokokanriException;
 }

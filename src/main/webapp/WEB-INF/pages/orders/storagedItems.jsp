@@ -194,8 +194,10 @@
 				</div>
 				<div class="modal-body">
 					<div id="order_detail"></div>
+					<input type="hidden" id="modal_orderId">
 				</div>
 				<div class="modal-footer">
+					<button class="btn btn-default" onclick="viewOrderHistory()">Xem lịch sử</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>

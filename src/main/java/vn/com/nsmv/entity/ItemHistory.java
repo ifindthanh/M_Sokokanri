@@ -31,6 +31,9 @@ public class ItemHistory {
     private User updateBy;
     private Date updateDate;
     
+    public ItemHistory() {
+    }
+
     public ItemHistory(Item item) {
         this.id = item.getId();
         this.name = item.getName();

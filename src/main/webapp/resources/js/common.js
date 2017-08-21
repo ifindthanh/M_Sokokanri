@@ -366,6 +366,7 @@
 				$('#ajax-overlay').hide();
 				$("#orderDetailModal").modal('show');
 				$('#order_detail').html(result);
+				$('#modal_orderId').val(id);
 			},
 			error : function() {
 				$('#ajax-overlay').hide();
@@ -389,3 +390,7 @@
 		}
 	}
     
+    
+    function viewOrderHistory(){
+    	window.location.href = "../donhang/xem-lich-su/" + $("#modal_orderId").val();
+    }

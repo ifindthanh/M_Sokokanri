@@ -36,6 +36,7 @@ public final class SearchCondition
 	private String toCheckedVNDate;
 	private String fromInformedDate;
 	private String toInformedDate;
+	private Long orderId;
 	
 	
 	public SearchCondition() {
@@ -295,6 +296,15 @@ public final class SearchCondition
     public void setBills(List<Long> bills) {
         this.bills = bills;
     }
-	
+
     
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+	
 }
