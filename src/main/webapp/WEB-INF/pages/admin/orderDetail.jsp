@@ -39,6 +39,7 @@
 		<jsp:include page="/WEB-INF/pages/common/header.jsp" />
 	</div>
 	<div id="page_content">
+		<h2 style="margin-left: 10px "> Thông tin chi tiết đơn hàng</h2>
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12">

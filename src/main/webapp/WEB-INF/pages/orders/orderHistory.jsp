@@ -36,7 +36,7 @@
 		<jsp:include page="/WEB-INF/pages/common/header.jsp" />
 	</div>
 	<div id="page_content">
-		<h2>Thông tin chi tiết đơn hàng ${orderId }</h2>
+		<h2 style="margin-left: 10px "> Lịch sử đơn hàng ${orderId }</h2>
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="table_container">
