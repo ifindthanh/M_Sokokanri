@@ -29,7 +29,7 @@
 							</td>
 						</tr>
 						<tr class="headings" role="row">
-							<td class="myLabel">Nhà phân phối</td>
+							<td class="myLabel">Nhà cung cấp</td>
 							<td>
 									${item.brand }
 							</td>

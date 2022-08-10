@@ -2,7 +2,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-<%@ taglib prefix="rate" uri="/WEB-INF/taglibs/moneyExchange.tld" %>
 <link rel="shortcut icon" href="<c:url value="/resources/img/favicon.ico" />" />
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/login.css" />" rel="stylesheet">
@@ -14,19 +13,6 @@
 	<div id="ajax-overlay"></div>
 	<div class="top-block"
 		style="height: 50px; width0: 100%; background-color: #9e9595">
-		<sec:authorize access="isAuthenticated()">
-			<div class="block"
-				style="float: left; padding-top: 15px; padding-left: 20px;">
-				Tỷ giá
-				<sec:authorize access="hasRole('ROLE_A')">
-					<a id='moneyRate' onclick="updateMoneyRate()"><rate:money/></a>
-				</sec:authorize>
-				<sec:authorize access="!hasRole('ROLE_A')">
-					<span id='moneyRate'><rate:money/></span>
-					
-				</sec:authorize>
-			</div>
-		</sec:authorize>
 		<div class="menu-header block">
 			<ul>
 				<sec:authorize access="!isAuthenticated()">
@@ -59,46 +45,26 @@
 			<li class="active"><a href="#">Home</a></li>
 			<li><a href="#">Giới thiệu</a></li>
 			<li><a href="#">Báo giá</a></li>
-			<sec:authorize access="isAuthenticated()">
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" id="mnuOrder">Đơn hàng</a>
+			<sec:authorize access="hasRole('ROLE_A')">
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" id="mnuOrder">Phiếu thu</a>
 					<ul class="dropdown-menu">
-						<sec:authorize access="hasRole('ROLE_U')">
-							<li><a href="<c:url value= "/donhang/tao-moi"/>">Tạo đơn hàng</a></li>
-						</sec:authorize>
-						<sec:authorize access="hasAnyRole('ROLE_U','ROLE_A')">
-							<li><a href="<c:url value= "/donhang/tat-ca/0"/>">Tất cả đơn hàng</a></li>
-						</sec:authorize>
-						<sec:authorize access="hasAnyRole('ROLE_C','ROLE_A','ROLE_U')">
-				    		<li><a id="mnu_waiting2approve" href="<c:url value= "/donhang/cho-duyet/0"/>">Chờ duyệt</a></li>
-				    	</sec:authorize>
-				    	<sec:authorize access="hasAnyRole('ROLE_B','ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/cho-mua/0"/>">Đã duyệt</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_T1','ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/da-mua/0"/>">Đã mua</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_T2','ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/da-chuyen/0"/>">Đã nhận hàng tại nước ngoài</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_K','ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/da-chuyen-vn/0"/>">Đã chuyển về Việt Nam</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_BG','ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/da-nhap-kho/0"/>">Đã nhập kho</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/da-xuat-hd/0"/>">Đã xuất hóa đơn</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_A','ROLE_U')">
-				        	<li><a href="<c:url value= "/donhang/giao-hang/0"/>">Giao hàng</a></li>
-				        </sec:authorize>
-				        <sec:authorize access="hasAnyRole('ROLE_A')">
-				        	<li><a href="<c:url value= "/donhang/da-hoan-thanh/0"/>">Đã hoàn thành</a></li>
-				        </sec:authorize>
-				    </ul>
+						<li><a href="<c:url value= "/donhang/tao-moi"/>">Tạo phiếu thu</a></li>
+						<li><a href="<c:url value= "/donhang/tat-ca/0"/>">Danh sách phiếu thu</a></li>
+					</ul>
 				</li>
+
 			</sec:authorize>
 			<sec:authorize access="hasRole('ROLE_A')">
+				<li><a href="<c:url value= "/cay/tat-ca/0"/>">Danh mục cây cảnh</a></li>
+			</sec:authorize>
+			<sec:authorize access="hasAnyRole('ROLE_A')">
+				<li><a href="<c:url value = "/provider/tat-ca/0"/>">Nhà Cung Cấp</a></li>
+			</sec:authorize>
+			<sec:authorize access="hasAnyRole('ROLE_A')">
+				<li><a href="<c:url value = "/nhom-cay/tat-ca/0"/>">Nhóm Loại Cây</a></li>
+			</sec:authorize>
+			<sec:authorize access="hasRole('ROLE_A')">
+
 				<li><a href="<c:url value= "/user/tat-ca/0"/>">Danh sách người dùng</a></li>
 			</sec:authorize>
 		</ul>
@@ -315,36 +281,6 @@
 			if (event.keyCode == 13) {
 				$("#loginBtn").click();
 			}
-		}
-
-		function updateMoneyRate() {
-			$("#saveError").html("");
-			$("#money-rate-modal").modal("show");
-			$("#money_rate").val($("#moneyRate").html());
-		}
-
-		function saveMoneyRate(url) {
-			$('#ajax-overlay').show();
-			$.ajax({
-				type : "GET",
-				url : url + '?value=' + $('#money_rate').val(),
-				success : function(response) {
-					if (response.status == 0) {
-						$("#saveError").html(response.message);
-						$('#money_rate').forcus();
-						return;
-					}
-					$("#moneyRate").html($('#money_rate').val());
-					$("#money-rate-modal").modal("hide");
-					$('#ajax-overlay').hide();
-				},
-				error : function(response) {
-					$("#saveError").html(response);
-					$('#money_rate').forcus();
-					$('#ajax-overlay').hide();
-				}
-
-			});
 		}
 
 		function resetPw() {

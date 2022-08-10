@@ -10,9 +10,9 @@
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
- 		<property name="url" value="jdbc:mysql://localhost:3306/sale_management?UseUnicode=true&amp;characterEncoding=utf8" /> 
+ 		<property name="url" value="jdbc:mysql://localhost:3306/qlcaycanh?UseUnicode=true&amp;characterEncoding=utf8" />
  		<property name="username" value="root" /> 
- 		<property name="password" value="123456" />
+ 		<property name="password" value="foo123" />
 		
 		
 	</bean>
@@ -24,15 +24,11 @@
 				<value>vn.com.nsmv.entity.User</value>
 				<value>vn.com.nsmv.entity.UserRole</value>
 				<value>vn.com.nsmv.entity.Role</value>
-				<value>vn.com.nsmv.entity.MoneyExchange</value>
-				<value>vn.com.nsmv.entity.Item</value>
-				<value>vn.com.nsmv.entity.ItemHistory</value>
 				<value>vn.com.nsmv.entity.Category</value>
-				<value>vn.com.nsmv.entity.Bill</value>
-				<value>vn.com.nsmv.entity.VBrand</value>
-				<value>vn.com.nsmv.entity.VBuyingCode</value>
-				<value>vn.com.nsmv.entity.VTransferId</value>
-				<value>vn.com.nsmv.entity.Transaction</value>
+				<value>vn.com.nsmv.entity.Provider</value>
+				<value>vn.com.nsmv.entity.TreeCategory</value>
+				<value>vn.com.nsmv.entity.Tree</value>
+				<value>vn.com.nsmv.entity.ImportingEntity</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

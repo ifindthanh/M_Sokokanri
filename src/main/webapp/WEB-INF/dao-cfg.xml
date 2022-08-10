@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
  http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
- 
- <bean id="userDAO" class="vn.com.nsmv.dao.impl.UserDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- 
- <bean id="moneyExchangeDAOImpl" class="vn.com.nsmv.dao.impl.MoneyExchangeDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean> 
- 
-  <bean id="itemDAOImpl" class="vn.com.nsmv.dao.impl.ItemDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- 
- <bean id="categoryDAOImpl" class="vn.com.nsmv.dao.impl.CategoryDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>
- 
-  <bean id="billDAOImpl" class="vn.com.nsmv.dao.impl.BillDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>   
- 
- <bean id="itemHistoryDAOImpl" class="vn.com.nsmv.dao.impl.ItemHistoryDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean>  
- 
- <bean id="transactionDAOImpl" class="vn.com.nsmv.dao.impl.TransactionDAOImpl">
-     <property name="sessionFactory" ref="mySessionFactory" />
- </bean> 
-  
+
+    <bean id="userDAO" class="vn.com.nsmv.dao.impl.UserDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+
+    <bean id="categoryDAOImpl" class="vn.com.nsmv.dao.impl.CategoryDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+    <bean id="providerDAOImpl" class="vn.com.nsmv.dao.impl.ProviderDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+    <bean id="treeDAOImpl" class="vn.com.nsmv.dao.impl.TreeDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+    <bean id="treeCartDAOImpl" class="vn.com.nsmv.dao.impl.TreeCategoryDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+    <bean id="importingDAOImpl" class="vn.com.nsmv.dao.impl.ImportingDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
 </beans>

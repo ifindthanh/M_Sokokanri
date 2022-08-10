@@ -46,7 +46,12 @@
 				<div class="col-xs-12 row">
 					<label class="col-xs-2 right_align top_margin_5" >Trạng thái đơn hàng: </label>
 					<div class="col-xs-4">
-						<order:search status="${searchCondition.status }"/>
+						<select name="treeId" class="selectpicker form-control inputstl" onchange="search()">
+							<option value="0">Tất cả</option>
+							<c:forEach var="tree" items="${allTrees}" varStatus="status">
+								<option value="${tree.id }" <c:if test="${searchCondition.treeId.equals(tree.id)}">selected</c:if>>${tree.name }</option>
+							</c:forEach>
+						</select>
 					</div>
 					<div>
 						<button type="submit" class="btn btn-primary">
@@ -55,11 +60,12 @@
 					</div>
 				</div>
 				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Nhãn hàng: </label>
+					<label class="col-xs-2 right_align top_margin_5" >Nhà cung cấp: </label>
 					<div class="col-xs-4">
-						<select name="brands" multiple="multiple" class="selectpicker form-control inputstl" onchange="search()">
+						<select name="providerId" class="selectpicker form-control inputstl" onchange="search()">
+							<option value="0">Tất cả</option>
 							<c:forEach var="brand" items="${allBrands}" varStatus="status">
-								<option value="${brand }" <c:if test="${searchCondition.brands.contains(brand)}">selected</c:if>>${brand }</option>
+								<option value="${brand.id }" <c:if test="${searchCondition.providerId.equals(brand.id)}">selected</c:if>>${brand.name }</option>
 							</c:forEach>
 						</select>
 					</div>
@@ -92,20 +98,15 @@
 					<thead>
 						<tr class="headings" role="row">
 							<th style="width: 20px">No.</th>
-							<th>Mã đơn hàng</th>
-							<th>Tên khách hàng</th>
-							<th>Trạng thái</th>
-							<th style="width: 180px">Tên sản phẩm</th>
-							<th style="width: 150px">Nhà phân phối</th>
-							<th style="width: 150px">Link</th>
-							<th style="width: 180px">Mô tả thêm</th>
-							<th style="width: 50px">Đơn giá</th>
-							<th style="width: 50px">Số lượng</th>
+							<th style="width: 100px">Mã phiếu thu</th>
+							<th style="width: 100px">Mã sản phẩm</th>
+							<th style="width: 280px">Tên sản phẩm</th>
+							<th style="width: 250px">Nhà cung cấp</th>
+							<th style="width: 280px">Mô tả thêm</th>
+							<th style="width: 100px">Đơn giá</th>
+							<th style="width: 100px">Số lượng</th>
 							<th style="width: 100px">Thành tiền</th>
-							<th style="width: 50px">Đơn giá mua</th>
-							<th style="width: 50px">Số lượng mua</th>
-							<th style="width: 100px">Thành tiền</th>
-							<th></th>
+							<th style="width: 100px"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -113,28 +114,20 @@
 							<tr>
 								<td class="fixed"></td>
 								<td class="fixed">
+									<a href="${item.category.id}">${item.category.formattedId}</a>
+								</td>
+								<td class="fixed">
 									${item.formattedId}
 								</td>
 								<td>
-									${item.user.fullname}
-								</td>
-								<td>
-									<order:status status="${item.status }"/>
-								</td>
-								<td>
-									<div class="lblName">${item.name }
+									<div class="lblName">${item.tree.name }
 									</div>
-									<input type="text" value= "${item.name }" class="form-control hiddenAction txtName"/>
+									<input type="text" value= "${item.tree.id }" class="form-control hiddenAction txtName"/>
 								</td>
 								<td>
-									<div class="lblBrand">${item.brand }
+									<div class="lblBrand">${item.provider.name }
 									</div>
-									<input type="text" value= "${item.brand }" class="form-control hiddenAction txtBrand"/>
-								</td>
-								<td>
-									<div class="lblLink">${item.link }
-									</div>
-									<input type="text" value= "${item.link }" class="form-control hiddenAction txtLink"/>
+									<input type="text" value= "${item.provider.id }" class="form-control hiddenAction txtBrand"/>
 								</td>
 								<td>
 									<div class="lblDesc">${item.description }
@@ -142,9 +135,9 @@
 									<textarea class="form-control hiddenAction description">${item.description } </textarea>
 								</td>
 								<td>
-									<div class="lblCost">${item.cost }
+									<div class="lblCost">${item.price }
 									</div>
-									<input type="number" value= "${item.cost }" onchange="computeMoney(this)" class="small_width form-control hiddenAction txtCost"/>
+									<input type="number" value= "${item.price }" onchange="computeMoney(this)" class="form-control hiddenAction txtCost"/>
 								</td>
 								<td>
 									<div class="lblQuantity">${item.quantity }
@@ -156,29 +149,16 @@
 									</div>
 									<input type="text" value= "${item.total }" class="form-control hiddenAction txtTotal" disabled="disabled"/>
 								</td>
-								<td>
-									<div class="lblComputeCost">${item.computeCost }</div> 
-								</td>
-								<td>
-									<div class="lblRealQuantity">${item.realQuantity }</div> 
-								</td>
-								<td>
-									<div class="lblComputePrice">${item.computePrice }</div> <input
-									type="text" value="${item.computePrice}"
-									class="form-control hiddenAction txtComputePrice"
-									disabled="disabled" />
-								</td>
+
 								<td class="fixed">
-									<c:if test="${item.isReadonly() ne true}">
 										<a onclick="edit(this)" class="myBtn origin btnEdit"><i
 											class="fa fa-edit icon-resize-small" aria-hidden="true"></i></a>
 										<div class="action">
-											<a onclick="save(this)" class="myBtn" item="${item.id }"><i
+											<a onclick="save(this)" class="myBtn" item="${item.id }" category = "${item.category.id}"><i
 												class="fa fa-save icon-resize-small" aria-hidden="true"></i></a>
 											<a onclick="cancel(this)" class="myBtn"><i
 												class="fa fa-ban icon-resize-small" aria-hidden="true"></i></a>
 										</div>
-									</c:if> 
 								</td>
 						</tr>
 						</c:forEach>

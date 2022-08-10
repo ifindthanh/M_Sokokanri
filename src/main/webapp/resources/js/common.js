@@ -3,12 +3,6 @@
     	var action = currentElement.closest('tr').find(".action");
     	currentElement.closest('tr').find(".origin").hide();
     	action.show();
-    	currentElement.closest('tr').find(".lblName").hide();
-    	currentElement.closest('tr').find(".txtName").show();
-    	currentElement.closest('tr').find(".lblBrand").hide();
-    	currentElement.closest('tr').find(".txtBrand").show();
-    	currentElement.closest('tr').find(".lblLink").hide();
-    	currentElement.closest('tr').find(".txtLink").show();
     	currentElement.closest('tr').find(".lblDesc").hide();
     	currentElement.closest('tr').find(".description").show();
     	currentElement.closest('tr').find(".lblCost").hide();
@@ -44,16 +38,18 @@
     	
     	var param = {
     		"id": currentElement.attr("item"),
-    		"name": currentElement.closest('tr').find(".txtName").val(),
-    		"brand": currentElement.closest('tr').find(".txtBrand").val(),
-    		"link": currentElement.closest('tr').find(".txtLink").val(),
+			"category": {
+				"id": currentElement.attr("category")
+			},
+			"tree": {
+				"id":  currentElement.closest('tr').find(".txtName").val()
+			},
+			"provider": {
+				"id":  currentElement.closest('tr').find(".txtBrand").val()
+			},
     		"description": currentElement.closest('tr').find(".description").val(),
-    		"cost": currentElement.closest('tr').find(".txtCost").val(),
-    		"quantity": parseInt(currentElement.closest('tr').find(".txtQuantity").val()),
-    		"realCost": currentElement.closest('tr').find(".txtRealCost").val(),
-    		"realQuantity": parseInt(currentElement.closest('tr').find(".txtRealQuantity").val()),
-    		"computeCost": currentElement.closest('tr').find(".txtComputeCost").val(),
-    		"buyingCode": currentElement.closest('tr').find(".txtBuyingCode").val()
+    		"price": currentElement.closest('tr').find(".txtCost").val(),
+    		"quantity": parseInt(currentElement.closest('tr').find(".txtQuantity").val())
     	};
     	$('#ajax-overlay').show();
     	$.ajax({
@@ -116,7 +112,7 @@
     	var txtTotal = currentElement.closest('tr').find(".txtTotal");
     	var txtCost = currentElement.closest('tr').find(".txtCost");
     	var txtQuantity = currentElement.closest('tr').find(".txtQuantity");
-    	var rate = $("#moneyRate").html();
+    	var rate = 1;
     	if (txtCost.val() && txtCost.val() != "" 
     			&& txtQuantity.val() && txtQuantity.val() != "" 
     				&& rate && rate != "") {
@@ -281,7 +277,7 @@
     	var txtTotal = currentElement.closest('tr').find(".txtRealPrice");
     	var txtCost = currentElement.closest('tr').find(".txtRealCost");
     	var txtQuantity = currentElement.closest('tr').find(".txtRealQuantity");
-    	var rate = $("#moneyRate").html();
+    	var rate = 1;
     	if (txtCost.val() && txtCost.val() != "" 
     			&& txtQuantity.val() && txtQuantity.val() != ""
     				&& rate && rate != "") {
@@ -298,7 +294,7 @@
     	var txtCost = currentElement.closest('tr').find(".txtRealCost");
     	var txtComputeCost = currentElement.closest('tr').find(".txtComputeCost");
     	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
-    	var rate = $("#moneyRate").html();
+    	var rate = 1;
     	if (txtCost.val() && txtCost.val() != "" 
     			&& currentElement.val() && currentElement.val() != ""
     				&& rate && rate != "") {
@@ -322,7 +318,7 @@
     	var currentElement = $(element);
     	var txtRealQuantity = currentElement.closest('tr').find(".txtRealQuantity");
     	var txtComputePrice = currentElement.closest('tr').find(".txtComputePrice");
-    	var rate = $("#moneyRate").html();
+    	var rate = 1;
     	if (txtRealQuantity.val() && txtRealQuantity.val() != "" 
 			&& currentElement.val() && currentElement.val() != ""
 				&& rate && rate != "") {

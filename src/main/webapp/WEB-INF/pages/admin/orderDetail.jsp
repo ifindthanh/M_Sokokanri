@@ -97,13 +97,13 @@
 						<tr class="headings" role="row">
 							<td class="myLabel">Tên sản phẩm</td>
 							<td>
-									${category.name }
+									${category.tree.name }
 							</td>
 						</tr>
 						<tr class="headings" role="row">
-							<td class="myLabel">Nhà phân phối</td>
+							<td class="myLabel">Nhà cung cấp</td>
 							<td>
-									${category.brand }
+									${category.provider.name }
 							</td>
 						</tr>
 						<tr class="headings" role="row">
@@ -133,93 +133,12 @@
 						<tr class="headings" role="row">
 							<td class="myLabel">Đơn giá mua</td>
 							<td>
-									${category.computeCost }
+									${category.price }
 							</td>
 						</tr>
 						<tr class="headings" role="row">
 							<td class="myLabel">Tổng tiền</td>
-							<td>${category.getTotal() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Số lượng mua</td>
-							<td>
-									${category.realQuantity }
-							</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Tổng tiền thực tế</td>
-							<td>${category.getComputePrice() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Đơn giá tính tiền</td>
-							<td>
-									${category.realCost }
-							</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Tổng tiền</td>
-							<td>${category.getRealPrice() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Mã hóa đơn</td>
-							<td>${category.bill.getFormattedId() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Vận đơn</td>
-							<td>${category.transferId }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Người duyệt đơn hàng</td>
-							<td>${category.getApproverDetail() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Ngày duyệt đơn hàng</td>
-							<td><fmt:formatDate value="${category.getApprovedDate()}" />
-							</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Người mua hàng</td>
-							<td>${category.getBuyerDetail() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Ngày mua hàng</td>
-							<td><fmt:formatDate value="${category.getBoughtDate()}" /></td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Người chuyển hàng tại nước ngoài</td>
-							<td>${category.getTransporterDetail() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Ngày chuyển hàng tại nước ngoài</td>
-							<td><fmt:formatDate value="${category.getTransportedDate()}" />
-							</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Người chuyển hàng về VN</td>
-							<td>${category.getTransporterVnDetail() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Ngày chuyển hàng về VN</td>
-							<td><fmt:formatDate
-									value="${category.getTransportedVnDate()}" /></td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Người kiểm hàng</td>
-							<td>${category.getCheckerDetail() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Ngày kiểm hàng</td>
-							<td><fmt:formatDate value="${category.getCheckedDate()}" />
-							</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Người báo giá</td>
-							<td>${category.getInformerDetail() }</td>
-						</tr>
-						<tr class="headings" role="row">
-							<td class="myLabel">Ngày báo giá</td>
-							<td><fmt:formatDate value="${category.getInformedDate()}" />
-							</td>
+							<td>${category.total }</td>
 						</tr>
 						<tr>
 							<td>

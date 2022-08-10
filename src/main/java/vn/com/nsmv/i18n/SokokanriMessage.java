@@ -179,7 +179,7 @@ public class SokokanriMessage {
 		return SokokanriMessage.messageSource.getMessage("message.error.bill.not.exist", args, locale);
 }
 
-	//Nhà phân phối không hợp lệ.
+	//Nhà cung cấp không hợp lệ.
 	public static String getMessageErrorInvalidBrand( Locale locale){
 
 		Object[] args = {};

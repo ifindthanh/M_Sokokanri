@@ -47,8 +47,8 @@
 						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
 						  <span class="caret"></span></button>
 							<ul class="dropdown-menu">
-								<li><a onclick="addTransaction()">Thêm giao dịch</a></li>
-								<li><a onclick="manageWallet()">Lịch sử giao dịch</a></li>
+<%--								<li><a onclick="addTransaction()">Thêm giao dịch</a></li>--%>
+<%--								<li><a onclick="manageWallet()">Lịch sử giao dịch</a></li>--%>
 								<li><a onclick="deleteUsers()">Xóa user</a></li>
 							</ul>
 						</div>

@@ -57,13 +57,11 @@
 						<tr class="headings" role="row">
 							<th>No</th>
 							<th>Tên sản phẩm</th>
-							<th>Nhà phân phối</th>
-							<th>Link</th>
+							<th>Nhà cung cấp</th>
 							<th>Mô tả thêm</th>
 							<th>Đơn giá</th>
 							<th>Số lượng</th>
 							<th>Thành tiền</th>
-							<th>Thực tế mua</th>
 							<c:if test="${read_only ne true}"><th></th></c:if>
 						</tr>
 					</thead>
@@ -73,17 +71,24 @@
 								<form:input type="hidden" path="items[${status.index}].id" value="${item.id }" readonly="${read_only }"/>
 								<td></td>
 								<td>
-									<form:input class="txtName form-control" path="items[${status.index}].name" value="${item.name }" readonly="${read_only }"/>
+									<select id="tree${status.index}" name="items[${status.index}].tree.id" class="selectpicker form-control inputstl checkTree" title="Tên cây">
+										<c:forEach var="tree" items="${allTrees}" varStatus="status2">
+											<option value="${tree.id }" <c:if test="${tree.id.equals(item.tree.id)}">selected</c:if> >${tree.name }</option>
+										</c:forEach>
+									</select>
 								</td>
-								<td><form:input class="form-control" path="items[${status.index}].brand" type="text" readonly="${read_only }"/></td>
-								<td><form:input class="txtLink form-control" path="items[${status.index}].link" type="text" readonly="${read_only }"/></td>
+								<td>
+									<select id="provider${status.index}" name="items[${status.index}].provider.id" class="selectpicker form-control inputstl checkProvider" title="Nhà cung cấp">
+										<c:forEach var="provider" items="${allProviders}" varStatus="status3">
+											<option value="${provider.id }" <c:if test="${provider.id.equals(item.provider.id)}">selected</c:if> >${provider.name }</option>
+										</c:forEach>
+									</select>
+								</td>
 								<td><form:textarea class="description form-control" path="items[${status.index}].description" readonly="${read_only }"/></td>
-								<td><form:input class="txtCost form-control" path="items[${status.index}].cost" type="text" onchange="computeMoney(this)" readonly="${read_only }"/></td>
+								<td><form:input class="txtCost form-control" path="items[${status.index}].price" type="text" onchange="computeMoney(this)" readonly="${read_only }"/></td>
 								<td><form:input class="txtQuantity form-control" path="items[${status.index}].quantity" type="number" min ="1" max="999" onchange="computeMoney(this)" readonly="${read_only }"/></td>
 								<td><form:input class="txtTotal form-control" path="items[${status.index}].total" type="text" readonly="true"/></td>
-								<td>
-									<form:input class="real_price form-control" path="items[${status.index}].realPrice" type="text" readonly="${real_price_access }" onchange="saveRealPrice(this, ${item.id })"/>
-								</td>
+
 								<c:if test="${read_only ne true}">
 									<td>
 										<a class="deleteItem myAction" item = "${item.id }"><i class="fa fa-trash-o"
@@ -104,41 +109,10 @@
 					</div>
 					<div style="float:right; position: absolute; right: 30px; top: 0px;">
 						<label>Tổng tiền : <span id="total_price">${category.getOrderPrice() }</span></label>
-						<br/>
-						<label>Tổng tiền thực mua: <span id="total_real_price">0</span></label>
 					</div>
 					
 				</div>
-				
-				<hr/>
-				
-				<div class="col-xs-12" style="margin-bottom: 20px">
-					<h4><label>Thông tin khách hàng</label></h4>
-					<div class = "row">
-						<label class="col-xs-2">Họ và tên:<span class="red_text">*</span> </label>
-						<div class="col-xs-4"><form:input id="fullName" path="fullName" type="text" class="form-control" readonly="${read_only }"/></div>
-					</div>
-					<div class = "row">
-						<label class="col-xs-2">Email:<span class="red_text">*</span> </label>
-						<div class="col-xs-4"><form:input id="email" path="email" type="text"  class="form-control" readonly="${read_only }"/></div>
-					</div>
-					<div class = "row">
-						<label class="col-xs-2">Số điện thoại:<span class="red_text">*</span> </label>
-						<div class="col-xs-4"><form:input id="phone" path="phone" type="text"  class="form-control" readonly="${read_only }"/></div>
-					</div>
-					<div class = "row">
-						<label class="col-xs-2">Địa chỉ:<span class="red_text">*</span> </label>
-						<div class="col-xs-4"><form:input id="address" path="address" type="text"  class="form-control" readonly="${read_only }"/></div>
-					</div>
-					<div class = "row">
-						<label class="col-xs-2">Thành phố: </label>
-						<div class="col-xs-4"><form:input path="city" type="text"  class="form-control" readonly="${read_only }"/></div>
-					</div>
-					<div class = "row">
-						<label class="col-xs-2">Ghi chú: </label>
-						<div class="col-xs-4"><form:textarea path="note" class="form-control description" rows="4" readonly="${read_only }"/></div>
-					</div>
-				</div>
+
 				<br/>
 				<c:if test="${read_only ne true}">
 					<input type="submit" class="btn btn-primary" value="Lưu thông tin" onclick="return validateForm()"/>
@@ -263,19 +237,20 @@
        	
        	
        	$('#addRow').on( 'click', function () {
-       		var index = parseInt($("#item_size").val());   
-       		
+       		var index = parseInt($("#item_size").val());
+			   var v1 = $("#tree1");
+       		console.log(v1.html());
+			   var v2 = document.getElementById("tree1");
+			console.log(v2.innerHTML);
     		$("#item_size").val(index + 1);
             table.row.add( [
             	"",
-            	"<input class=\"txtName form-control\" type=\"text\" name=\"items[" + index + "].name\" value=\"\" />",
-        		"<input class=\"form-control\" type=\"text\" name=\"items[" + index + "].brand\" />",
-        		"<input class=\"txtLink form-control\" type=\"text\" name=\"items[" + index + "].link\" />",
+				"<select name='items["+index+"].tree.id'>" + $("#tree1").html() + "</select>",
+				"<select name='items["+index+"].provider.id'>" + $("#provider1").html() + "</select>",
         		"<textarea class=\"description form-control\" name=\"items[" + index + "].description\"> </textarea>",
-        		"<input class=\"txtCost form-control\" type=\"text\" name=\"items[" + index + "].cost\" onchange=\"computeMoney(this)\" />",
+        		"<input class=\"txtCost form-control\" type=\"text\" name=\"items[" + index + "].price\" onchange=\"computeMoney(this)\" />",
         		"<input class=\"txtQuantity form-control\" type=\"number\" min =\"1\" max=\"999\" name=\"items[" + index + "].quantity\" onchange=\"computeMoney(this)\" />",
         		"<input class=\"txtTotal form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].total\"/>",
-        		"<input class=\"real_price form-control\" type=\"text\" readonly=\"true\" name=\"items[" + index + "].realPrice\" />",
         		"<a class= \"deleteItem myAction\" onclick=\"deleteRow(this)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\" ></i></a>"
             ] ).draw( false );
             table.column(0, {}).nodes().each( function (cell, i) {
@@ -429,23 +404,11 @@
 	    		var link = $(this).find(".txtLink").val();
 	    		var quantity = $(this).find(".txtQuantity").val();
 	    		var cost = $(this).find(".txtCost").val();
-	    		if ((!name || name == "") && (!link || link == "")
-	    				&& (!quantity || quantity == "") && (!cost || cost == "")) {
+	    		if ((!quantity || quantity == "") && (!cost || cost == "")) {
 	    			return;
 	    		}
 	    		
-	    		if (!name || name == "") {
-	    			errorMessage = "Tên mặt hàng không được để trống";
-	    			$(this).find(".txtName").focus();
-	    			throw BreakException;
-	    		}
-	    		
-	    		if (!link || link == "") {
-	    			errorMessage = "Đường dẫn đến mặt hàng không được để trống";
-	    			$(this).find(".txtLink").focus();
-	    			throw BreakException;
-	    		}
-	    		
+
 	    		if (!quantity || quantity == "") {
 	    			errorMessage = "Số lượng không được để trống";
 	    			$(this).find(".txtQuantity").focus();
@@ -463,12 +426,7 @@
 	    			$(this).find(".txtCost").focus();
 	    			throw BreakException;
 	    		}
-	    		
-	    		if (parseFloat(cost) <= 0) {
-	    			errorMessage = "Đơn giá phải lớn hơn 0";
-	    			$(this).find(".txtCost").focus();
-	    			throw BreakException;
-	    		}
+
 	    	})
     	} catch (e) {
     		if (e !== BreakException) throw e;
@@ -477,30 +435,6 @@
     	if (errorMessage != "") {
     		alert (errorMessage);
         	//return false;
-    	}
-    	
-    	if (!$("#fullName").val() || $("#fullName").val() == "") {
-    		alert("Vui lòng điền họ và tên của bạn");
-    		$("#fullName").focus();
-    		return false;
-    	}
-    	
-    	if (!$("#email").val() || $("#email").val() == "") {
-    		alert("Vui lòng điền địa chỉ email");
-    		$("#email").focus();
-    		return false;
-    	}
-    	
-    	if (!$("#phone").val() || $("#phone").val() == "") {
-    		alert("Vui lòng điền số điện thoại");
-    		$("#phone").focus();
-    		return false;
-    	}
-    	
-    	if (!$("#address").val() || $("#address").val() == "") {
-    		alert("Vui lòng điền địa chỉ nhận hàng");
-    		$("#address").focus();
-    		return false;
     	}
     		
     	return true;

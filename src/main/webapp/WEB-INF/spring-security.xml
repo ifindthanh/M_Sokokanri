@@ -40,7 +40,7 @@
  		<intercept-url pattern="/quen-mat-khau" access="permitAll" />
  		<intercept-url pattern="/doi-mat-khau" access="permitAll" />
         
-        <intercept-url pattern="/donhang/tao-moi" access="hasRole('ROLE_U')" />
+        <intercept-url pattern="/donhang/tao-moi" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/tat-ca" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/luu-don-hang" access="hasAnyRole('ROLE_U', 'ROLE_A')" />
         <intercept-url pattern="/donhang/tao-tu-file" access="hasRole('ROLE_U')" />
@@ -122,10 +122,10 @@
  
         <!-- authentication from database -->
         <authentication-provider user-service-ref="customUserService">
-        	 <password-encoder ref="encoder" />
+<!--        	 <password-encoder ref="encoder" />-->
         </authentication-provider>
     </authentication-manager>
-    <beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
-		<beans:constructor-arg name="strength" value="10" />
-	</beans:bean>
+<!--    <beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">-->
+<!--		<beans:constructor-arg name="strength" value="10" />-->
+<!--	</beans:bean>-->
 </beans:beans>

@@ -31,7 +31,7 @@ public class Category implements java.io.Serializable {
 	private Integer status;
 	private Date createdDate;
 	private Date updateDate;
-	private List<Item> items;
+	private List<ImportingEntity> items;
 	private String fullName;
 	private String email;
 	private String phone;
@@ -77,11 +77,11 @@ public class Category implements java.io.Serializable {
 	}
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
-	public List<Item> getItems() {
+	public List<ImportingEntity> getItems() {
 		return this.items;
 	}
 
-	public void setItems(List<Item> items) {
+	public void setItems(List<ImportingEntity> items) {
 		this.items = items;
 	}
 	
@@ -135,10 +135,6 @@ public class Category implements java.io.Serializable {
 		this.note = note;
 	}
 	
-	public void removeItem(Item item) {
-		this.items.remove(item);
-	}
-	
 	@Transient
 	public Long getUserId() {
 		return userId;
@@ -175,29 +171,11 @@ public class Category implements java.io.Serializable {
 			return "";
 		}
 		double result = 0;
-		for (Item item : this.items) {
+		for (ImportingEntity item : this.items) {
 			if (item.getTotal() == null) {
 				continue;
 			}
 			result += item.getTotal();
-		}
-		if (result == 0) {
-			return "";
-		}
-		return String.format("%.4f", result);
-	}
-	
-	@Transient
-	public String getOrderRealPrice() {
-		if (this.items == null) {
-			return "";
-		}
-		double result = 0;
-		for (Item item : this.items) {
-			if (item.getRealPrice() == null) {
-				continue;
-			}
-			result += item.getRealPrice();
 		}
 		if (result == 0) {
 			return "";

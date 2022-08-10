@@ -16,7 +16,6 @@ import vn.com.nsmv.bean.ResponseResult;
 import vn.com.nsmv.common.Constants;
 import vn.com.nsmv.common.SokokanriException;
 import vn.com.nsmv.common.Utils;
-import vn.com.nsmv.service.OrdersService;
 
 public abstract class AbstractController {
     private Integer offset;
@@ -30,13 +29,13 @@ public abstract class AbstractController {
         this.selectedItems.clear();
     }
     
-    protected void listAllOrdersInPage(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
+    protected void settingUpParams(HttpServletRequest request, Model model, Integer offset, Integer maxResults) {
         this.resetParams(offset, maxResults);
         String message = request.getParameter("message");
         if (!Utils.isEmpty(message)) {
             model.addAttribute("message", message);
         }
-        this.doBusiness(model);
+        this.listItems(model);
        
     }
     
@@ -64,7 +63,7 @@ public abstract class AbstractController {
         }
     }
     
-    protected abstract void doBusiness(Model model);
+    protected abstract void listItems(Model model);
     
     protected @ResponseBody ResponseEntity<ResponseResult<String>> selectItem(@RequestParam Long id){
         this.selectedItems.add(id);
@@ -138,16 +137,7 @@ public abstract class AbstractController {
     protected void setSelectedItems(Set<Long> selectedItems) {
         this.selectedItems = selectedItems;
     }
-    
-    protected void checkSearching(List<String> searchedItems, List<String> allItems){
-        
-        for (String item:searchedItems) {
-            if (allItems.contains(item)) {
-                continue;
-            }
-            allItems.add(item);
-        }
-    }
+
     
     protected void checkSearchingBills(List<Long> searchedItems, List<Long> allItems){
         
@@ -156,24 +146,6 @@ public abstract class AbstractController {
                 continue;
             }
             allItems.add(item);
-        }
-    }
-    
-    protected void delete(Model model, OrdersService ordersService) {
-        try {
-            ordersService.deleteItems(this.getSelectedItems());
-            this.getSelectedItems().clear();
-        } catch (SokokanriException ex) {
-            model.addAttribute("message", ex.getErrorMessage());
-        }
-    }
-    
-    protected void cancel(Model model, OrdersService ordersService) {
-        try {
-            ordersService.cancelItems(this.getSelectedItems());
-            this.getSelectedItems().clear();
-        } catch (SokokanriException ex) {
-            model.addAttribute("message", ex.getErrorMessage());
         }
     }
     

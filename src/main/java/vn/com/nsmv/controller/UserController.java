@@ -41,7 +41,7 @@ import vn.com.nsmv.service.UserService;
 
 @Controller
 @Scope("session")
-public class UserController extends SokokanriCommonController
+public class UserController extends CommonController
 {
 
 	@Autowired
