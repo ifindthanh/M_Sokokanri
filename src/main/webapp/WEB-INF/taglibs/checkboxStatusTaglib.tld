@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/checkboxStatusTaglib.tld</uri>
   <tag>
     <name>chbox</name>
-    <tag-class>vn.com.nsmv.taglib.CheckboxStatusTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.CheckboxStatusTaglib</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>selectedItems</name>

@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/moneyExchange.tld</uri>
   <tag>
     <name>money</name>
-    <tag-class>vn.com.nsmv.taglib.MoneyExchangeTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.MoneyExchangeTaglib</tag-class>
     <body-content>empty</body-content>
   </tag>
 </taglib>

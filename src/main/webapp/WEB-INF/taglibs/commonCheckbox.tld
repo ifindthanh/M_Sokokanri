@@ -6,7 +6,7 @@
  
   <tag>
     <name>chbox</name>
-    <tag-class>vn.com.nsmv.taglib.CommonCheckbox</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.CommonCheckbox</tag-class>
     <body-content>empty</body-content>
     
     <attribute>

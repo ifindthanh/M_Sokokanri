@@ -10,7 +10,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Tất cả phiếu thu</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -116,7 +116,7 @@
 				<br/>
 				<c:if test="${read_only ne true}">
 					<input type="submit" class="btn btn-primary" value="Lưu thông tin" onclick="return validateForm()"/>
-					<a href="tat-ca" class="btn btn-default">Xem tất cả đơn hàng</a>
+					<a href="tat-ca" class="btn btn-default">Danh sách phiếu thu</a>
 				</c:if>
 				<input type="hidden" value="${category.items.size()}" id="item_size"/>
 				<form:input type="hidden" path = "userId" value="${category.user.id}"/>
@@ -381,27 +381,12 @@
 
 		});
     }
-    
-    $(".openNote").on("click", function () {
-        var action = $(this).data('id');
-        $("#action").val( action );
-        $('#addNoteModal').modal('show');
-   });
-    
-    function transferToVN () {
-    	var check = confirm("Bạn có thật sự muốn phê duyệt đơn hàng này?");
-    	if (check) {
-    		window.location.href = "chuyen-don-hang-vn?id="+$("#orderId").val(); 
-    	}
-    }
-    
+
     function validateForm() {
     	var BreakException = {};
     	var errorMessage = "";
     	try {
 	    	$("#order_form table tr").each(function(){
-	    		var name = $(this).find(".txtName").val();
-	    		var link = $(this).find(".txtLink").val();
 	    		var quantity = $(this).find(".txtQuantity").val();
 	    		var cost = $(this).find(".txtCost").val();
 	    		if ((!quantity || quantity == "") && (!cost || cost == "")) {

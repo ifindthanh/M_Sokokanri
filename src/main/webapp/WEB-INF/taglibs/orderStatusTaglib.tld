@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/orderStatusTaglib.tld</uri>
   <tag>
     <name>status</name>
-    <tag-class>vn.com.nsmv.taglib.OrderStatusTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.OrderStatusTaglib</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>status</name>
@@ -16,7 +16,7 @@
   </tag>
   <tag>
     <name>search</name>
-    <tag-class>vn.com.nsmv.taglib.OrderStatusSearchingTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.OrderStatusSearchingTaglib</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>status</name>

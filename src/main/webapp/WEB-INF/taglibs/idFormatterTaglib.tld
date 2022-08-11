@@ -6,7 +6,7 @@
  
   <tag>
     <name>formatter</name>
-    <tag-class>vn.com.nsmv.taglib.IDFormattedTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.IDFormattedTaglib</tag-class>
     <body-content>empty</body-content>
     
     <attribute>
@@ -18,7 +18,7 @@
   </tag>
   <tag>
     <name>date</name>
-    <tag-class>vn.com.nsmv.taglib.DateFormattedTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.DateFormattedTaglib</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>date</name>

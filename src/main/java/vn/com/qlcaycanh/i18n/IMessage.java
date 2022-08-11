@@ -1,0 +1,504 @@
+package vn.com.qlcaycanh.i18n;
+
+import java.util.Locale;
+public class IMessage {
+	private static final ExposedResourceBundleMessageSource messageSource = new ExposedResourceBundleMessageSource();
+
+	//Loại giao dịch không được để trống.
+	public static String getMessageErrorTransactionTypeCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.transaction.type.cannot.be.empty", args, locale);
+}
+
+	//Khách hàng 
+	public static String getMessageInforLabelCustomer( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.label.customer", args, locale);
+}
+
+	//Không thể chuyển trạng thái đơn hàng đã chọn.
+	public static String getMessageErrorCannotUpdateStatus( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.cannot.update.status", args, locale);
+}
+
+	//Thêm giao dịch thành công.
+	public static String getMessageInforAddTransactionSuccessfully( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.add.transaction.successfully", args, locale);
+}
+
+	//Bạn không được phép thao tác với đơn hàng này.
+	public static String getMessageErrorNoPermissionInOrder( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.no.permission.in.order", args, locale);
+}
+
+	//Đã xuất hóa đơn
+	public static String getLabelBillExported( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.bill.exported", args, locale);
+}
+
+	//Email không tồn tại trong hệ thống.
+	public static String getMessageErrorEmailNotExists( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.email.not.exists", args, locale);
+}
+
+	//Thanh toán
+	public static String getMessageInforLabelTransactionTypePay( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.label.transaction.type.pay", args, locale);
+}
+
+	//Chi tiết hóa đơn: {0}
+	public static String getLabelBillDetail(Object arg0,  Locale locale){
+
+		Object[] args = {arg0};
+		return IMessage.messageSource.getMessage("label.bill.detail", args, locale);
+}
+
+	//Không thể ghi chú đơn hàng đã chọn.
+	public static String getMessageErrorCannotNoteSelectedOrder( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.cannot.note.selected.order", args, locale);
+}
+
+	//Tên khách hàng: {0}
+	public static String getLabelNameOfCustomer(Object arg0,  Locale locale){
+
+		Object[] args = {arg0};
+		return IMessage.messageSource.getMessage("label.name.of.customer", args, locale);
+}
+
+	//User đã chọn là người quản trị hệ thống, không thể quản lý giao dịch .
+	public static String getMessageErrorAddTransactionNotAllow( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.add.transaction.not.allow", args, locale);
+}
+
+	//File đã chọn không chứa thông tin của đơn hàng nào.
+	public static String getMessageErrorNoOrderInFile( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.no.order.in.file", args, locale);
+}
+
+	//File vừa chọn không phải là excel file.
+	public static String getMessageErrorInvalidExcel( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.excel", args, locale);
+}
+
+	//Đã mua
+	public static String getLabelBought( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.bought", args, locale);
+}
+
+	//Đường link của không hợp lệ.
+	public static String getMessageErrorInvalidLink( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.link", args, locale);
+}
+
+	//Đổi mật khẩu thành công.
+	public static String getMessageInforChangePasswordSuccessfully( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.change.password.successfully", args, locale);
+}
+
+	//Số lượng thực mua của đơn {0} không được để trống
+	public static String getMessageErrorQuantityCannotBeEmptyWithParam(Object arg0,  Locale locale){
+
+		Object[] args = {arg0};
+		return IMessage.messageSource.getMessage("message.error.quantity.cannot.be.empty.with.param", args, locale);
+}
+
+	//Mật khẩu xác nhận không khớp.
+	public static String getMessageErrorInvalidConfirmPassword( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.confirm.password", args, locale);
+}
+
+	//Tổng cộng
+	public static String getLabelTotalRecords( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.total.records", args, locale);
+}
+
+	//Mật khẩu hiện tại không đúng.
+	public static String getMessageErrorInvalidPassword( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.password", args, locale);
+}
+
+	//Hiển thị
+	public static String getLabelNumberOfDisplay( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.number.of.display", args, locale);
+}
+
+	//User không tồn tại trong hệ thống.
+	public static String getMessageErrorUserNotExists( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.user.not.exists", args, locale);
+}
+
+	//Đơn giá tính tiền mua của đơn {0} không được để trống
+	public static String getMessageErrorComputeCostCannotBeEmpty(Object arg0,  Locale locale){
+
+		Object[] args = {arg0};
+		return IMessage.messageSource.getMessage("message.error.compute.cost.cannot.be.empty", args, locale);
+}
+
+	//Hóa đơn không tồn tại.
+	public static String getMessageErrorBillNotExist( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.bill.not.exist", args, locale);
+}
+
+	//Nhà cung cấp không hợp lệ.
+	public static String getMessageErrorInvalidBrand( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.brand", args, locale);
+}
+
+	//Địa chỉ không được để trống.
+	public static String getMessageErrorAddressCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.address.cannot.be.empty", args, locale);
+}
+
+	//Tên sản phẩm không hợp lệ.
+	public static String getMessageErrorInvalidName( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.name", args, locale);
+}
+
+	//Đã chuyển về VN
+	public static String getLabelTransferredToVn( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.transferred.to.vn", args, locale);
+}
+
+	//Địa chỉ email không được để trống.
+	public static String getMessageErrorEmailCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.email.cannot.be.empty", args, locale);
+}
+
+	//Tất cả
+	public static String getLabelAll( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.all", args, locale);
+}
+
+	//Đơn giá mua của đơn {0} không được để trống
+	public static String getMessageErrorCostCannotBeEmptyWithParam(Object arg0,  Locale locale){
+
+		Object[] args = {arg0};
+		return IMessage.messageSource.getMessage("message.error.cost.cannot.be.empty.with.param", args, locale);
+}
+
+	//Kiểu giao dịch không hợp lệ.
+	public static String getMessageErrorTransactionTypeInvalid( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.transaction.type.invalid", args, locale);
+}
+
+	//Vui lòng điền ít nhất 1 sản phẩm
+	public static String getMessageErrorProvideAtLeastOneItem( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.provide.at.least.one.item", args, locale);
+}
+
+	//Email này đã được đăng ký trong hệ thống. Vui lòng chọn địa chỉ email khác. 
+	public static String getMessageErrorEmailExisted( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.email.existed", args, locale);
+}
+
+	//Đã duyệt
+	public static String getLabelApproved( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.approved", args, locale);
+}
+
+	//Vui lòng chọn ít nhật một role.  
+	public static String getMessageErrorUserRoleEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.user.role.empty", args, locale);
+}
+
+	//Đã lưu kho
+	public static String getLabelStored( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.stored", args, locale);
+}
+
+	//Tổng tiền
+	public static String getLabelTotalPrice( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.total.price", args, locale);
+}
+
+	//Số lượng không được để trống.
+	public static String getMessageErrorQuantityCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.quantity.cannot.be.empty", args, locale);
+}
+
+	//Nạp tiền
+	public static String getMessageInforLabelTransactionTypeRecharge( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.label.transaction.type.recharge", args, locale);
+}
+
+	//Ghi chú không hợp lệ.
+	public static String getMessageErrorInvalidNote( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.note", args, locale);
+}
+
+	//Đường link không được để trống.
+	public static String getMessageErrorLinkCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.link.cannot.be.empty", args, locale);
+}
+
+	//Số lượng phải lớn hơn 0.
+	public static String getMessageErrorQuantityMustGtZero( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.quantity.must.gt.zero", args, locale);
+}
+
+	//Đã chuyển về tại nước ngoài
+	public static String getLabelTransferred( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.transferred", args, locale);
+}
+
+	//Không thể duyệt đơn hàng đã chọn.
+	public static String getMessageErrorCannotApproveSelectedOrder( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.cannot.approve.selected.order", args, locale);
+}
+
+	//Đơn giá không hợp lệ.
+	public static String getMessageErrorInvalidCost( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.cost", args, locale);
+}
+
+	//Chờ duyệt
+	public static String getLabelWaitingToApproval( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.waiting.to.approval", args, locale);
+}
+
+	//Đăng ký tài khoản thành công.
+	public static String getMessageInforSignInSuccessfully( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.sign.in.successfully", args, locale);
+}
+
+	//Số điện thoại không đúng.
+	public static String getMessageErrorInvalidPhone( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.phone", args, locale);
+}
+
+	//Hiển thị tối đa
+	public static String getLabelMaxOfDisplay( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.max.of.display", args, locale);
+}
+
+	//Đơn giá phải lớn hơn 0.
+	public static String getMessageErrorCostMustGtZero( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.cost.must.gt.zero", args, locale);
+}
+
+	//Mã mua hàng của đơn {0} không được để trống
+	public static String getMessageErrorBuydingCodeCannotBeEmpty(Object arg0,  Locale locale){
+
+		Object[] args = {arg0};
+		return IMessage.messageSource.getMessage("message.error.buyding.code.cannot.be.empty", args, locale);
+}
+
+	//Đơn giá không được để trống.
+	public static String getMessageErrorCostCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.cost.cannot.be.empty", args, locale);
+}
+
+	//Đã hoàn thành
+	public static String getLabelFinished( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.finished", args, locale);
+}
+
+	//Đang giao hàng
+	public static String getLabelIsShipping( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.is.shipping", args, locale);
+}
+
+	//Đơn hàng đã được duyệt, không thể xóa đơn hàng.
+	public static String getMessageErrorOrderIsApprovedCannotDelete( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.order.is.approved.cannot.delete", args, locale);
+}
+
+	//Tên mặt hàng không được để trống.
+	public static String getMessageErrorNameCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.name.cannot.be.empty", args, locale);
+}
+
+	//Đã ghi chú
+	public static String getLabelNoted( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("label.noted", args, locale);
+}
+
+	//Định dạng email không đúng.
+	public static String getMessageErrorInvalidEmail( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.email", args, locale);
+}
+
+	//Số tiền không được để trống và phải lớn hơn 0 VNĐ.
+	public static String getMessageErrorAmountCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.amount.cannot.be.empty", args, locale);
+}
+
+	//Số điện thoại không được để trống
+	public static String getMessageErrorPhoneCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.phone.cannot.be.empty", args, locale);
+}
+
+	//Số tiền trong tài khoản của {0}({1}) không thể nhỏ hơn tổng số tiền cần thanh toán và số tiền các đơn hàng chưa thanh toán({2}).
+	public static String getMessageErrorAddAccountBalanceCannotLessThanTotalAmout(Object arg0, Object arg1, Object arg2,  Locale locale){
+
+		Object[] args = {arg0, arg1, arg2};
+		return IMessage.messageSource.getMessage("message.error.add.account.balance.cannot.less.than.total.amout", args, locale);
+}
+
+	//Số tiền trong tài khoản nhỏ hơn số tiền cần thanh toán.
+	public static String getMessageErrorAddAccountBalanceCannotLessThanAmount( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.add.account.balance.cannot.less.than.amount", args, locale);
+}
+
+	//Invalid request.
+	public static String getMessageErrorInvalidRequest( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.request", args, locale);
+}
+
+	//Mật khẩu phải bao gồm tối thiếu 6 ký tự.
+	public static String getMessageErrorInvalidPasswordLength( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.password.length", args, locale);
+}
+
+	//Đơn hàng không tồn tại.
+	public static String getMessageErrorOrderNotExist( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.order.not.exist", args, locale);
+}
+
+	//Họ và tên không được để trống.
+	public static String getMessageErrorFullNameCannotBeEmpty( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.full.name.cannot.be.empty", args, locale);
+}
+
+	//User không hợp lệ.
+	public static String getMessageErrorInvalidUser( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalid.user", args, locale);
+}
+
+	//Số lượng phải là số nguyên.
+	public static String getMessageErrorInvalieQuantity( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.error.invalie.quantity", args, locale);
+}
+
+	//Hoàn tiền
+	public static String getMessageInforLabelTransactionTypeRefund( Locale locale){
+
+		Object[] args = {};
+		return IMessage.messageSource.getMessage("message.infor.label.transaction.type.refund", args, locale);
+}
+
+}

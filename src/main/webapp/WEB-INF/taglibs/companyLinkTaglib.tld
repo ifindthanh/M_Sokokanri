@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/companyLinkTaglib.tld</uri>
   <tag>
     <name>link</name>
-    <tag-class>vn.com.nsmv.taglib.CompanyLinkTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.CompanyLinkTaglib</tag-class>
     <body-content>empty</body-content>
     
     <attribute>

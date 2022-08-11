@@ -10,7 +10,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Tất cả phiếu thu</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -102,7 +102,7 @@
 				
 				<hr/>
 
-				<input type="submit" class="btn btn-primary" value="Tạo đơn hàng" onclick="return validateForm()"/>
+				<input type="submit" class="btn btn-primary" value="Tạo phiếu thu" onclick="return validateForm()"/>
 				<input type="hidden" value="${order.items.size()}" id="item_size"/>
 				<form:input type="hidden" path = "userId" value="${order.userId}"/>
 			</form:form>

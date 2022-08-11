@@ -11,7 +11,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Danh sách phiếu thu</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -39,7 +39,7 @@
 		<jsp:include page="/WEB-INF/pages/common/header.jsp" />
 	</div>
 	<div id="page_content">
-		<h2 style="margin-left: 10px "> Thông tin chi tiết đơn hàng</h2>
+		<h2 style="margin-left: 10px "> Thông tin chi tiết phiếu thu</h2>
 		<p class="error">${message }</p>
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12">
@@ -83,7 +83,7 @@
 					</thead>
 					<tbody>
 						<tr class="headings" role="row">
-							<td class="myLabel">Mã đơn hàng</td>
+							<td class="myLabel">Mã phiếu thu</td>
 							<td>${category.formattedId}</td>
 						</tr>
 						<tr class="headings" role="row">

@@ -16,15 +16,15 @@
         <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/>  
     </http>
     
-    <beans:bean id="jwtAuthenticationFilter" class="vn.com.nsmv.authentication.JwtAuthenticationFilter">  
+    <beans:bean id="jwtAuthenticationFilter" class="vn.com.qlcaycanh.authentication.JwtAuthenticationFilter">
     </beans:bean>
- 	<beans:bean id="restAuthenticationEntryPoint" class="vn.com.nsmv.authentication.RestAuthenticationEntryPoint">  
+ 	<beans:bean id="restAuthenticationEntryPoint" class="vn.com.qlcaycanh.authentication.RestAuthenticationEntryPoint">
     </beans:bean>
-    <beans:bean id="ajaxTimeoutRedirectFilter" class="vn.com.nsmv.bean.AjaxTimeoutRedirectFilter"></beans:bean>
-    <beans:bean id="customUserService" class="vn.com.nsmv.bean.CustomUserService" autowire="byName"> 
+    <beans:bean id="ajaxTimeoutRedirectFilter" class="vn.com.qlcaycanh.bean.AjaxTimeoutRedirectFilter"></beans:bean>
+    <beans:bean id="customUserService" class="vn.com.qlcaycanh.bean.CustomUserService" autowire="byName">
     	<beans:property name="userDAO" ref="userDAO"></beans:property>
     </beans:bean>
-     <beans:bean id="userDAO" class="vn.com.nsmv.dao.impl.UserDAOImpl">  
+     <beans:bean id="userDAO" class="vn.com.qlcaycanh.dao.impl.UserDAOImpl">
     </beans:bean>
     <http use-expressions="true">
         <csrf disabled="true"/>

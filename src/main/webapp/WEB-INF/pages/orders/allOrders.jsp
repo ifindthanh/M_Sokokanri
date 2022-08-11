@@ -11,7 +11,7 @@
 
 <html>
 <head>
-<title>Tất cả đơn hàng</title>
+<title>Tất cả phiếu thu</title>
 <META http-equiv="Pragma" content="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <meta http-equiv="cache-control" content="no-cache" />
@@ -44,7 +44,7 @@
 		<form action="tat-ca" method="POST">
 			<div class="col-sm-12 row" style="height: 150px">
 				<div class="col-xs-12 row">
-					<label class="col-xs-2 right_align top_margin_5" >Trạng thái đơn hàng: </label>
+					<label class="col-xs-2 right_align top_margin_5" >Trạng thái phiếu thu: </label>
 					<div class="col-xs-4">
 						<select name="treeId" class="selectpicker form-control inputstl" onchange="search()">
 							<option value="0">Tất cả</option>

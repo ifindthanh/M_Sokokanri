@@ -27,7 +27,7 @@
     }
     
 	function save(element) {
-		var aConfirm = window.confirm("Lưu đơn hàng?");
+		var aConfirm = window.confirm("Lưu thông tin phiếu thu?");
 		if (!aConfirm) {
 			cancel(element);
 			return;
@@ -328,29 +328,7 @@
 			txtComputePrice.val("");
 		}
     }
-    
-    function cancelOrders(url) {
-    	if ($('.order_id:checkbox:checked').length == 0) {
-    		alert("Vui lòng chọn đơn hàng.");
-    		return;
-    	}
-    	var check = confirm("Bạn có chắc muốn hủy đơn hàng này?");
-    	if (check) {
-    		window.location.href = url;
-    	}
-    }
-    
-    function deleteOrders(url) {
-    	if ($('.order_id:checkbox:checked').length == 0) {
-    		alert("Vui lòng chọn đơn hàng.");
-    		return;
-    	}
-    	var check = confirm("Bạn có chắc muốn xóa đơn hàng này?");
-    	if (check) {
-    		window.location.href = url;
-    	}
-        
-    }
+
     
 
     function viewOrder(id) {
@@ -386,7 +364,3 @@
 		}
 	}
     
-    
-    function viewOrderHistory(){
-    	window.location.href = "../donhang/xem-lich-su/" + $("#modal_orderId").val();
-    }

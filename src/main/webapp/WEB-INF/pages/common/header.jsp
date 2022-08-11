@@ -1,4 +1,4 @@
-<%@page import="vn.com.nsmv.common.Utils"%>
+<%@page import="vn.com.qlcaycanh.common.Utils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
@@ -328,7 +328,7 @@
 	    			url : "${pageContext.request.contextPath}/thong-tin-don-hang",
 	    			success : function(result) {
 	    				if (result.status == 1 && result.result.nbOfNotedOrder > 0) {
-	    					$("#mnuOrder").html("Đơn hàng <span class='error'>(" + result.result.nbOfNotedOrder + ")</span>");
+	    					$("#mnuOrder").html("phiếu thu <span class='error'>(" + result.result.nbOfNotedOrder + ")</span>");
 	    					$("#mnu_waiting2approve").html("Chờ duyệt <span class='error'>(" + result.result.nbOfNotedOrder + ")</span>");
 	    				}
 	    			},

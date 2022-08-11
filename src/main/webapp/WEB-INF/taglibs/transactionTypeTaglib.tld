@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/transactionTypeTaglib.tld</uri>
   <tag>
     <name>type</name>
-    <tag-class>vn.com.nsmv.taglib.TransactionTypeTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.TransactionTypeTaglib</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>type</name>

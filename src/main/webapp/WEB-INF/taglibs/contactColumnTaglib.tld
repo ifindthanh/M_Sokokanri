@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/contactColumnTaglib.tld</uri>
   <tag>
     <name>contact</name>
-    <tag-class>vn.com.nsmv.taglib.ContactColumnTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.ContactColumnTaglib</tag-class>
     <body-content>empty</body-content>
     
     <attribute>
@@ -18,7 +18,7 @@
     <attribute>
       <name>bussinessCard</name>
       <rtexprvalue>true</rtexprvalue>
-      <type>vn.com.nsmv.entity.BusinessCard</type>
+      <type>vn.com.qlcaycanh.entity.BusinessCard</type>
     </attribute>
   </tag>
 </taglib>

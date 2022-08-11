@@ -21,14 +21,14 @@
 		<property name="dataSource" ref="myDataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>vn.com.nsmv.entity.User</value>
-				<value>vn.com.nsmv.entity.UserRole</value>
-				<value>vn.com.nsmv.entity.Role</value>
-				<value>vn.com.nsmv.entity.Category</value>
-				<value>vn.com.nsmv.entity.Provider</value>
-				<value>vn.com.nsmv.entity.TreeCategory</value>
-				<value>vn.com.nsmv.entity.Tree</value>
-				<value>vn.com.nsmv.entity.ImportingEntity</value>
+				<value>vn.com.qlcaycanh.entity.User</value>
+				<value>vn.com.qlcaycanh.entity.UserRole</value>
+				<value>vn.com.qlcaycanh.entity.Role</value>
+				<value>vn.com.qlcaycanh.entity.Category</value>
+				<value>vn.com.qlcaycanh.entity.Provider</value>
+				<value>vn.com.qlcaycanh.entity.TreeCategory</value>
+				<value>vn.com.qlcaycanh.entity.Tree</value>
+				<value>vn.com.qlcaycanh.entity.ImportingEntity</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

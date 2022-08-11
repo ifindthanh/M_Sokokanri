@@ -6,7 +6,7 @@
  
   <tag>
     <name>paginate</name>
-    <tag-class>vn.com.nsmv.taglib.PaginationTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.PaginationTaglib</tag-class>
     <body-content>empty</body-content>
     
     <attribute>

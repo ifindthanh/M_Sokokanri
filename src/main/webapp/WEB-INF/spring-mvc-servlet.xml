@@ -13,11 +13,11 @@
       http://www.springframework.org/schema/task 
       http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
-	<context:component-scan base-package="vn.com.nsmv" />
+	<context:component-scan base-package="vn.com.qlcaycanh" />
 
 	<mvc:annotation-driven />
 	<task:annotation-driven />
-<!-- 	<bean id="registerValidator" class="vn.com.nsmv.validator.RegisterValidator" /> -->
+<!-- 	<bean id="registerValidator" class="vn.com.qlcaycanh.validator.RegisterValidator" /> -->
 	<mvc:interceptors>
 		<bean id="localeChangeInterceptor"
 			class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">

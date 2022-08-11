@@ -141,19 +141,7 @@
 																						<roles:roles disable="${selfEdit}" allRoles="${roles }"/>
 																					</div>
 																				</div>
-																			
-																			<div class="form-group">
-																				<label
-																					class="control-label col-md-3 col-sm-3 col-xs-12"
-																					for="first-name">Số dư tài khoản</label>
-																				<div class="col-md-6 col-sm-6 col-xs-12">
-																					<input type="text"
-																						class="form-control has-feedback-left"
-																						disabled="disabled" readonly="readonly"
-																						name="accountBalance" maxlength="30" id="accountBalance"
-																						value="${user.accountBalance }">
-																				</div>
-																			</div>
+
 																			
 																			<div class="ln_solid"></div>
 																			<div class="form-group">

@@ -5,7 +5,7 @@
   <uri>/WEB-INF/taglibs/rolesDisplayingTaglib.tld</uri>
   <tag>
     <name>roles</name>
-    <tag-class>vn.com.nsmv.taglib.RolesDisplayingTaglib</tag-class>
+    <tag-class>vn.com.qlcaycanh.taglib.RolesDisplayingTaglib</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>disable</name>
